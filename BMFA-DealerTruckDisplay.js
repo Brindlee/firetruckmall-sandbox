@@ -2,9 +2,6 @@
 var head = document.getElementsByTagName('head')[0];
 var script = document.createElement('script');
 script.type = 'text/javascript';
-script.onload = function() {
-    callFunctionFromScript();
-}
 script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js';
 head.appendChild(script);
 
