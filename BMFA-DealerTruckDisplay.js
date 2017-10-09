@@ -1,3 +1,13 @@
+/* Inject external script library for making support of Promise in IE */
+var head = document.getElementsByTagName('head')[0];
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.onload = function() {
+    callFunctionFromScript();
+}
+script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js';
+head.appendChild(script);
+
 /* Javascript Map for Bind Truck Apparatus Type to respective public image path. */
 var FT_truckTypeImageUrl = {
 	'FooterBellImg':'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003fIoK&oid=00Do0000000JLLE&lastMod=1499264854000',
