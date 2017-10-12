@@ -27,10 +27,63 @@ var FT_truckTypeImageUrl = {
 	'Demoand Refurb Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whta&oid=00Do0000000JLLE&lastMod=1495568791000',
 };
 
+var FT_translatableStrings = {
+	"footerSellingTxt1" : "Selling A Used Fire Truck?",
+	"footerSellingTxt2" : "Click Here For More Information",
+	"mainPageTitle" : "Shop Our Used Fire Trucks",
+	"paginationNextText" : "Next",
+	"paginationPrevText" : "Previous",
+	"viewDetailsBtnText" : "View Details",
+	"descriptionTabText" : "DESCRIPTION",
+	"inquiryTabText" : "YES I&#39;M INTERESTED",
+	"shareLinkTabText" : "LINK TO SHARE",
+	"copyBtnText" : "Copy",
+	"inquiryLinkText1" : "click",
+	"inquiryLinkText2" : "here",
+	"inquiryLinkText3" : "to inquire about this truck",
+	"contactUsText" : "Contact us to learn more about this truck.",
+	"pageTitleStart" : "Shop Our ",
+	"allCatText" : "Used Fire Trucks",
+	"paginationText1" : "Page",
+	"paginationText2" : "of",
+	"backToCatPageText" : "Return To Categories",
+	"backToTrucksPageText" : "Return To Truck List",
+	"sellFormTitle" : "Thank you for your interest in contacting us about selling your used fire truck!",
+	"sellFormDescription1" : "Please fill out the form below, and a member of our team will be in touch with you as soon as possible to answer what questions you have.",
+	"sellFormDescription2" : "Thank you again for your interest – we look forward to speaking with you soon, and working with you in the sale of your used emergency apparatus!",
+	"requiredErrormsg" : "Please Fill All Required Fields!",
+	"invalidPhoneError" : "Invalid Phone!",
+	"invalidEmailError" : "Invalid Email!",
+	"sellFormSubmitText" : "Submit",
+	"sellFormSuccessMsg" : "Thank you for the opportunity to sell your truck.  A member of our team will be in touch with you as soon as possible to answer your questions.",
+	"formErrorMsg" : "Something Went Wrong. Please Contact Admin!",
+	"First Name" : "First Name",
+	"Last Name" : "Last Name",
+	"Fire Department" : "Fire Department",
+	"Email" : "Email",
+	"Phone" : "Phone",
+	"State" : "State",
+	"How many trucks would you like to sell" : "How many trucks would you like to sell",
+	"Are you also considering buying a used truck" : "Are you also considering buying a used truck",
+	"What year is your truck" : "What year is your truck",
+	"What type of truck" : "What type of truck",
+	"What brand is your truck" : "What brand is your truck",
+	"When would you like to sell your truck" : "When would you like to sell your truck",
+	"Have you ordered a replacement truck" : "Have you ordered a replacement truck",
+	"What price is needed for your truck" : "What price is needed for your truck",
+	"Comments" : "Comments",
+	"enquiryFormSubmitTxt" : "Submit Fire Truck Inquiry",
+	"Purchase Timeframe" : "Purchase Timeframe",
+	"City" : "City",
+	"FD or Company" : "FD or Company",
+	"Inquiry Message" : "Inquiry Message",
+	"inquiryFormSuccessMsg" : "Your Request Has Been Submited Successfully!",
+	"loaderText" : "We are finding your fire truck"
+};
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
 var FT_GlobalFieldToStrHTML = {
 	VF_Main_Title__c : '<h1 class="FT_title">{0}</h1><br/>',
-	VF_Website_Price__c : '<h2 class="FT_heading" style="color:{0}">{1} - click <a href="javascript:void(0)" onclick="{2}">here</a> to inquire about this truck</h2>',
+	VF_Website_Price__c : '<h2 class="FT_heading" style="color:{0}">{1} - {3} <a href="javascript:void(0)" onclick="{2}">{4}</a> {5} </h2>',
 	Cloud_Documents__r : ''
 }
 
@@ -132,15 +185,14 @@ var FT_DetailFieldToStrHTML = {
 	'VF_Wheelbase__c' : '{0}<br/>',
 	'Additional_Dimension_Info__c' : '{0}<br/>'
 };
-
 /* Javascript global variable for Bind footer element on page. */
 var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
 						   '	<img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfL"/>'+
 						   '	<img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfR"/>'+
-						   '	<h5 style="color:{1}" class="FT_footerHead">Selling A Used Fire Truck?</h5>' +
-						   '	<a href="javascript:void(0)" onclick="showSellModal()" style="color:{2}" target="_blank">Click Here For More Information </a>' +
+						   '	<h5 style="color:{1}" class="FT_footerHead">{3}</h5>' +
+						   '	<a href="javascript:void(0)" onclick="showSellModal()" style="color:{2}">{4}</a>' +
 						   '</div>';
-var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">We are finding your fire truck</p></div></div>';
+var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">{1}</p></div></div>';
 
 /* Javascript variables contains CSS class in string format to for add to page. */
 var FT_DynamicTabCSS = 'li.FT_active a, li.FT_active a:hover { background: {0}; color: {1}; }'
@@ -172,8 +224,11 @@ var FT_truckTypeMap;
 var FT_categoryMap;
 var FT_catTruckCountMap;
 var FT_dataToTranslate = [];
+var translationApiLink = 'https://www.firetruckapi.com/api/Translation';
 var FT_translatableFields = [ "Name", "VF_Main_Title__c", "Description", "VF_Additional_Pricing_Text__c", "VF_Website_Price__c", "detailBtnText", "VF_Chassis__c", "VF_Seating__c", "VF_Engine__c", "VF_Transmission_Description__c", "VF_Engine_Brake__c", "VF_Pump__c", "VF_Current_Annual_Pump_Service_Test__c", "VF_Water_Tank__c", "VF_Foam_System__c", "VF_Foam_Tank_1__c", "VF_Foam_Tank_2__c", "VF_Drivers_Side_Discharges__c", "VF_Drivers_Side_Suction__c", "VF_Officers_Side_Discharges__c", "VF_Officers_Side_Suction__c", "VF_Front_Discharges__c", "VF_Front_Suction__c", "VF_Rear_Discharges__c", "VF_Rear_Suction__c", "FT_Deck_Gun__c", "VF_Booster_Reel__c", "VF_Crosslays_Speedlays__c", "VF_Monitor_Description__c", "VF_Generator_Description__c", "VF_Lighting_Description__c", "VF_Heated_Mirrors__c", "VF_Hard_Suction__c", "VF_Electric_Reels__c", "VF_Hydraulic_Reels__c", "VF_Air_Reels__c", "VF_Electronic_Siren__c", "VF_Cascade_System__c", "VF_Breathing_Air__c", "VF_Air_Conditioning__c", "VF_Hydraulic_Ladder_Rack__c", "VF_Aluminum_Hose_Bed_Cover__c", "VF_Automatic_Tire_Chains__c", "VF_Pump_Heat_Pan__c", "VF_Backup_Camera__c", "VF_Federal_Q2B_Siren__c", "FT_Ground_Ladders__c", "VF_Auto_Lube_System__c", "VF_Pump_Hours__c", "VF_Engine_Hours__c", "VF_Arrowstick_Traffic_Indicator__c", "VF_LED_Lighting__c", "VF_Light_Tower__c", "VF_Telescoping_Lights__c", "VF_Current_Aerial_Certification__c", "FT_Aerial_Hours__c", "VF_Mileage__c", "Loose_Equipment_Included__c", "VF_Break_Text_1__c", "VF_OAL__c", "VF_OAH__c", "VF_OAW__c", "VF_GVRW__c", "VF_Wheelbase__c", "Additional_Dimension_Info__c", "Additional_Chassis_Info__c", "Additional_Fire_Body_Info__c", "Additional_Engine_Info__c", "Additional_Pump_Info__c", "Additional_Plumbing_Info__c", "Additional_Electrical_Info__c", "Additional_Features__c", "Additional_Lighting_Info__c", "Aerial_Info__c" ];
 var dbFetchError = false;
+var FT_isFetchedPageSize = false;
+var FT_isFetchedTranslations = false;
 /* A javascript Class Module for API requests. */
 var FT_WebRequestHandler = {
 	getWebRequestInstance : function() {
@@ -203,18 +258,21 @@ var FT_WebRequestHandler = {
 			};
 		}
 	},		
-	getPageRequest : function(callback, categoryName, pageNumber, stockno) {
+	getPageRequest : function(callback, additionalParams) {
+		if( typeof additionalParams['cat'] != 'undefined' ) var categoryName = additionalParams['cat'];
+		if( typeof additionalParams['pageNum'] != 'undefined' ) var pageNumber = additionalParams['pageNum'];
+		if( typeof additionalParams['stockn'] != 'undefined' ) var stockno = additionalParams['stockn'];
 		xhttp = this.getWebRequestInstance();
 		if(xhttp) {
-			if( stockno ) {
-				xhttp.open("GET", "https://www.firetruckapi.com/api/services?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&category="+categoryName+"&stockno="+stockno, true);
+			if( typeof stockno != 'undefined' ) {
+				xhttp.open("GET", "https://www.firetruckapi.com/api/BMFAServices?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&Category="+categoryName+"&Stockno="+stockno, true);
 			} else {
-				xhttp.open("GET", "https://www.firetruckapi.com/api/services?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&category="+categoryName+"&page="+pageNumber+"&pageSize="+pageSize, true);
+				xhttp.open("GET", "https://www.firetruckapi.com/api/BMFAServices?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&Category="+categoryName+"&Page="+pageNumber+"&PageSize="+pageSize, true);
 			}
 			xhttp.setRequestHeader("Authorization", "Basic ZnNtLWFkbWluOjhlZDMxMmM4NTE0ZDRhMDI3OWFjOTBjNTQxOGEwOGQ5");
 			xhttp.send();
 			xhttp.onreadystatechange = function() {
-				callback(this, categoryName, pageNumber);
+				callback(this, additionalParams);
 			};
 		}
 	},	
@@ -234,6 +292,7 @@ var FT_WebRequestHandler = {
 		if(xhttp) {
 			xhttp.open("POST", url , true);
 			xhttp.setRequestHeader("Authorization", "Basic ZnNtLWFkbWluOjhlZDMxMmM4NTE0ZDRhMDI3OWFjOTBjNTQxOGEwOGQ5");
+			xhttp.setRequestHeader('Content-Type', 'application/json');
 			xhttp.send(payload);
 			xhttp.onreadystatechange = function() {
 				callback( this, additionalParams);
@@ -352,7 +411,7 @@ var FT_loadCachedTruckData = function() {
 						    		/*delete indexed db and reinitialize so that 
 						    		pagewise data from cache will also be flushed*/
 						    		FT_reinitializeIndexedDb().then( 
-						    			function( isReinitialized ) {
+						    			function() {
 						    				FT_loadCustomTruckData(false);	
 						    			}, function( error ) {
 						    				console.log( error );
@@ -461,12 +520,12 @@ var FT_loadCustomTruckData = function(isCached) {
 	FT_BMFA_TruckContainer = document.getElementById('dealerTruckContainerId');
 	FT_DealerAccointId = FT_BMFA_TruckContainer.getAttribute('accountId');
 	isSandbox = FT_BMFA_TruckContainer.getAttribute('isSandbox');
-	pageSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
-	if( !pageSize ) pageSize = 10;
+	//pageSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
+	//if( !pageSize ) pageSize = 10;
 	var style = getComputedStyle(FT_BMFA_TruckContainer);
 	FT_ThemeProperties.background = style.backgroundColor;
 	FT_ThemeProperties.color = style.color;
-	FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background]);
+	FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
 	FT_BMFA_TruckContainer.className = FT_BMFA_TruckContainer.className.replace('FT_ThemeContainer', '');
 	FT_AddDynamicCSS();
 	//if data is not cached then get it from server else use cached data
@@ -510,7 +569,8 @@ function FT_putCategoryMapInCache( categoryMap, isDisplayTruckPricing, languageC
 function FT_checkValidCategory( category ) {
 	var isValidCat = false;
 	for( var i = 0; i < FT_categoryMap.length; i++) {
-		if( category == FT_categoryMap[i].Name ) {
+		var checkWith = ( languageCode != 'en' ) ? FT_categoryMap[i].originalName : FT_categoryMap[i].Name;
+		if( category == checkWith ) {
 			isValidCat = true;
 			break;
 		}
@@ -520,7 +580,11 @@ function FT_checkValidCategory( category ) {
 function FT_prepareCatTruckCountMap( categoryMap )  {
 	FT_catTruckCountMap = [];
 	for( var i = 0; i < categoryMap.length; i++ ) {
-		FT_catTruckCountMap[categoryMap[i].Name] = categoryMap[i].Truck_Count__c;
+		if( languageCode && languageCode != 'en' && categoryMap[i].originalName ) {
+			FT_catTruckCountMap[categoryMap[i].originalName] = categoryMap[i].Truck_Count__c;
+		} else {
+			FT_catTruckCountMap[categoryMap[i].Name] = categoryMap[i].Truck_Count__c;
+		}
 	}
 	console.log('FT_catTruckCountMap:',FT_catTruckCountMap);
 	return FT_catTruckCountMap; 
@@ -543,49 +607,158 @@ function FT_createTranslationData( arr ) {
 		iterateObject( arr[i], i );
 	}  
 }
-function FT_MapTranslatedObject( obj ) {
+function FT_MapTranslatedObject( translatedTextObj, obj ) {
+	//console.log('translatedTextObj: ',translatedTextObj);
 	for (var key in obj) {
-	    if( translatedTextObj[key] ) {
+		if( typeof translatedTextObj[key] != 'undefined' ) {
+			console.log('key: ',key, translatedTextObj[key]);
+			if( key == 'Name' ) {
+				obj['originalName'] = obj['Name'];
+			}
 	    	obj[key] = translatedTextObj[key];
 	    }
-	    if (obj[key] !== null && typeof obj[key] === "object") {
+	    if(obj[key] !== null && typeof obj[key] === "object") {
 	      	// Recurse into children
 	     	FT_MapTranslatedObject(translatedTextObj, obj[key]);
 	    } 
   	}
+  	return obj;
 }
-function FT_setTranslatedData( translatedTextObj, sentData ) {
+function FT_setTranslatedData( translatedTextArr, sentData ) {
 	for( var i = 0; i < sentData.length; i++ ) {
-		sentData[i] = FT_MapTranslatedObject( sentData[i] );
+		sentData[i] = FT_MapTranslatedObject( translatedTextArr[i], sentData[i] );
 	}	
 	return sentData;
 }
+
+function FT_putDataInCache( data, key ) {
+	if( FT_idbSupported && FT_isIndexedDbCreated) {
+		var transaction = FT_idxDb.transaction(["FT_trucks"],"readwrite");
+		if( transaction ) {
+			var store = transaction.objectStore("FT_trucks");
+			if( store ) {
+				var request = store.put( data, key );
+				request.onerror = function(e) {
+				    console.log("Error",e.target.error.name);
+				}
+				request.onsuccess = function(e) {
+					console.log("DB entry done for "+key);				    					   	
+				}
+			} 
+		} 	
+	}
+}
+
+function FT_getDataFromCache( key ) {
+	var dbResults = {};
+	var promise = new Promise( function(resolve, reject) {
+		if( FT_idbSupported && FT_isIndexedDbCreated ) {
+			var transaction = FT_idxDb.transaction(["FT_trucks"],"readwrite");
+			if( transaction ) {
+				var store = transaction.objectStore("FT_trucks");
+				if( store ) {
+					var ob = store.get( key );
+					if( ob ) {
+		 				ob.onsuccess = function(e) {
+		 					dbResults = e.target.result;
+		 					resolve(dbResults);
+						}
+						ob.onerror = function(e) {
+							//console.log("error in getting db key: ");
+						 	reject("error in getting db key");
+						}
+					} else {
+						reject("indexedDB Error");
+					}
+				} else {
+						reject("indexedDB Error");
+				}
+			} else {
+				reject("indexedDB Error");
+			}		
+		} else {
+			reject("indexedDB not supported");
+		}
+	});
+	return promise;
+}
+
 var FT_processTranslation = function( xhttp, additionalParams ) {
 	var originalData = additionalParams.originalData;
 	var pageName = additionalParams.pageName;
 	if ( xhttp && xhttp.readyState == 4 && xhttp.status == 200 ) {
 		try {
-			var serverResponse = JSON.parse(xhttp.responseText);
-			if(serverResponse.Success) {
-				var truckData = JSON.parse(JSON.parse(serverResponse.Data));
-				truckData = FT_setTranslatedData( truckData, originalData );
-				console.log( 'After translation data : ', truckData );				
+			//var serverResponse = JSON.parse(xhttp.responseText);
+			console.log('serverResponse',JSON.parse(xhttp.responseText));
+			/*if(serverResponse.Success) {*/
+				var translatedData = JSON.parse(JSON.parse(xhttp.responseText));
+				console.log('parsed Data: ',translatedData);
+				truckData = FT_setTranslatedData( translatedData, originalData );
+				console.log( 'After translation data : ', truckData );
+
 				if( pageName == 'categoriesPage' ) {					
-					FT_categoryMap = truckData;
+					FT_categoryMap = truckData.reverse();
+
+					/* static strings translation */
+					var translatedDataLen = parseInt(translatedData.length-1);
+					if( translatedData[translatedDataLen] ) {
+						FT_translatableStrings = translatedData[translatedDataLen];	
+						console.log('static texts: ',translatedData[translatedDataLen]);
+						FT_putDataInCache( FT_translatableStrings , 'FT_translatableStrings' );	
+					} else {
+						console.log("Error accoured while translating static strings");
+					}	
+
 					FT_processMainPage();									
 				} else if( pageName == 'truckListingPage' ) {
 					var categoryName = additionalParams.categoryName;
 					var pageNumber = additionalParams.pageNumber;
-					FT_processTruckList( truckData, categoryName, pageNumber );
+					var translatedCatName = additionalParams.translatedCat;
+					//put translated data in cache
+					FT_PutPageTrucksInCache( truckData, pageNumber, categoryName );
+					//display data on page
+					FT_processTruckList( truckData, categoryName, pageNumber, translatedCatName );
 				} else if( pageName == 'truckDetailPage' ) {
 					var truck = additionalParams.truck;
 					FT_prepareTruckDetails( truck );
 				} else {
 					FT_processMainPage();	
 				}
-			} else {
+			/*} else {
 				console.log('Server Error Message : ', serverResponse.Message);
-			}
+			}*/
+		} catch(exp) {
+			console.log('Parsing Error Message : ', exp.message);
+		}
+	}
+}
+var FT_processCustomTranslation = function( xhttp, additionalParams ) {
+	if ( xhttp && xhttp.readyState == 4 && xhttp.status == 200 ) {
+		try {
+			var originalData = additionalParams.originalData;
+			//var serverResponse = JSON.parse(xhttp.responseText);
+			console.log('serverResponse',JSON.parse(xhttp.responseText));
+			var translatedData = JSON.parse(JSON.parse(xhttp.responseText));
+			console.log('parsed Data: ',translatedData);
+			truckData = FT_setTranslatedData( translatedData, originalData );
+			console.log( 'After translation data : ', truckData );
+
+			/* static strings translation */
+			var translatedDataLen = parseInt(translatedData.length-1);
+			if( translatedData[translatedDataLen] ) {
+				FT_translatableStrings = translatedData[translatedDataLen];	
+				console.log('static texts: ',translatedData[translatedDataLen]);	
+				FT_putDataInCache( FT_translatableStrings, 'FT_translatableStrings' );
+			} else {
+				console.log("Error accoured while translating static strings");
+			}	
+
+			//store category map into a global variable for further use
+			FT_categoryMap = truckData;
+			FT_prepareCatTruckCountMap( FT_categoryMap );
+			if( FT_categoryMap.length && isDisplayTruckPricing && languageCode ) {
+				FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );						
+			} 		
 		} catch(exp) {
 			console.log('Parsing Error Message : ', exp.message);
 		}
@@ -595,11 +768,12 @@ function FT_processMainPage() {
 	FT_prepareCatTruckCountMap( FT_categoryMap );
 	if(FT_categoryMap.length) {
 		FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );
-		if(FT_URLParam.category) {						
+		if(FT_URLParam.category) {			
 			isCatValid = FT_checkValidCategory( FT_URLParam.category );
-			var cat = ( isCatValid ) ? FT_URLParam.category : 'All Used Trucks';
+			var cat = ( isCatValid ) ? FT_URLParam.category : 'All';
 			var div = document.createElement('div');
-			FT_setAttributes( div, { 'category' : cat, 'page' : 1 } );
+			var translatedCatName = FT_getCatTranslatedName( cat );				
+			FT_setAttributes( div, { 'category' : cat, 'page' : 1, 'translatedCat' : translatedCatName } );
    			FT_expandCategory( div );				   									
 		} else {
 			//added for history maintainance
@@ -621,17 +795,26 @@ var FT_processTruckData = function(xhttp) {
 				languageCode = truckData.strLanguageCode;
 				console.log('languageCode: ',languageCode);
 				isDisplayTruckPricing = truckData.isDisplayTruckPricing;
+				//put pagesize in cache
+				var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
+				FT_putDataInCache( pgSize, 'FT_pageSize' );
 				//if language code is different than english then request translated data from server
 				if( languageCode != 'en' ) {
 					FT_dataToTranslate = [];
 					FT_createTranslationData( truckData.recordList );
 					console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
+					FT_dataToTranslate.push(FT_translatableStrings);
 					//FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
 					var callbackAdditionalParams = { originalData : truckData.recordList, pageName : 'categoriesPage' };
-					FT_WebRequestHandler.postRequestCustom( FT_dataToTranslate, "http://localhost:31044/api/Translation?language="+languageCode, FT_processTranslation, callbackAdditionalParams );
+					FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
 				} else {
 					//store category map into a global variable for further use
-					FT_categoryMap = truckData.recordList;
+					console.log('truckData.recordList::',truckData.recordList);
+					if( truckData.recordList.length ) {
+						FT_categoryMap = truckData.recordList.reverse();
+					} else {
+						FT_categoryMap = truckData.recordList;
+					}					
 					FT_processMainPage();
 				}							
 			} else {
@@ -649,14 +832,31 @@ function FT_refreashTruckCountMap( xhttp ) {
 			if(serverResponse.Success) {
 				var truckData = JSON.parse(JSON.parse(serverResponse.Data));
 				console.log('truckData: ',truckData);
-				//store category map into a global variable for further use
-				FT_categoryMap = truckData.recordList;
-				FT_prepareCatTruckCountMap( FT_categoryMap );
 				isDisplayTruckPricing = truckData.isDisplayTruckPricing;
 				languageCode = truckData.strLanguageCode;
-				if(FT_categoryMap.length) {
-					FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );						
-				} 					
+				//put pagesize in cache
+				var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
+				FT_putDataInCache( pgSize, 'FT_pageSize' );
+				if( languageCode != 'en' ) {
+					FT_dataToTranslate = [];
+					FT_createTranslationData( FT_categoryMap );
+					console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
+					//send static strings for translation
+					FT_dataToTranslate.push(FT_translatableStrings);
+					var callbackAdditionalParams = { originalData : truckData.recordList };
+					FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processCustomTranslation, callbackAdditionalParams );
+				} else {
+					//store category map into a global variable for further use
+					if( truckData.recordList.length ) {
+						FT_categoryMap = truckData.recordList.reverse();
+					} else {
+						FT_categoryMap = truckData.recordList;
+					}	
+					FT_prepareCatTruckCountMap( FT_categoryMap );
+					if(FT_categoryMap.length) {
+						FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );						
+					} 		
+				}			
 			} else {
 				console.log('Server Error Message : ', serverResponse.Message);
 			}
@@ -709,22 +909,48 @@ function FT_getCategoryMapFromCache() {
 	});
 	return promise;
 }
+function FT_getCatTranslatedName( originalCatName ) {
+	var translatedCatName = originalCatName;
+	if( FT_categoryMap && FT_categoryMap.length ) {
+		for( var i = 0; i < FT_categoryMap.length; i++ ) {
+			if( FT_categoryMap[i].originalName && FT_categoryMap[i].originalName == originalCatName ) {
+				translatedCatName = FT_categoryMap[i].Name;
+			}
+		}
+		//console.log( 'FT_categoryMap :::: ',FT_categoryMap );
+	}
+	return translatedCatName
+}
 /* Function to process cached truck data */
 var FT_processCachedTruckData = function() {
 	FT_getCategoryMapFromCache().then( function( categoryMap ) {
 		if( categoryMap ) { //if successfully fetched data from cache
 			FT_categoryMap = categoryMap; //set global variable
 			FT_prepareCatTruckCountMap( FT_categoryMap );
-	 		if(FT_URLParam.category) {						
+	 		if(FT_URLParam.category) {		
 				isCatValid = FT_checkValidCategory( FT_URLParam.category );
-				var cat = ( isCatValid ) ? FT_URLParam.category : 'All Used Trucks';
+				var cat = ( isCatValid ) ? FT_URLParam.category : 'All';
 				var div = document.createElement('div');
-				FT_setAttributes( div, { 'category' : cat, 'page' : 1 } );
+				var translatedCatName = FT_getCatTranslatedName( cat );
+				console.log('translatedCatName::::',translatedCatName);
+				FT_setAttributes( div, { 'category' : cat, 'page' : 1, 'translatedCat' : translatedCatName } );
 					FT_expandCategory( div );				   									
 			} else {
 				//added for history maintainance
 				navigatedFromCategories = true;
-				FT_displayCategories( FT_categoryMap );							
+				/* Get static translation from cache */
+				if( languageCode && languageCode != 'en' )	{
+					FT_getDataFromCache( "FT_translatableStrings" ).then( function(result) {
+						FT_translatableStrings = result;
+						FT_displayCategories( FT_categoryMap );	
+					}, function( error ) {
+						console.log( error );
+						//if error occured whil fetching translations from db then use english data
+						FT_displayCategories( FT_categoryMap );	
+					});										
+				} else {
+					FT_displayCategories( FT_categoryMap );	
+				}
 			}	
 		} else { //if error ocuured while fetching data from cache request data from server
 			FT_WebRequestHandler.getRequest(FT_processTruckData);	
@@ -738,7 +964,7 @@ var FT_processCachedTruckData = function() {
  * @Param parent	: hold parent element where footer will be added.
  */
 var FT_addPageFooter = function(parent) {
-	var FooterStrHtml = FT_PageFooterStrHTML.FT_format([FT_ThemeProperties.background, FT_ThemeProperties.color, FT_ThemeProperties.color]);
+	var FooterStrHtml = FT_PageFooterStrHTML.FT_format([FT_ThemeProperties.background, FT_ThemeProperties.color, FT_ThemeProperties.color, FT_translatableStrings['footerSellingTxt1'], FT_translatableStrings['footerSellingTxt2']]);
 	var div = document.createElement('div');
 	div.innerHTML = FooterStrHtml;
 	/* create a modal for sell form and append to footer */
@@ -761,14 +987,14 @@ function FT_setAttributes( el, attrs ) {
 }
 function FT_getCategoryTruckCount( categoryName ) {
 	var totalPages = 1;
-	if( FT_catTruckCountMap[categoryName] ) { //check if given category exists in category trcuk count map
+	if( FT_catTruckCountMap[categoryName] ) { //check if given category exists in category truck count map
 		if( FT_catTruckCountMap[categoryName] != 0 ) { //if truck count is not 0
 			totalPages = Math.ceil( FT_catTruckCountMap[categoryName] / pageSize );
 		}
 	}
 	return totalPages;
 }
-var FT_displayTruckDetails = function( xhttp ) {
+var FT_displayTruckDetails = function( xhttp, additionalParams ) {
 	if ( xhttp && xhttp.readyState == 4 && xhttp.status == 200 ) {
 		try {
 			var serverResponse = JSON.parse(xhttp.responseText);
@@ -785,7 +1011,7 @@ var FT_displayTruckDetails = function( xhttp ) {
 						console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
 						//FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
 						var callbackAdditionalParams = { originalData : trucks, pageName: 'truckDetailPage', truck: truck };
-						FT_WebRequestHandler.postRequestCustom( FT_dataToTranslate, "http://localhost:31044/api/Translation?language="+languageCode, FT_processTranslation, callbackAdditionalParams );
+						FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
 					} else {
 						FT_prepareTruckDetails( truck );
 					}					
@@ -802,7 +1028,7 @@ var FT_displayTruckDetails = function( xhttp ) {
 	}
 }
 
-function FT_processTruckList( trucks, categoryName, pageNumber ) {
+function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatName ) {
 	if(trucks.length) {
 		//add history
 		var currentUrl = window.location.href;
@@ -810,12 +1036,12 @@ function FT_processTruckList( trucks, categoryName, pageNumber ) {
 			//if not truck detail page then add category detail page in history
 			if(FT_GetParam(currentUrl, 'stockno') == '') {
 				var historyUrl = FT_SetURLParam(currentUrl, 'category', categoryName );
-				history.pushState({ page : 'categoryDetail',category : categoryName }, null, historyUrl);
+				history.pushState({ page : 'categoryDetail',category : categoryName, 'translatedCat' : translatedCatName }, null, historyUrl);
 			}
 		} 
 		var catDiv = document.createElement('div');
 		//catDiv.setAttribute('category',categoryName);
-		FT_setAttributes( catDiv, { 'category' : categoryName, 'page' : pageNumber } );
+		FT_setAttributes( catDiv, { 'category' : categoryName, 'page' : pageNumber, 'translatedCat' : translatedCatName } );
 		FT_lastCategorySelected = catDiv;
 		FT_clearContainerDom();
 		
@@ -825,7 +1051,8 @@ function FT_processTruckList( trucks, categoryName, pageNumber ) {
 		FT_constructBackButton('To Categories');
 		var titleDiv = document.createElement('div');
 		titleDiv.className = 'FT_PageTitle';
-		titleDiv.innerHTML = 'Shop Our '+ ((categoryName === 'All Used Trucks' ) ? 'Used Fire Trucks' : categoryName);
+		titleDiv.innerHTML = FT_translatableStrings['pageTitleStart']+ ((categoryName === 'All' ) ? ' '+FT_translatableStrings['allCatText'] : ' '+translatedCatName);
+		//titleDiv.innerHTML = FT_translatableStrings['pageTitleStart']+ ((categoryName === 'All' ) ? ' '+FT_translatableStrings['allCatText'] : ' '+categoryName);
 		
 		containerDiv.appendChild(titleDiv);
 
@@ -839,8 +1066,8 @@ function FT_processTruckList( trucks, categoryName, pageNumber ) {
 			prevBtn.className = 'FT_PagePrev FT_PaginaionBtn';
 			//prevBtn.setAttribute('category', categoryName);
 			var prevPageNumber = ( (pageNumber-1) > 0 ) ? (pageNumber-1) : 1;
-			FT_setAttributes( prevBtn, { "category": categoryName, "page" : parseInt(pageNumber)-1 } );
-			var btnText = document.createTextNode("Previous");
+			FT_setAttributes( prevBtn, { "category": categoryName, "page" : parseInt(pageNumber)-1, "translatedcat" : translatedCatName } );
+			var btnText = document.createTextNode(FT_translatableStrings['paginationPrevText']);
 	    	prevBtn.appendChild(btnText);
 	    	prevBtn.style.cssText = 'color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background;
 	    	paginationDiv.appendChild(prevBtn);   
@@ -849,9 +1076,9 @@ function FT_processTruckList( trucks, categoryName, pageNumber ) {
     	if( parseInt(pageNumber)+1 <= totalPages ) {
 			var nextBtn = document.createElement('a');
 			nextBtn.className = 'FT_PageNext FT_PaginaionBtn';
-			FT_setAttributes( nextBtn, { "category": categoryName, "page" : parseInt(pageNumber)+1 } );
+			FT_setAttributes( nextBtn, { "category": categoryName, "page" : parseInt(pageNumber)+1, "translatedcat" : translatedCatName } );
 			//nextBtn.setAttribute('category', categoryName);
-			var btnText = document.createTextNode("Next");
+			var btnText = document.createTextNode(FT_translatableStrings['paginationNextText']);
 	    	nextBtn.appendChild(btnText);
 	    	nextBtn.style.cssText = 'color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background;		 	
 			paginationDiv.appendChild(nextBtn);
@@ -859,7 +1086,7 @@ function FT_processTruckList( trucks, categoryName, pageNumber ) {
 
 		containerDiv.appendChild(paginationDiv);
 		var paginationTextSpan = document.createElement('span');
-		var paginationText = document.createTextNode('Page '+pageNumber+' of '+totalPages);
+		var paginationText = document.createTextNode( FT_translatableStrings['paginationText1'] + ' ' + pageNumber + ' '+FT_translatableStrings['paginationText2']+' '+totalPages );
 		paginationTextSpan.appendChild(paginationText);
 		paginationDiv.appendChild(paginationTextSpan);
 
@@ -871,14 +1098,15 @@ function FT_processTruckList( trucks, categoryName, pageNumber ) {
 		//bind pagination events
 		FT_bindEvent('click', FT_expandCategory, FT_BMFA_TruckContainer.querySelectorAll('a.FT_PaginaionBtn'));
 		
-		if(FT_URLParam.stockno && !FT_lastTruckSelected) {
+		/*if(FT_URLParam.stockno && !FT_lastTruckSelected) {
 			//refreash category truck count map
 			FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);
 			//show loader before requesting data from server
-			FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background]);
+			FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
 			//request data from server
-			FT_WebRequestHandler.getPageRequest( FT_displayTruckDetails, 'All', 1, FT_URLParam.stockno );
-		}
+			var additionalParam = { cat : 'All', pageNum: 1, stockn : FT_URLParam.stockno };
+			FT_WebRequestHandler.getPageRequest( FT_displayTruckDetails , additionalParam );
+		}*/
 		//call lazy load
 		FT_setLazyLoad();
 		/* Scroll to top at start of truck container div */
@@ -913,27 +1141,30 @@ function FT_PutPageTrucksInCache( trucks, pageNumber, categoryName ) {
 /* A function for expand purticuler category. 
  * @Param element	: holding instance of category DOM-element that is currently selected by User.
  */
-var FT_processPageTruckData = function( xhttp, categoryName, pageNumber ) {
+var FT_processPageTruckData = function( xhttp, additionalParams ) {
 	if ( xhttp && xhttp.readyState == 4 && xhttp.status == 200 ) {
 		try {
+			var categoryName = additionalParams.cat;
+			var pageNumber = additionalParams.pageNum;
+			var translatedCatName = additionalParams.translatedCat;
 			var serverResponse = JSON.parse(xhttp.responseText);
 			if(serverResponse.Success) {
 				var truckData = JSON.parse(JSON.parse(serverResponse.Data));
 				console.log('Page truckData: ',truckData);
 				var trucks = truckData.recordList;
 				console.log('Page trucks: ',trucks);
-				//put trucks in cache page number wise
-				FT_PutPageTrucksInCache( trucks, pageNumber, categoryName );
 				/* check if language is different than english if so then request for language translation */
 				if( languageCode != 'en' ) {
 					FT_dataToTranslate = [];
 					FT_createTranslationData( trucks );
 					console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
 					//FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
-					var callbackAdditionalParams = { originalData : trucks, pageName: 'truckListingPage', categoryName: categoryName, pageNumber: pageNumber };
-					FT_WebRequestHandler.postRequestCustom( FT_dataToTranslate, "http://localhost:31044/api/Translation?language="+languageCode, FT_processTranslation, callbackAdditionalParams );
+					var callbackAdditionalParams = { originalData : trucks, pageName: 'truckListingPage', categoryName: categoryName, pageNumber: pageNumber, translatedCat : translatedCatName };
+					FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
 				} else {
-					FT_processTruckList( trucks, categoryName, pageNumber );
+					//put trucks in cache page number wise
+					FT_PutPageTrucksInCache( trucks, pageNumber, categoryName );
+					FT_processTruckList( trucks, categoryName, pageNumber, translatedCatName );
 				}
 			} else {
 				console.log('Server Error Message : ', serverResponse.Message);
@@ -987,18 +1218,19 @@ function FT_getCatchedPageTrucks( pageNumber, categoryName ) {
 	});
 	return promise;
 }
-var FT_processCachedPageTruckData = function( categoryName, pageNumber ) {
+var FT_processCachedPageTruckData = function( categoryName, pageNumber, translatedCatName ) {
 	FT_getCatchedPageTrucks( pageNumber, categoryName ).then( function( trucks ) {
 		if( trucks ) {
-			FT_processTruckList(trucks, categoryName, pageNumber);
+			FT_processTruckList( trucks, categoryName, pageNumber, translatedCatName );
 		} else { //if no data returned from cache then request to server
 			//show loader before requesting data from server
-			FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background]);
+			FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
 			//request data from server
-			FT_WebRequestHandler.getPageRequest(FT_processPageTruckData, categoryName, pageNumber);
+			var additionalParam = { cat : categoryName, pageNum: pageNumber, translatedCat : translatedCatName };
+			FT_WebRequestHandler.getPageRequest( FT_processPageTruckData, additionalParam );
 		}
 	}, function(error) {
-		console.log('Error while getting trcuks data from indexedDB: ',error);
+		console.log('Error while getting trucks data from indexedDB: ',error);
 	});	
 }
 var FT_IsTrucksPageCatched = function( categoryName, pageNumber ) {
@@ -1061,28 +1293,90 @@ var FT_IsTrucksPageCatched = function( categoryName, pageNumber ) {
 	});
 	return promise;
 }
-var FT_expandCategory = function(element) {
-	//if( !pageNumber ) pageNumber = 1;
+function FT_expandCategoryDetail( element ) {
 	var categoryName = element.getAttribute('category');
+	var translatedCatName = element.getAttribute('translatedcat');
 	var pageNumber = element.getAttribute('page');
 	console.log('selected cat: ',categoryName);
-	//check if page is catched. if catched then take page data from cache else request from server
-	FT_IsTrucksPageCatched(categoryName, pageNumber).then( function(isCached) {
-		if( !isCached ) {
-			//request truck count map from server and refreash it in cache
-			//FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);
-			//show loader before requesting data from server
-			FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background]);
-			//request data from server
-			FT_WebRequestHandler.getPageRequest(FT_processPageTruckData, categoryName, pageNumber);			
+	
+	if(FT_URLParam.stockno && !FT_lastTruckSelected) {
+		//reinitialize indexedDB so that if pagesize is changed in HTML then all page cache should also be cleared 
+		FT_reinitializeIndexedDb().then( 
+			function() {
+				//refreash category truck count map
+				FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);
+				//show loader before requesting data from server
+				FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
+				//set last selected category to all
+				var catDiv = document.createElement('div');
+				//catDiv.setAttribute('category',categoryName);
+				FT_setAttributes( catDiv, { 'category' : 'All', 'page' : 1, 'translatedCat' : translatedCatName } );
+				FT_lastCategorySelected = catDiv;
+				//request data from server
+				var additionalParam = { cat : 'All', pageNum: 1, stockn : FT_URLParam.stockno };
+				FT_WebRequestHandler.getPageRequest( FT_displayTruckDetails, additionalParam );
+			}, function( error ) {
+				console.log( error );
+				///else display first page
+				FT_loadCustomTruckData(false);	
+			}
+		);			
+	} else {
+		//check if page is catched. if catched then take page data from cache else request from server
+		FT_IsTrucksPageCatched(categoryName, pageNumber).then( function(isCached) {
+			if( !isCached ) {
+				//request truck count map from server and refreash it in cache
+				//FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);
+				//show loader before requesting data from server
+				FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
+				//request data from server
+				var additionalParam = { cat : categoryName, pageNum: pageNumber, translatedCat : translatedCatName };
+				FT_WebRequestHandler.getPageRequest( FT_processPageTruckData, additionalParam );			
+			}
+			else {
+				FT_processCachedPageTruckData( categoryName, pageNumber, translatedCatName );	
+			}
+		}, 
+		function(error) {
+			console.log('error: ',error);
+		});	
+	}	
+}
+function FT_expandCategoryDeep( element ) {
+	if(  languageCode && languageCode != 'en' ) {
+		if( !FT_isFetchedTranslations ) {
+			FT_getDataFromCache( "FT_translatableStrings" ).then( function(result) {
+				FT_translatableStrings = result;
+				FT_isFetchedTranslations = true;
+				FT_expandCategoryDetail( element );
+			}, function( error ) {
+				console.log( error );
+				//if error occured whil fetching translations from db then use english data
+				FT_expandCategoryDetail( element );
+			});
+		} else {
+			FT_expandCategoryDetail( element );
 		}
-		else {
-			FT_processCachedPageTruckData(categoryName, pageNumber);	
-		}
-	}, 
-	function(error) {
-		console.log('error: ',error);
-	});		
+	} else {
+		FT_expandCategoryDetail( element );
+	}	
+}
+var FT_expandCategory = function( element ) {
+	if( !FT_isFetchedPageSize ) {
+		//get page size from cache
+		FT_getDataFromCache( "FT_pageSize" ).then( function( result ) {
+			pageSize = result;
+			FT_isFetchedPageSize = true;
+			FT_expandCategoryDeep( element );
+			
+		}, function( error ) {
+			console.log( error );	
+			//even error occured while fetching data from cache continue expanding category page
+			FT_expandCategoryDeep( element );
+		} );
+	} else {
+		FT_expandCategoryDeep( element );
+	}	
 }
 
 
@@ -1115,7 +1409,7 @@ var FT_displayCategories = function(categoryMap) {
 
 	var titleDiv = document.createElement('div');
 	titleDiv.className = 'FT_PageTitle';
-	titleDiv.innerHTML = 'Shop Our Used Fire Trucks';
+	titleDiv.innerHTML = FT_translatableStrings['mainPageTitle'];
 
 	containerDiv.appendChild(titleDiv);
 	containerDiv.appendChild( FT_prepareImageContainer(true, categoryMap, 'FT_category' , '', 1) );
@@ -1144,7 +1438,13 @@ var FT_bindEvent = function(eventToBind, callback, elements) {
 var FT_constructBackButton = function(toword) {
 	var button = document.createElement('a');
 	button.style.textAlign = "left";
-	button.innerText = '« Return ' + toword;
+	if( toword == 'To Categories' ) {
+		button.innerText = '« '+FT_translatableStrings['backToCatPageText'];
+	} else if( toword == 'To Truck List' ) {
+		button.innerText = '« '+FT_translatableStrings['backToTrucksPageText'];
+	} else {
+		button.innerText = '« Return ' + toword;
+	}	
 	button.className='FT_backLink';
 	button.setAttribute('jData', toword);
 	FT_BMFA_TruckContainer.appendChild( button );
@@ -1193,7 +1493,11 @@ var FT_prepareImageContainer = function(isForCategory, truckDataList, UICclass ,
 				catDetailDiv.innerHTML = truckDataList[truck].Name+ ' (' +truckDataList[truck].Truck_Count__c+ ')';
 				catDetailDiv.className = 'FT_redTxt';
 				catDetailDiv.style.color = FT_ThemeProperties.background;
-				FT_setAttributes( img, { 'category' : truckDataList[truck].Name, 'page' : 1 } );
+				if( languageCode && languageCode != 'en' &&  truckDataList[truck].originalName ) {
+					FT_setAttributes( img, { 'category' : truckDataList[truck].originalName, translatedcat: truckDataList[truck].Name, 'page' : 1 } );
+				} else {
+					FT_setAttributes( img, { 'category' : truckDataList[truck].Name, translatedcat: truckDataList[truck].Name, 'page' : 1 } );
+				}
 				if(!imgSrc) {		
 					//console.log(truck);
 				}
@@ -1243,8 +1547,7 @@ var FT_prepareImageContainer = function(isForCategory, truckDataList, UICclass ,
 					miniDetailHtml += '<span class="FT_PriceText">Call For Custom Quote</span>';
 				}
 				miniDetailHtml += '<a class="FT_redBtn" '+
-								  '	  style="color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background+'" truckid="'+truck.Id+'" category="'+categoryName+'" page="'+pageNumber+'" index="'+idx+'">'+
-								  'View Details</a></div>';
+								  '	  style="color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background+'" truckid="'+truck.Id+'" category="'+categoryName+'" page="'+pageNumber+'" index="'+idx+'">'+ FT_translatableStrings['viewDetailsBtnText'] +'</a></div>';
 				miniDetailDiv.innerHTML = miniDetailHtml;
 				div.appendChild(miniDetailDiv);
 			}
@@ -1491,7 +1794,7 @@ function FT_prepareTruckDetails( truck ) {
 			var pricingText = fieldVal;
 			console.log('pricingText: ',pricingText);
 			if( !isDisplayTruckPricing ) pricingText = 'Call For Custom Quote';
-			TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, pricingText, 'document.getElementsByName(\''+FT_tab2Id+'\')[0].click()']);
+			TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, pricingText, 'document.getElementsByName(\''+FT_tab2Id+'\')[0].click()', FT_translatableStrings['inquiryLinkText1'], FT_translatableStrings['inquiryLinkText2'], FT_translatableStrings['inquiryLinkText3'] ]);
 		} else {
 			TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([fieldVal]);
 		}
@@ -1696,7 +1999,7 @@ var FT_addInetrestFrom = function() {
 	tab2Div.className = 'FT_gryTxt';
 	
 	var formTitleDiv = document.createElement('div');
-	formTitleDiv.innerHTML = 'Contact us to learn more about this truck.';
+	formTitleDiv.innerHTML = FT_translatableStrings['contactUsText'];
 	formTitleDiv.className = 'FT_formTitle';
 	tab2Div.appendChild(formTitleDiv);
 	var formWarpper = document.createElement('div');
@@ -1717,7 +2020,7 @@ var FT_addInetrestFrom = function() {
 			PurchaseTimeframeOpt.forEach(function(opt) {				
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: ' ';
-				option.innerHTML = (opt) ? opt: 'Timeframe';
+				option.innerHTML = (opt) ? opt: (( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : 'Timeframe');
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;
@@ -1731,7 +2034,7 @@ var FT_addInetrestFrom = function() {
 			StateOpt.forEach(function(opt) {
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: ' ';
-				option.innerHTML = (opt) ? opt : 'State';
+				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;
@@ -1741,7 +2044,7 @@ var FT_addInetrestFrom = function() {
 			
 			FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
 		} else {
-			dynamicDom.placeholder = fieldName;			
+			dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;			
 			if(fieldName === 'Phone') {
 				FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
 			} else if(fieldName === 'Inquiry Message') {
@@ -1758,7 +2061,7 @@ var FT_addInetrestFrom = function() {
 	var submitButton = document.createElement('button');
 	submitButton.type = 'button';
 	submitButton.className = 'FT_submitBtn';
-	submitButton.innerHTML = 'Submit Fire Truck Inquiry';
+	submitButton.innerHTML = FT_translatableStrings['enquiryFormSubmitTxt'];
 	formWarpper.appendChild(submitButton);
 	tab2Div.appendChild(formWarpper);
 	//append loader displayed when for is submitted
@@ -1788,7 +2091,7 @@ var FT_addShareLinkTab = function() {
 	
 	var copyBtn = document.createElement('a');
 	copyBtn.className += 'copyBtn';
-	copyBtn.innerHTML = 'Copy';
+	copyBtn.innerHTML = FT_translatableStrings['copyBtnText'];
 	copyBtn.style.cursor = 'pointer';
 	copyBtn.setAttribute('containerId', a.id);
 	tab3Div.appendChild(copyBtn);
@@ -1928,7 +2231,7 @@ var FT_validateData = function() {
 				if(FT_hasClass(element, 'FT_email')) {
 					isEmailValid = FT_emailRegex.test(elementValue);
 					if(!isEmailValid) {
-						errorMessage = 'Invalid Email!';
+						errorMessage = FT_translatableStrings['invalidEmailError'];
 						isProcced = false;
 					} else {
 						element.style.borderColor = 'darkgrey';
@@ -1936,7 +2239,7 @@ var FT_validateData = function() {
 				} else if(FT_hasClass(element, 'FT_phone')) {
 					isPhoneValid = FT_phoneRegex.test(elementValue);
 					if(!isPhoneValid) {
-						errorMessage = 'Invalid Phone!';
+						errorMessage = FT_translatableStrings['invalidPhoneError'];
 						isProcced = false;
 					} else {
 						element.style.borderColor = 'darkgrey';
@@ -1958,7 +2261,7 @@ var FT_validateData = function() {
 			element.style.borderColor = 'red';
 			if(isProcced) isProcced = false;
 			requiredEmpty = true;
-			errorMessage = 'Please Fill All Required Fields!';
+			errorMessage = FT_translatableStrings['requiredErrormsg'];
 		}
 		if(!isProcced) {
 			if( !isFocusSet ) {
@@ -2014,11 +2317,11 @@ var FT_submitEnquiry = function() {
 				//console.log('serverResponse: ',serverResponse);
 				var serverData = JSON.parse(JSON.parse(serverResponse.Data));
 				if( serverData.strMessage == 'Success' ) {
-					FT_setMessage(true, 'Your Request Has Been Submited Successfully!');
+					FT_setMessage(true, FT_translatableStrings['inquiryFormSuccessMsg']);
 					FT_saveFormToCookie(JSON.stringify(JSON_Buffer));					
 				} else {
 					console.log(serverResponse.Message);
-					FT_setMessage(false, 'Something Went Wrong. Please Contact Admin!');
+					FT_setMessage(false, FT_translatableStrings['formErrorMsg']);
 				}
 			}
 			//hide loader
@@ -2054,7 +2357,7 @@ var FT_createTabs = function() {
 	var li1 = document.createElement('li');
 	li1.className = 'FT_active';
 	var a1 = document.createElement('a');
-	a1.innerHTML = 'DESCRIPTION';
+	a1.innerHTML = FT_translatableStrings['descriptionTabText'];
 	//a1.href = '#detailsTabId';	
 	a1.href = 'javascript:void(0)';	
 	a1.name = FT_tab1Id;
@@ -2063,7 +2366,7 @@ var FT_createTabs = function() {
 	
 	var li2 = document.createElement('li');
 	var a2 = document.createElement('a');
-	a2.innerHTML = 'YES I&#39;M INTERESTED';
+	a2.innerHTML = FT_translatableStrings['inquiryTabText'];
 	//a2.href = '#detailsTabId';
 	a2.href = 'javascript:void(0)';
 	a2.name = FT_tab2Id;
@@ -2072,7 +2375,7 @@ var FT_createTabs = function() {
 	
 	var li3 = document.createElement('li');
 	var a3 = document.createElement('a');
-	a3.innerHTML = 'LINK TO SHARE';
+	a3.innerHTML = FT_translatableStrings['shareLinkTabText'];
 	//a3.href = '#detailsTabId';
 	a3.href = 'javascript:void(0)';
 	a3.name = FT_tab3Id;
@@ -2094,7 +2397,7 @@ window.addEventListener("popstate", function(e) {
 	   		FT_displayCategories( FT_categoryMap );	   		   
 	   } else if(e.state.page == 'categoryDetail') {
 			var div = document.createElement('div');
-			FT_setAttributes( div, { 'category' : e.state.category, 'page' : 1 } );
+			FT_setAttributes( div, { 'category' : e.state.category, 'page' : 1, 'translatedCat' : e.state.translatedCat } );
 			//div.setAttribute('category', e.state.category);
 			if(e.state.category) {
 				FT_expandCategory( div );
@@ -2277,16 +2580,16 @@ var FT_addSellFrom = function() {
 	sellFormSection.className = 'FT_gryTxt FT_container FT_SellSec';
 	
 	var formTitleDiv = document.createElement('div');
-	var titleText = 'Thank you for your interest in contacting us about selling your used fire truck!';
+	var titleText = FT_translatableStrings['sellFormTitle'];
 	formTitleDiv.innerHTML = titleText;
 	formTitleDiv.className = 'FT_formTitle';
 	sellFormSection.appendChild(formTitleDiv);
 	
 	var formSubTitleDiv = document.createElement('div');
 	formSubTitleDiv.className = 'FT_formSubTitle';
-	var subtitleText = '<p>Please fill out the form below, and a member of our team will be in touch with you as soon as possible to answer what questions you have.</p>';
+	var subtitleText = '<p>'+FT_translatableStrings['sellFormDescription1']+'</p>';
 
-	subtitleText += '<p>Thank you again for your interest – we look forward to speaking with you soon, and working with you in the sale of your used emergency apparatus!</p>';
+	subtitleText += '<p>'+FT_translatableStrings['sellFormDescription2']+'</p>';
 	formSubTitleDiv.innerHTML = subtitleText;
 	sellFormSection.appendChild(formSubTitleDiv);
 
@@ -2311,7 +2614,7 @@ var FT_addSellFrom = function() {
 				idx++;			
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt: 'State';
+				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;
@@ -2327,7 +2630,7 @@ var FT_addSellFrom = function() {
 			BooleanOpt.forEach(function(opt) {
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt : 'Are you also considering buying a used truck?';
+				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;
@@ -2345,7 +2648,7 @@ var FT_addSellFrom = function() {
 			truckTypeOpt.forEach(function(opt) {
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt : 'What type of truck?';
+				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;					
@@ -2360,7 +2663,7 @@ var FT_addSellFrom = function() {
 			timeForSellOpt.forEach(function(opt) {
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt : 'When would you like to sell your truck?';
+				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;
@@ -2375,7 +2678,7 @@ var FT_addSellFrom = function() {
 			replacementOpt.forEach(function(opt) {
 				var option = document.createElement('option');
 				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt : 'Have you ordered a replacement truck?';
+				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
 				if(!opt) {
 					option.disabled = true;
 					option.selected = true;
@@ -2387,25 +2690,23 @@ var FT_addSellFrom = function() {
 		}
 		else {
 				
-			if(fieldName == 'What brand is your truck'){
-				
-				dynamicDom.placeholder = fieldName + '?';
-			}else if(fieldName == 'How many trucks would you like to sell'){
-				
-				dynamicDom.placeholder = fieldName + '?';
+			if(fieldName == 'What brand is your truck'){				
+				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';
+			}else if(fieldName == 'How many trucks would you like to sell'){				
+				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';
 				FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
 			}else if(fieldName == 'What price is needed for your truck'){				
-				dynamicDom.placeholder = fieldName + '?';				
+				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';			
 				dynamicDom.className += ' FT_gryTxt FT_select FT_currency';
 				FT_bindEvent('keyup', FT_validateCurrency, [dynamicDom]);
 				
 			}else if(fieldName == 'What year is your truck' ){
-				dynamicDom.placeholder = fieldName + '?';								
+				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';							
 				dynamicDom.setAttribute("maxlength", "4");	
 				FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
 				
 			}else{
-				dynamicDom.placeholder = fieldName;	
+				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;	
 			}
 			
 			if(fieldName === 'Phone') {
@@ -2427,7 +2728,7 @@ var FT_addSellFrom = function() {
 	var submitButton = document.createElement('button');
 	submitButton.type = 'button';
 	submitButton.className = 'FT_submitBtn';
-	submitButton.innerHTML = 'Submit';
+	submitButton.innerHTML = FT_translatableStrings['sellFormSubmitText'];
 	formWarpper.appendChild(submitButton);
 	sellFormSection.appendChild(formWarpper);
 	//append loader displayed when for is submitted
@@ -2476,12 +2777,12 @@ var FT_submitSell = function() {
 					var serverData = JSON.parse(firstParse);
 					if( serverData.strMessage == 'Success' ) {
 						//FT_setSellMessage(true, 'Your Request Has Been Submited Successfully!');
-						FT_setSellMessage(true, 'Thank you for the opportunity to sell your truck.  A member of our team will be in touch with you as soon as possible to answer your questions.');
-						FT_saveSellFormToCookie(JSON.stringify(JSON_Buffer));	
+						FT_setSellMessage( true, FT_translatableStrings['sellFormSuccessMsg'] );
+						FT_saveSellFormToCookie( JSON.stringify( JSON_Buffer ) );	
 						isSellFormError = false;						
 					} else {
-						console.log(serverResponse.Message);
-						FT_setSellMessage(false, 'Something Went Wrong. Please Contact Admin!');						
+						console.log( serverResponse.Message );
+						FT_setSellMessage( false, FT_translatableStrings['formErrorMsg'] );						
 						isSellFormError = true;
 					}
 					
@@ -2535,7 +2836,7 @@ var FT_validateSellsData = function() {
 				if(FT_hasClass(element, 'FT_email')) {
 					isEmailValid = FT_emailRegex.test(elementValue);
 					if(!isEmailValid) {
-						errorMessage = 'Invalid Email!';
+						errorMessage = FT_translatableStrings['invalidEmailError'];
 						isProcced = false;
 					} else {
 						element.style.borderColor = 'darkgrey';
@@ -2543,7 +2844,7 @@ var FT_validateSellsData = function() {
 				} else if(FT_hasClass(element, 'FT_phone')) {
 					isPhoneValid = FT_phoneRegex.test(elementValue);
 					if(!isPhoneValid) {
-						errorMessage = 'Invalid Phone!';
+						errorMessage = FT_translatableStrings['invalidPhoneError'];
 						isProcced = false;
 					} else {
 						element.style.borderColor = 'darkgrey';
@@ -2565,7 +2866,7 @@ var FT_validateSellsData = function() {
 			element.style.borderColor = 'red';
 			if(isProcced) isProcced = false;
 			requiredEmpty = true;
-			errorMessage = 'Please Fill All Required Fields!';
+			errorMessage = FT_translatableStrings['requiredErrormsg'];
 		}
 		if(!isProcced) {
 			if( !isFocusSet ) {
