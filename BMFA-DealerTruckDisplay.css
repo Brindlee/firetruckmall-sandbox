@@ -77,7 +77,7 @@
 	a.copyBtn { color: #000; text-decoration: underline; }
 	*/
 	a.copyBtn { color: rgb(255, 255, 255); background: rgb(122, 3, 3); border: 1px solid rgb(122, 3, 3); max-width: 150px; text-align: center; width: 100%; text-decoration: none; cursor: pointer; display: block; padding: 8px; border-radius: 3px; margin: 12px 0 0; }
-	a#linkContainerId { border: 1px solid #d6d6d6; width: 100%; display: block; padding: 10px; } a.copyBtn:hover { text-decoration: none; color: #fff; }
+	a#linkContainerId { border: 1px solid #d6d6d6; width: 100%; display: block; padding: 10px; word-break: break-all; } a.copyBtn:hover { text-decoration: none; color: #fff; }
 	/****************Common Css****************/
 	  ul li, ol li{margin-left: 0;}
 	 ul, ol{margin:0;}
@@ -150,8 +150,8 @@
 	ul.FT_listStyle > li { width: 100%;}
 	ul.FT_listStyle.FT_truckList > li { width:100%;}
 	.FT_tab-links a { height: 100%; }
-	.FT_tab-links li { min-width: auto;  display: table-cell;  height: 100%; float: none; }
-	ul.FT_tab-links { width: 100%;  display: table;}
+	.FT_tab-links li { min-width: auto;  display: block; /*display: table-cell;*/ width: 100%; max-width: 100%; height: 100%; float: none; }
+	ul.FT_tab-links { width: 100%;  /*display: table;*/ display: block; }
 	.FT_fL, .FT_fR { width: 100%; padding: 0; }
 	li .FT_gryTxt { /*-webkit-line-clamp: inherit; -webkit-box-orient: vertical; overflow: auto; text-overflow: inherit;*/ line-height: normal; margin: 0; }
 	.FT_heading{padding: 10px 0 25px;}
