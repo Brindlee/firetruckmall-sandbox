@@ -1664,7 +1664,27 @@ function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatNam
 			paginationDiv.appendChild(nextBtn);
 		}
 
-		containerDiv.appendChild(paginationDiv);		
+		//create a select list of pages to navigate between pages
+		if( totalPages > 1 ) {
+			var paginationSelect = document.createElement('select');
+			paginationSelect.className = 'FT_pageSelect';
+			for( var i = 1; i <= totalPages; i++ ) {
+				var pageOption = document.createElement('option');
+				pageOption.value = i;
+			    pageOption.text = i;
+			    if( i == pageNumber ) pageOption.selected = true;
+			    FT_setAttributes( pageOption, { "category": categoryName, "page" : i, "translatedcat" : translatedCatName } );
+			    paginationSelect.appendChild(pageOption);
+			}
+			paginationDiv.appendChild(paginationSelect);
+			paginationSelect.addEventListener(
+			    'change',
+			    function() { FT_expandCategory(this.options[this.selectedIndex]); },
+			     false
+			);
+		}
+
+		containerDiv.appendChild(paginationDiv);
 
 		FT_BMFA_TruckContainer.appendChild(containerDiv);
 		FT_addPageFooter(FT_BMFA_TruckContainer);
@@ -1673,7 +1693,8 @@ function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatNam
 		
 		//bind pagination events
 		FT_bindEvent('click', FT_expandCategory, FT_BMFA_TruckContainer.querySelectorAll('a.FT_PaginaionBtn'));
-		
+		//FT_bindEvent('change', FT_expandCategory, FT_BMFA_TruckContainer.querySelectorAll('.FT_pageSelect'));
+
 		/*if(FT_URLParam.stockno && !FT_lastTruckSelected) {
 			//refreash category truck count map
 			FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);

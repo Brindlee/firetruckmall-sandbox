@@ -126,7 +126,7 @@
 	.FT_select option { color: black; }
 	/* Pagination */
 	.FT_Pagination {padding: 10px;text-align: center;}
-}
+	select.FT_pageSelect { padding: 5px; margin-left: 10px; }
 @media screen and  (max-width:1200px){
 	.FT_modalContent {width: 80%;}
 }
