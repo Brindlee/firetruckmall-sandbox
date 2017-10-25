@@ -266,10 +266,12 @@ var FT_WebRequestHandler = {
 		if( typeof additionalParams['stockn'] != 'undefined' ) var stockno = additionalParams['stockn'];
 		xhttp = this.getWebRequestInstance();
 		if(xhttp) {
-			if( typeof stockno != 'undefined' ) {
-				xhttp.open("GET", "https://www.firetruckapi.com/api/BMFAServices?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&Category="+categoryName+"&Stockno="+stockno, true);
+			if( typeof stockno != 'undefined' ) {		
+				var reqURL = "https://www.firetruckapi.com/api/BMFAServices?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&Category="+encodeURIComponent(categoryName)+"&Stockno="+stockno;
+				xhttp.open("GET", reqURL, true);
 			} else {
-				xhttp.open("GET", "https://www.firetruckapi.com/api/BMFAServices?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&Category="+categoryName+"&Page="+pageNumber+"&PageSize="+pageSize, true);
+				var reqURL = "https://www.firetruckapi.com/api/BMFAServices?accountId=" + FT_DealerAccointId + "&isSandbox="+isSandbox+"&Category="+encodeURIComponent(categoryName)+"&Page="+pageNumber+"&PageSize="+pageSize;
+				xhttp.open("GET", reqURL, true);
 			}
 			xhttp.setRequestHeader("Authorization", "Basic ZnNtLWFkbWluOjhlZDMxMmM4NTE0ZDRhMDI3OWFjOTBjNTQxOGEwOGQ5");
 			xhttp.send();
@@ -1650,20 +1652,10 @@ function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatNam
     	var totalPages = FT_getCategoryTruckCount( categoryName );
 
     	var paginationTextSpan = document.createElement('span');
-		var paginationText = document.createTextNode( FT_translatableStrings['paginationText1'] + ' ' + pageNumber + ' '+FT_translatableStrings['paginationText2']+' '+totalPages );
-		paginationTextSpan.appendChild(paginationText);
-		paginationDiv.appendChild(paginationTextSpan);
-
-    	if( parseInt(pageNumber)+1 <= totalPages ) {
-			var nextBtn = document.createElement('a');
-			nextBtn.className = 'FT_PageNext FT_PaginaionBtn';
-			FT_setAttributes( nextBtn, { "category": categoryName, "page" : parseInt(pageNumber)+1, "translatedcat" : translatedCatName } );
-			//nextBtn.setAttribute('category', categoryName);
-			var btnText = document.createTextNode(FT_translatableStrings['paginationNextText']);
-	    	nextBtn.appendChild(btnText);
-	    	nextBtn.style.cssText = 'color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background;		 	
-			paginationDiv.appendChild(nextBtn);
-		}
+		var paginationText1 = document.createTextNode( FT_translatableStrings['paginationText1']+' ' );
+		var paginationText2 = document.createTextNode( pageNumber );
+		var paginationText3 = document.createTextNode( ' '+FT_translatableStrings['paginationText2'] +' '+totalPages );
+		paginationTextSpan.appendChild(paginationText1);
 
 		//create a select list of pages to navigate between pages
 		if( totalPages > 1 ) {
@@ -1677,12 +1669,28 @@ function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatNam
 			    FT_setAttributes( pageOption, { "category": categoryName, "page" : i, "translatedcat" : translatedCatName } );
 			    paginationSelect.appendChild(pageOption);
 			}
-			paginationDiv.appendChild(paginationSelect);
+			paginationTextSpan.appendChild(paginationSelect);
 			paginationSelect.addEventListener(
 			    'change',
 			    function() { FT_expandCategory(this.options[this.selectedIndex]); },
 			     false
 			);
+		} else {
+			paginationTextSpan.appendChild(paginationText2);
+		}
+		paginationTextSpan.appendChild(paginationText3);		
+		
+		paginationDiv.appendChild(paginationTextSpan);
+
+    	if( parseInt(pageNumber)+1 <= totalPages ) {
+			var nextBtn = document.createElement('a');
+			nextBtn.className = 'FT_PageNext FT_PaginaionBtn';
+			FT_setAttributes( nextBtn, { "category": categoryName, "page" : parseInt(pageNumber)+1, "translatedcat" : translatedCatName } );
+			//nextBtn.setAttribute('category', categoryName);
+			var btnText = document.createTextNode(FT_translatableStrings['paginationNextText']);
+	    	nextBtn.appendChild(btnText);
+	    	nextBtn.style.cssText = 'color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background;		 	
+			paginationDiv.appendChild(nextBtn);
 		}
 
 		containerDiv.appendChild(paginationDiv);
