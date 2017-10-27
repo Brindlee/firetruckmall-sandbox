@@ -1543,7 +1543,6 @@ function FT_prepareTruckDetails( truck ) {
 			for(var param in urlParams) {
 				historyUrl = FT_SetURLParam(historyUrl, param, encodeURIComponent( urlParams[param] ) );
 			}
-			alert(historyUrl);
 			history.pushState({page:'truckDetail',category:FT_lastCategorySelected.getAttribute('category'), truck: FT_TruckId }, null, historyUrl);
 		}
 	}
