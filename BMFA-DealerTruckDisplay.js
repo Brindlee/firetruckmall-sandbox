@@ -9,7 +9,7 @@ head.appendChild(script);
 var FT_truckTypeImageUrl = {
 	'FooterBellImg':'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003fIoK&oid=00Do0000000JLLE&lastMod=1499264854000',
 	'Default' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003exvn&oid=00Do0000000JLLE&lastMod=1497451382000',
-	'All Used Trucks' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Wht1&oid=00Do0000000JLLE&lastMod=1495568542000',
+	'All' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Wht1&oid=00Do0000000JLLE&lastMod=1495568542000',
 	'Rescue Pumpers and Engines' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtz&oid=00Do0000000JLLE&lastMod=1495568876000',
 	'Used Rescue Trucks and Squads' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuY&oid=00Do0000000JLLE&lastMod=1495568998000',
 	'Used Aerials, Ladder Trucks and Quints' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whu9&oid=00Do0000000JLLE&lastMod=1495568916000',
@@ -687,16 +687,24 @@ var FT_prepareImageContainer = function(isForCategory, truckDataList, UICclass ,
 	ul.className = 'FT_listStyle ' + UICclass;
 	for(var truck in truckDataList) {
 		if(truckDataList[truck] || isForCategory) {
-			if( isForCategory )
-				var imgSrc = FT_truckTypeImageUrl[truckDataList[truck].Name];
-			else
+			if( isForCategory ) {
+				console.log('test123: ',truckDataList[truck].Name);
+				if( languageCode != 'en' && truckDataList[truck].originalName ) {
+					var imgSrc = FT_truckTypeImageUrl[truckDataList[truck].originalName];
+				} else {
+					var imgSrc = FT_truckTypeImageUrl[truckDataList[truck].Name];
+				}
+			}
+			else {
 				var imgSrc = FT_truckTypeImageUrl[truck];
+			}
 			var li = document.createElement('li');
 			var div = document.createElement('div');
 			var img = document.createElement('img');
 			
 			if(isForCategory) {
 				var catDetailDiv = document.createElement('div');
+				console.log( 'Name: ',truckDataList[truck].originalName, 'count: ',truckDataList[truck].Truck_Count__c );
 				catDetailDiv.innerHTML = truckDataList[truck].Name+ ' (' +truckDataList[truck].Truck_Count__c+ ')';
 				catDetailDiv.className = 'FT_redTxt';
 				catDetailDiv.style.color = FT_ThemeProperties.background;
@@ -1797,7 +1805,8 @@ var FT_processTranslation = function( xhttp, additionalParams ) {
 				//console.log( 'After translation data : ', truckData );
 
 				if( pageName == 'categoriesPage' ) {					
-					FT_categoryMap = truckData.reverse();
+					//FT_categoryMap = truckData.reverse();
+					FT_categoryMap = truckData;
 
 					/* static strings translation */
 					var translatedDataLen = parseInt(translatedData.length-1);
@@ -1884,7 +1893,8 @@ var FT_processTruckData = function(xhttp) {
 					//store category map into a global variable for further use
 					console.log('truckData.recordList::',truckData.recordList);
 					if( truckData.recordList.length ) {
-						FT_categoryMap = truckData.recordList.reverse();
+						//FT_categoryMap = truckData.recordList.reverse();
+						FT_categoryMap = truckData.recordList;
 					} else {
 						FT_categoryMap = truckData.recordList;
 					}					
@@ -2020,7 +2030,8 @@ function FT_refreashTruckCountMap( xhttp ) {
 				} else {
 					//store category map into a global variable for further use
 					if( truckData.recordList.length ) {
-						FT_categoryMap = truckData.recordList.reverse();
+						//FT_categoryMap = truckData.recordList.reverse();
+						FT_categoryMap = truckData.recordList;
 					} else {
 						FT_categoryMap = truckData.recordList;
 					}	
