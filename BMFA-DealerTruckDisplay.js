@@ -688,7 +688,6 @@ var FT_prepareImageContainer = function(isForCategory, truckDataList, UICclass ,
 	for(var truck in truckDataList) {
 		if(truckDataList[truck] || isForCategory) {
 			if( isForCategory ) {
-				console.log('test123: ',truckDataList[truck].Name);
 				if( languageCode != 'en' && truckDataList[truck].originalName ) {
 					var imgSrc = FT_truckTypeImageUrl[truckDataList[truck].originalName];
 				} else {
@@ -704,7 +703,6 @@ var FT_prepareImageContainer = function(isForCategory, truckDataList, UICclass ,
 			
 			if(isForCategory) {
 				var catDetailDiv = document.createElement('div');
-				console.log( 'Name: ',truckDataList[truck].originalName, 'count: ',truckDataList[truck].Truck_Count__c );
 				catDetailDiv.innerHTML = truckDataList[truck].Name+ ' (' +truckDataList[truck].Truck_Count__c+ ')';
 				catDetailDiv.className = 'FT_redTxt';
 				catDetailDiv.style.color = FT_ThemeProperties.background;
@@ -1797,7 +1795,7 @@ var FT_processTranslation = function( xhttp, additionalParams ) {
 	if ( xhttp && xhttp.readyState == 4 && xhttp.status == 200 ) {
 		try {
 			//var serverResponse = JSON.parse(xhttp.responseText);
-			console.log('serverResponse',JSON.parse(xhttp.responseText));
+			//console.log('serverResponse',JSON.parse(xhttp.responseText));
 			/*if(serverResponse.Success) {*/
 				var translatedData = JSON.parse(JSON.parse(xhttp.responseText));
 				//console.log('parsed Data: ',translatedData);
