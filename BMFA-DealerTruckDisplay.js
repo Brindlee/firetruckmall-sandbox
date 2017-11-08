@@ -48,9 +48,7 @@ var FT_translatableStrings = {
 	"paginationText2" : "of",
 	"backToCatPageText" : "Return To Categories",
 	"backToTrucksPageText" : "Return To Truck List",
-	"sellFormTitle" : "Thank you for your interest in contacting us about selling your used fire truck!",
-	"sellFormDescription1" : "Please fill out the form below, and a member of our team will be in touch with you as soon as possible to answer what questions you have.",
-	"sellFormDescription2" : "Thank you again for your interest – we look forward to speaking with you soon, and working with you in the sale of your used emergency apparatus!",
+	"sellFormTitle" : "Let us know a little about your Fire Truck, and we will be in touch!",
 	"requiredErrormsg" : "Please Fill All Required Fields!",
 	"invalidPhoneError" : "Invalid Phone!",
 	"invalidEmailError" : "Invalid Email!",
@@ -63,13 +61,10 @@ var FT_translatableStrings = {
 	"Email" : "Email",
 	"Phone" : "Phone",
 	"State" : "State",
-	"How many trucks would you like to sell" : "How many trucks would you like to sell",
-	"Are you also considering buying a used truck" : "Are you also considering buying a used truck",
 	"What year is your truck" : "What year is your truck",
 	"What type of truck" : "What type of truck",
 	"What brand is your truck" : "What brand is your truck",
 	"When would you like to sell your truck" : "When would you like to sell your truck",
-	"Have you ordered a replacement truck" : "Have you ordered a replacement truck",
 	"What price is needed for your truck" : "What price is needed for your truck",
 	"Comments" : "Comments",
 	"enquiryFormSubmitTxt" : "Submit Fire Truck Inquiry",
@@ -2633,13 +2628,10 @@ var FT_addSellFrom = function() {
 		'Email':'input',
 		'Phone':'input',
 		'State':'select',
-		'How many trucks would you like to sell':'input',
-		'Are you also considering buying a used truck' : 'select',		
 		'What year is your truck':'input',
 		'What type of truck' : 'select',
 		'What brand is your truck' : 'input',
 		'When would you like to sell your truck' : 'select',
-		'Have you ordered a replacement truck' : 'select',		
 		'What price is needed for your truck': 'input',
 		'Comments':'textarea'
 	}
@@ -2651,13 +2643,10 @@ var FT_addSellFrom = function() {
 		'Email': 'FT_input FT_required FT_email',
 		'Phone': 'FT_input FT_required',
 		'State': 'FT_input FT_required',
-		'How many trucks would you like to sell': 'FT_input',
-		'Are you also considering buying a used truck' : 'FT_input',
 		'What year is your truck': 'FT_input',
 		'What type of truck' : 'FT_input',
 		'What brand is your truck' : 'FT_input',
 		'When would you like to sell your truck' : 'FT_input',
-		'Have you ordered a replacement truck' : 'FT_input',
 		'What price is needed for your truck': 'FT_input',
 		'Comments' : 'FT_input'
 		
@@ -2670,13 +2659,10 @@ var FT_addSellFrom = function() {
 		'Email': '',
 		'Phone': '',
 		'State': '',
-		'How many trucks would you like to sell': '',
-		'Are you also considering buying a used truck' : '',
 		'What year is your truck': '',
 		'What type of truck' : '',
 		'What brand is your truck' : '',
 		'When would you like to sell your truck' : '',
-		'Have you ordered a replacement truck' : '',
 		'What price is needed for your truck': '',	
 		'Comments' : ''		
 	}
@@ -2690,14 +2676,11 @@ var FT_addSellFrom = function() {
 		if( frmData['Phone'] ) fieldToValues['Phone'] = frmData['Phone'];
 		if( frmData['Email'] ) fieldToValues['Email'] = frmData['Email'];
 		if( frmData['FireDepartment'] ) fieldToValues['FireDepartment'] = frmData['FireDepartment'];
-		if( frmData['Howmanytruckswouldyouliketosell'] ) fieldToValues['Howmanytruckswouldyouliketosell'] = frmData['Howmanytruckswouldyouliketosell'];
 		if( frmData['State'] ) fieldToValues['State'] = frmData['State'];
-		if( frmData['Areyoualsoconsideringbuyingausedtruck'] ) fieldToValues['Are you also considering buying a used truck'] = frmData['Areyoualsoconsideringbuyingausedtruck'];
 		if( frmData['Whatyearisyourtruck'] ) fieldToValues['What year is your truck'] = frmData['Whatyearisyourtruck'];	
 		if( frmData['Whattypeoftruck'] ) fieldToValues['What type of truck'] = frmData['Whattypeoftruck'];	
 		if( frmData['Whatbrandisyourtruck'] ) fieldToValues['What brand is your truck'] = frmData['Whatbrandisyourtruck'];	
 		if( frmData['Whenwouldyouliketosellyourtruck'] ) fieldToValues['When would you like to sell your truck'] = frmData['Whenwouldyouliketosellyourtruck'];	
-		if( frmData['Haveyouorderedareplacementtruck'] ) fieldToValues['Have you ordered a replacement truck'] = frmData['Haveyouorderedareplacementtruck'];			
 		if( frmData['Whatpriceisneededforyourtruck'] ) fieldToValues['What price is needed for your truck'] = frmData['Whatpriceisneededforyourtruck'];			
 		if( frmData['Comments'] ) fieldToValues['Comments'] = frmData['Comments'];			
 	}
@@ -2725,10 +2708,6 @@ var FT_addSellFrom = function() {
 	
 	var formSubTitleDiv = document.createElement('div');
 	formSubTitleDiv.className = 'FT_formSubTitle';
-	var subtitleText = '<p>'+FT_translatableStrings['sellFormDescription1']+'</p>';
-
-	subtitleText += '<p>'+FT_translatableStrings['sellFormDescription2']+'</p>';
-	formSubTitleDiv.innerHTML = subtitleText;
 	sellFormSection.appendChild(formSubTitleDiv);
 
 	var formWarpper = document.createElement('div');
@@ -2763,25 +2742,7 @@ var FT_addSellFrom = function() {
 			
 			FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
 			
-		} else if(fieldName === 'Are you also considering buying a used truck') {
-			dynamicDom.className += ' FT_gryTxt FT_select';
-			BooleanOpt.forEach(function(opt) {
-				var option = document.createElement('option');
-				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
-				if(!opt) {
-					option.disabled = true;
-					option.selected = true;
-				}
-				dynamicDom.appendChild(option);
-
-				
-			});
-			FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-
-    //dynamicDom.appendChild(option);
-
-		}else if(fieldName === 'What type of truck') {
+		} else if(fieldName === 'What type of truck') {
 			dynamicDom.className += ' FT_gryTxt FT_select';
 			truckTypeOpt.forEach(function(opt) {
 				var option = document.createElement('option');
@@ -2811,28 +2772,10 @@ var FT_addSellFrom = function() {
 			
 			FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
 		}
-		else if(fieldName === 'Have you ordered a replacement truck') {
-			dynamicDom.className += ' FT_gryTxt FT_select';
-			replacementOpt.forEach(function(opt) {
-				var option = document.createElement('option');
-				option.value = (opt) ? opt: '';
-				option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
-				if(!opt) {
-					option.disabled = true;
-					option.selected = true;
-				}
-				dynamicDom.appendChild(option);
-			});
-			
-			FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-		}
 		else {
 				
 			if(fieldName == 'What brand is your truck'){				
 				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';
-			}else if(fieldName == 'How many trucks would you like to sell'){				
-				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';
-				FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
 			}else if(fieldName == 'What price is needed for your truck'){				
 				dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';			
 				dynamicDom.className += ' FT_gryTxt FT_select FT_currency';
@@ -3051,10 +2994,8 @@ var clearSellFormData = function(){
 	var inputs = sellFrom.getElementsByClassName('FT_input');	
 	for(var i = 0; i < inputs.length; i++){
 		fieldName = inputs[i].getAttribute("Name");		
-		if(fieldName == 'Howmanytruckswouldyouliketosell' || fieldName == 'Areyoualsoconsideringbuyingausedtruck' ||
-		   fieldName == 'Whatyearisyourtruck' || fieldName == 'Whattypeoftruck' ||
-		   fieldName == 'Whatbrandisyourtruck' || fieldName == 'Whenwouldyouliketosellyourtruck' ||
-		   fieldName == 'Haveyouorderedareplacementtruck' || fieldName == 'Whatpriceisneededforyourtruck' ||
+		if(fieldName == 'Whatyearisyourtruck' || fieldName == 'Whattypeoftruck' ||
+		   fieldName == 'Whatbrandisyourtruck' || fieldName == 'Whenwouldyouliketosellyourtruck' || fieldName == 'Whatpriceisneededforyourtruck' ||
 		   fieldName == 'Comments'){		
 			inputs[i].value = '';			
 			if(inputs[i].tagName === 'SELECT' || inputs[i].tagName === 'select'){
