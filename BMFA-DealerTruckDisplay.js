@@ -28,6 +28,7 @@ var FT_truckTypeImageUrl = {
 };
 
 var FT_translatableStrings = {
+
 	"footerSellingTxt1" : "Selling A Used Fire Truck?",
 	"footerSellingTxt2" : "Click Here For More Information",
 	"mainPageTitle" : "Shop Our Used Fire Trucks",
@@ -76,7 +77,9 @@ var FT_translatableStrings = {
 	"loaderText" : "We are finding your fire truck",
 	"serverErrorMessage" : "Something went wrong..",
 	"notFoundError" : "Truck not found"
+
 };
+
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
 var FT_GlobalFieldToStrHTML = {
 	VF_Main_Title__c : '<h1 class="FT_title">{0}</h1><br/>',
@@ -1866,11 +1869,14 @@ var FT_processTruckData = function(xhttp) {
 				var truckData = JSON.parse(JSON.parse(serverResponse.Data));
 				console.log('truckData: ',truckData);
 				languageCode = truckData.strLanguageCode;
+				if( languageCode == null || typeof languageCode == 'undefined' ) {
+					languageCode = 'en';
+				}
 				console.log('languageCode: ',languageCode);
 				isDisplayTruckPricing = truckData.isDisplayTruckPricing;
 				//put pagesize in cache
 				var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
-				if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 ) pgSize = 10;
+				if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 || pgSize == null || typeof pgSize == 'undefined' ) pgSize = 10;
 				FT_putDataInCache( pgSize, 'FT_pageSize' );
 				//if language code is different than english then request translated data from server
 				if( languageCode != 'en' ) {
@@ -2008,9 +2014,12 @@ function FT_refreashTruckCountMap( xhttp ) {
 				console.log('truckData: ',truckData);
 				isDisplayTruckPricing = truckData.isDisplayTruckPricing;
 				languageCode = truckData.strLanguageCode;
+				if( languageCode == null || typeof languageCode == 'undefined' ) {
+					languageCode = 'en';
+				}
 				//put pagesize in cache
 				var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
-				if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 ) pgSize = 10;
+				if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 || pgSize == null || typeof pgSize == 'undefined' ) pgSize = 10;
 				FT_putDataInCache( pgSize, 'FT_pageSize' );
 				if( languageCode != 'en' ) {
 					FT_dataToTranslate = [];
@@ -2456,8 +2465,6 @@ var FT_loadCustomTruckData = function(isCached) {
 	FT_BMFA_TruckContainer = document.getElementById('dealerTruckContainerId');
 	FT_DealerAccointId = FT_BMFA_TruckContainer.getAttribute('accountId');
 	isSandbox = FT_BMFA_TruckContainer.getAttribute('isSandbox');
-	//pageSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
-	//if( !pageSize ) pageSize = 10;
 	var style = getComputedStyle(FT_BMFA_TruckContainer);
 	FT_ThemeProperties.background = style.backgroundColor;
 	FT_ThemeProperties.color = style.color;
