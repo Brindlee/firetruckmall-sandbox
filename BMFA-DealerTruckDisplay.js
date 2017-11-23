@@ -2566,8 +2566,9 @@ var FT_loadTruckData = function() {
 	/* Check if indexedDB is supported by browser */
 	if("indexedDB" in window) {
 		var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+		var safari = /safari/.test( navigator.userAgent ); //for safari browser
 		//console.log("ios: ",iOS);
-		if( !iOS )
+		if( !iOS && !safari )
         	FT_idbSupported = true;
     }	
     if(FT_idbSupported) { //if indexedDB supported then use cached data
