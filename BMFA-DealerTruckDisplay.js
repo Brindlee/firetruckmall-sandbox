@@ -82,7 +82,7 @@ var FT_translatableStrings = {
 
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
 var FT_GlobalFieldToStrHTML = {
-    VF_Main_Title__c : '<h1 class="FT_title">{0}</h1><br/>',
+    VF_Main_Title__c : '<h1 class="FT_title">{0}</h1>',
     VF_Website_Price__c : '<h2 class="FT_heading" style="color:{0}">{1} - {3} <a href="javascript:void(0)" onclick="{2}">{4}</a> {5} </h2>',
     Cloud_Documents__r : ''
 }
@@ -1532,7 +1532,7 @@ var FT_displayTabs = function(parentNode, selectedTruck) {
             if(innerMostField === 'Stock_Number__c') {
                 truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
             } else {
-                truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([innerFieldVal]);
+                truckDetailsHtml += '<p>'+FT_DetailFieldToStrHTML[field].FT_format([innerFieldVal])+'</p>';
             }
         }
     }
