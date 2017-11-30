@@ -127,6 +127,7 @@
     /* Pagination */
     .FT_Pagination {padding: 10px;text-align: center;}
     select.FT_pageSelect { padding: 1px; margin: 0px; max-width: 100px;width: auto; }
+    #descriptionTab p { margin-bottom: 10px; }
 @media screen and  (max-width:1200px){
     .FT_modalContent {width: 80%;}
 }
@@ -154,11 +155,26 @@
     ul.FT_tab-links { width: 100%;  /*display: table;*/ display: block; }
     .FT_fL, .FT_fR { width: 100%; padding: 0; }
     li .FT_gryTxt { /*-webkit-line-clamp: inherit; -webkit-box-orient: vertical; overflow: auto; text-overflow: inherit;*/ line-height: normal; margin: 0; }
-    .FT_heading{padding: 10px 0 25px;}
-    .FT_tab-links a, .FT_tab-links li{ height:unset;}
+    .FT_heading{/*padding: 10px 0 25px;*/ padding: 10px 0 0; font-size: 16px;}
+    .FT_tab-links a, .FT_tab-links li{ height:unset; }
+    /* Added to make page look better on smaller screens */
+    .FT_title, .FT_PageTitle { font-size: 22px; margin: 0; }
+    .FT_tab-links a { border: 1px solid #ccc; }
+    .FT_footer > h5 { font-size: 18px;  }
+    .FT_footer a {  font-size: 14px; }
+    .FT_backLink { font-size: 16px; margin: 0 0 10px; }
+    h2.FT_heading > a {  font-size: 16px; }
+    .FT_tabs { padding: 10px 0 0; }
+    #descriptionTab p { margin-bottom: 7px; }
+    .FT_content { border: 1px solid #ccc; border-top: 0; border-bottom: 0; }
+    .FT_tab-links a { padding: 15px 10px; }
+    .FT_formTitle {  font-size: 18px; }    
 }
 @media screen and  (max-width: 520px){
     ul.FT_listStyle.FT_truckList { -moz-column-count: 1; -webkit-column-count: 1; column-count: 1;}
     .FT_modalContent {width: 65%;}
-}
-  
+    a.FT_PagePrev, a.FT_PageNext { display: block; }
+    a.FT_PagePrev { margin: 0 auto 8px auto; }
+    a.FT_PageNext { margin: 8px auto 0 auto; }
+    .FT_PageTitle { padding-top: 5px;  }
+}  
