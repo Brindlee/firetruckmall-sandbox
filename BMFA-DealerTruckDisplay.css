@@ -155,7 +155,7 @@
     ul.FT_tab-links { width: 100%;  /*display: table;*/ display: block; }
     .FT_fL, .FT_fR { width: 100%; padding: 0; }
     li .FT_gryTxt { /*-webkit-line-clamp: inherit; -webkit-box-orient: vertical; overflow: auto; text-overflow: inherit;*/ line-height: normal; margin: 0; }
-    .FT_heading{/*padding: 10px 0 25px;*/ padding: 10px 0 0; font-size: 16px;}
+    .FT_heading{/*padding: 10px 0 25px;*/ padding: 10px 0 10px; font-size: 16px;}
     .FT_tab-links a, .FT_tab-links li{ height:unset; }
     /* Added to make page look better on smaller screens */
     .FT_title, .FT_PageTitle { font-size: 22px; margin: 0; }
