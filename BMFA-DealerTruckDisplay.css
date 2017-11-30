@@ -165,7 +165,7 @@
     .FT_backLink { font-size: 16px; margin: 0 0 10px; }
     h2.FT_heading > a {  font-size: 16px; }
     .FT_tabs { padding: 10px 0 0; }
-    #descriptionTab p { margin-bottom: 7px; }
+    #descriptionTab p { margin-bottom: 5px; }
     .FT_content { border: 1px solid #ccc; border-top: 0; border-bottom: 0; }
     .FT_tab-links a { padding: 15px 10px; }
     .FT_formTitle {  font-size: 18px; }    
