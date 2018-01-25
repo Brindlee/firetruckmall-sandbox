@@ -90,7 +90,9 @@ var FT_GlobalFieldToStrHTML = {
 /* Javascript Map for Bind Truck Mini-Details(HTML) Top content dynamically with respective field data of truck. */
 var FT_MiniDetailFieldToStrHTML = {
     VF_Main_Title__c : '<div class="FT_redTxt" style="color:{0}">{1}</div>',
-    Description : '<div class="FT_gryTxt">{0}</div>'    
+    Description : '<div class="FT_gryTxt">{0}</div>',
+    Stock_Number__c: '<div class="FT_gryTxt">{0}</div>',   
+    VF_Additional_Pricing_Text__c: '<div class="FT_gryTxt">{0}</div>' 
 }
 
 /* Javascript Map for Bind Truck Mini-Details(HTML) bottom content dynamically with respective field data of truck. */
