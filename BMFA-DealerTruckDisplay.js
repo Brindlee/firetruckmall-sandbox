@@ -2785,7 +2785,7 @@ var FT_addSellFrom = function() {
     
     var truckTypeOpt = ['', 'Used Pumper and Engines', 'Rescue Pumper and Engines', 'Used Aerial, Ladder Trucks and Quints', 'Towers and Platforms', 'Used Tankers and Tenders', 'Used Brush Trucks, Quick Attacks and Mini Pumpers', 'Used Rescue Trucks and Squads', 'Command Units', 'Used ARFF and Airport Crash Trucks', 'Ambulances and Transport Units', 'European Style Units', 'Vocational Trucks'];
     
-    var timeForSellOpt = ['', 'Today', '30 Days', 'May be 6 Months', 'Probably 1 Year Or More'];
+    var timeForSellOpt = ['', 'Today', '30 Days', 'Maybe 6 Months', 'Probably 1 Year Or More'];
     
     var replacementOpt = ['', 'Yes', 'No', 'Working On It', 'Not Replacing'];   
     
