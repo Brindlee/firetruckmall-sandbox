@@ -91,7 +91,7 @@ var FT_GlobalFieldToStrHTML = {
 var FT_MiniDetailFieldToStrHTML = {
     VF_Main_Title__c : '<div class="FT_redTxt" style="color:{0}">{1}</div>',
     Description : '<div class="FT_gryTxt">{0}</div>',
-    Stock_Number__c: '<div class="FT_gryTxt">{0}</div>',   
+    Stock_Number__c: '<div class="FT_gryTxt">Stock # {0}</div>',   
     VF_Additional_Pricing_Text__c: '<div class="FT_gryTxt">{0}</div>' 
 }
 
@@ -1310,7 +1310,7 @@ var FT_addInetrestFrom = function() {
     
     var PurchaseTimeframeOpt = ['', 'Less than 1 month', '1 month - 3 months', '6 months - 12 months', '12 months+'];
     //var StateOpt = ['', 'CA'];
-    var StateOpt = ["", "AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FM", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PW", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY"];
+    var StateOpt = ["", "AB", "AL", "AK", "AS", "AZ", "AR", "BC", "CA", "CO", "CT", "DE", "DC", "FM", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "MB", "ME", "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NB", "NE", "NL", "NV", "NH", "NJ", "NM", "NS", "NY", "NC", "ND", "MP", "OH", "OK", "ON", "OR", "PW", "PA", "PE", "PR", "QC", "RI", "SC", "SD", "SK", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY"];
     
     var tab2Div = document.createElement('div');
     tab2Div.id = FT_tab2Id;
@@ -1359,8 +1359,7 @@ var FT_addInetrestFrom = function() {
                     option.selected = true;
                 }
                 dynamicDom.appendChild(option);
-            });
-            
+            });            
             FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
         } else {
             dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;           
