@@ -1,5 +1,5 @@
-/* Inject external script library for making support of Promise in IE */
 var head = document.getElementsByTagName('head')[0];
+/* Inject external script library for making support of Promise in IE */
 var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js';
@@ -1309,9 +1309,10 @@ var FT_addInetrestFrom = function() {
     }
     
     var PurchaseTimeframeOpt = ['', 'Less than 1 month', '1 month - 3 months', '6 months - 12 months', '12 months+'];
-    //var StateOpt = ['', 'CA'];
-    var StateOpt = ["", "AB", "AL", "AK", "AS", "AZ", "AR", "BC", "CA", "CO", "CT", "DE", "DC", "FM", "FL", "GA", "GU", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "MB", "ME", "MH", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NB", "NE", "NL", "NV", "NH", "NJ", "NM", "NS", "NY", "NC", "ND", "MP", "OH", "OK", "ON", "OR", "PW", "PA", "PE", "PR", "QC", "RI", "SC", "SD", "SK", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY"];
-    
+    var StateOpt = {
+        "United States" : [ "AL", "AK", "AZ", "AR", "AS", "CA", "CO", "CT", "DC", "DE", "FM", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MD", "MH", "MI", "MN", "MS", "MO", "MT", "MP", "NE", "NH", "NJ", "NM", "NY", "NC", "ND", "NV", "OH", "OK", "OR", "PA", "PR", "QC", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY" ], 
+        "Canada" : [ "AB", "BC", "MB", "NL", "NB", "NS", "ON", "PE", "QC", "SK" ]
+    };
     var tab2Div = document.createElement('div');
     tab2Div.id = FT_tab2Id;
     tab2Div.style.display = 'none';
@@ -1350,16 +1351,25 @@ var FT_addInetrestFrom = function() {
             FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
         } else if(fieldName === 'State') {
             dynamicDom.className += ' FT_gryTxt FT_select';
-            StateOpt.forEach(function(opt) {
-                var option = document.createElement('option');
-                option.value = (opt) ? opt: ' ';
-                option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
-                if(!opt) {
-                    option.disabled = true;
-                    option.selected = true;
-                }
-                dynamicDom.appendChild(option);
-            });            
+            //default selected option "State"
+            var option = document.createElement('option');
+            option.value = ' ';
+            option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
+            option.disabled = true;
+            option.selected = true;   
+            dynamicDom.appendChild(option);
+            //create option group
+            for( var key in StateOpt ) {
+                var optGroup = document.createElement('optgroup');
+                optGroup.setAttribute( "label", key );
+                StateOpt[ key ].forEach( function( opt ) {
+                    var option = document.createElement('option');
+                    option.value = opt;
+                    option.innerHTML = opt;
+                    optGroup.appendChild(option);
+                });                         
+                dynamicDom.appendChild( optGroup );
+            }
             FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
         } else {
             dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;           
@@ -2778,8 +2788,11 @@ var FT_addSellFrom = function() {
         if( frmData['Comments'] ) fieldToValues['Comments'] = frmData['Comments'];          
     }
     
-    var StateOpt = ['', 'Alabama', 'Alaska', 'Alberta', 'Arizona', 'Arkansas', 'British Columbia', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Manitoba', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'Newfoundland / Labrador', 'New Brunswick', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Nova Scotia', 'Ohio', 'Oklahoma', 'Ontario', 'Oregon', 'Pennsylvania', 'Prince Edward Island', 'Quebec', 'Rhode Island', 'Saskatchewan', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-    
+    var StateOpt = {
+        "United States" : [ 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ],
+        "Canada" : [ 'Alberta', 'British Columbia', 'Manitoba', 'Newfoundland / Labrador', 'New Brunswick', 'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan' ]
+    };
+
     var BooleanOpt = ['', 'Yes', 'No'];
     
     var truckTypeOpt = ['', 'Used Pumper and Engines', 'Rescue Pumper and Engines', 'Used Aerial, Ladder Trucks and Quints', 'Towers and Platforms', 'Used Tankers and Tenders', 'Used Brush Trucks, Quick Attacks and Mini Pumpers', 'Used Rescue Trucks and Squads', 'Command Units', 'Used ARFF and Airport Crash Trucks', 'Ambulances and Transport Units', 'European Style Units', 'Vocational Trucks'];
@@ -2819,20 +2832,26 @@ var FT_addSellFrom = function() {
         dynamicDom.className = fieldToClasses[fieldName];
         if(fieldName === 'State') {
             dynamicDom.className += ' FT_gryTxt FT_select';
-            var idx = 0;
-            StateOpt.forEach(function(opt) {    
-                idx++;          
-                var option = document.createElement('option');
-                option.value = (opt) ? opt: '';
-                option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
-                if(!opt) {
-                    option.disabled = true;
-                    option.selected = true;
-                }
-                if(idx == 1) option.selected = true;
-                dynamicDom.appendChild(option);
-            });
-            
+            //default selected option "State"
+            var option = document.createElement('option');
+            option.value = '';
+            option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
+            option.disabled = true;
+            //option.selected = true; 
+            option.setAttribute( "selected", "" );
+            dynamicDom.appendChild(option);
+            //create option group
+            for( var key in StateOpt ) {
+                var optGroup = document.createElement('optgroup');
+                optGroup.setAttribute( "label", key );
+                StateOpt[ key ].forEach( function( opt ) {
+                    var option = document.createElement('option');
+                    option.value = opt;
+                    option.innerHTML = opt;
+                    optGroup.appendChild(option);
+                });                         
+                dynamicDom.appendChild( optGroup );
+            }
             FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
             
         } else if(fieldName === 'What type of truck') {
