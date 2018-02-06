@@ -76,8 +76,8 @@ var FT_translatableStrings = {
     "inquiryFormSuccessMsg" : "Your Request Has Been Submited Successfully!",
     "loaderText" : "We are finding your fire truck",
     "serverErrorMessage" : "Something went wrong..",
-    "notFoundError" : "Truck not found"
-
+    "notFoundError" : "Truck not found",
+    "noRecordsMessage" : "No categories found"
 };
 
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
@@ -1953,6 +1953,7 @@ var FT_processTruckData = function(xhttp) {
                         FT_categoryMap = truckData.recordList;
                     } else {
                         FT_categoryMap = truckData.recordList;
+                        FT_displayServerError( 'noRecordsMessage' );
                     }   
                     FT_processMainPage();
                 }                           
