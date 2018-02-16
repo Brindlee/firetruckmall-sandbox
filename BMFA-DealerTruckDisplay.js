@@ -77,7 +77,9 @@ var FT_translatableStrings = {
     "loaderText" : "We are finding your fire truck",
     "serverErrorMessage" : "Something went wrong..",
     "notFoundError" : "Truck not found",
-    "noRecordsMessage" : "No categories found"
+    "noRecordsMessage" : "No categories found",
+    "pricingTxt" : "Call For Custom Quote",
+    "hodTxt" : "Held on Deposit"
 };
 
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
@@ -708,10 +710,15 @@ var FT_prepareImageContainer = function( isForCategory, truckDataList, UICclass 
     for(var truck in truckDataList) {
         if(truckDataList[truck] || isForCategory) {
             if( isForCategory ) {
-                if( languageCode != 'en' && truckDataList[truck].originalName ) {
-                    var imgSrc = FT_truckTypeImageUrl[truckDataList[truck].originalName];
+                var imgSrc = '';
+                if( typeof truckDataList[truck].Thumbnail_Image_Url__c != 'undefined' ) {
+                    imgSrc = truckDataList[truck].Thumbnail_Image_Url__c;
                 } else {
-                    var imgSrc = FT_truckTypeImageUrl[truckDataList[truck].Name];
+                    if( languageCode != 'en' && truckDataList[truck].originalName ) {
+                        imgSrc = FT_truckTypeImageUrl[truckDataList[truck].originalName];                        
+                    } else {                        
+                        imgSrc = FT_truckTypeImageUrl[truckDataList[truck].Name];                        
+                    }
                 }
             }
             else {
@@ -777,7 +784,11 @@ var FT_prepareImageContainer = function( isForCategory, truckDataList, UICclass 
                         }                   
                     }
                 } else {
-                    miniDetailHtml += '<span class="FT_PriceText">Call For Custom Quote</span>';
+                    if( truck['VF_Website_Price__c'] == 'Held on Deposit' ) {
+                        miniDetailHtml += '<div class="FT_PriceText">'+ FT_translatableStrings["pricingTxt"] +'</div><div class="FT_HodText">'+ FT_translatableStrings["hodTxt"] +'</div>';
+                    } else {
+                        miniDetailHtml += '<div class="FT_PriceText">'+ FT_translatableStrings["pricingTxt"] +'</div>';
+                    }
                 }
                 miniDetailHtml += '<a class="FT_redBtn" '+
                                   '   style="color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background+'" truckid="'+truck.Id+'" category="'+categoryName+'" page="'+pageNumber+'" index="'+idx+'" translatedcat="'+translatedCatName+'" Stock_No="'+truck.Stock_Number__c+'">'+ FT_translatableStrings['viewDetailsBtnText'] +'</a></div>';
@@ -1624,7 +1635,13 @@ function FT_prepareTruckDetails( truck ) {
             //var linkUrl = ((selectedTruck['Truck_Public_URL__c']) ? selectedTruck['Truck_Public_URL__c'] : '');
             var pricingText = fieldVal;
             //console.log('pricingText: ',pricingText);
-            if( !isDisplayTruckPricing ) pricingText = 'Call For Custom Quote';
+            if( !isDisplayTruckPricing ) {
+                if( selectedTruck[ field ] == 'Held on Deposit' )  {
+                    pricingText = FT_translatableStrings["pricingTxt"]+' ('+ FT_translatableStrings["hodTxt"] +')';    
+                } else {
+                    pricingText = FT_translatableStrings["pricingTxt"]; 
+                }
+            } 
             TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, pricingText, 'document.getElementsByName(\''+FT_tab2Id+'\')[0].click()', FT_translatableStrings['inquiryLinkText1'], FT_translatableStrings['inquiryLinkText2'], FT_translatableStrings['inquiryLinkText3'] ]);
         } else {
             TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([fieldVal]);
@@ -1936,23 +1953,27 @@ var FT_processTruckData = function(xhttp) {
                 if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 || pgSize == null || typeof pgSize == 'undefined' ) pgSize = 10;
                 FT_putDataInCache( pgSize, 'FT_pageSize' );
                 //if language code is different than english then request translated data from server
+                var allCategories = truckData.recordList;
+                if( allCategories.length > 0 ) {
+                    allCategories.reverse();
+                }
                 if( languageCode != 'en' ) {
                     FT_dataToTranslate = [];
-                    FT_createTranslationData( truckData.recordList );
+                    FT_createTranslationData( allCategories );
                     //console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
                     FT_dataToTranslate.push(FT_translatableStrings);
                     console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
                     //FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
-                    var callbackAdditionalParams = { originalData : truckData.recordList, pageName : 'categoriesPage' };
+                    var callbackAdditionalParams = { originalData : allCategories, pageName : 'categoriesPage' };
                     FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
                 } else {
                     //store category map into a global variable for further use
-                    console.log('truckData.recordList::',truckData.recordList);
-                    if( truckData.recordList.length ) {
+                    console.log('truckData.recordList::',allCategories);
+                    if( allCategories.length ) {
                         //FT_categoryMap = truckData.recordList.reverse();
-                        FT_categoryMap = truckData.recordList;
+                        FT_categoryMap = allCategories;
                     } else {
-                        FT_categoryMap = truckData.recordList;
+                        FT_categoryMap = allCategories;
                         FT_displayServerError( 'noRecordsMessage' );
                     }   
                     FT_processMainPage();
