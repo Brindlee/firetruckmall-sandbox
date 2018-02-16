@@ -116,7 +116,8 @@
     /* vertically middle align contents of modal */
     .FT_modal:before { content: '';display: inline-block;vertical-align: middle;height: 100%;}
     .FT_modalContent { display: inline-block; vertical-align: middle; }
-    span.FT_PriceText {font-weight: 600;}
+    div.FT_PriceText {font-weight: 600;}
+    .FT_HodText { margin-top: 4px; }
     .FT_loadingImage {display: block;height: 155px;}
     
     /*** */
@@ -177,4 +178,4 @@
     a.FT_PagePrev { margin: 0 auto 8px auto; }
     a.FT_PageNext { margin: 8px auto 0 auto; }
     .FT_PageTitle { padding-top: 5px;  }
-}  
+} 
