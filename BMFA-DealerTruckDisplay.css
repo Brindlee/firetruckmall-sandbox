@@ -129,6 +129,8 @@
     .FT_Pagination {padding: 10px;text-align: center;}
     select.FT_pageSelect { padding: 1px; margin: 0px; max-width: 100px;width: auto; }
     #descriptionTab p { margin-bottom: 10px; }
+    .FT_regtext { position:relative;display: inline-block;margin-top: 10px; }
+    .FT_regmark { position: absolute; right: -14px; top: -2px; font-size: 15px; }
 @media screen and  (max-width:1200px){
     .FT_modalContent {width: 80%;}
 }
