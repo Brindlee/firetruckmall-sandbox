@@ -31,6 +31,7 @@ var FT_translatableStrings = {
 
     "footerSellingTxt1" : "Selling A Used Fire Truck?",
     "footerSellingTxt2" : "Click Here For More Information",
+    "footerPoweredByTxt" : "Powered by the Fire Truck Finder",
     "mainPageTitle" : "Shop Our Used Fire Trucks",
     "paginationNextText" : "Next",
     "paginationPrevText" : "Previous",
@@ -195,6 +196,9 @@ var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
                            '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfR"/>'+
                            '    <h5 style="color:{1}" class="FT_footerHead">{3}</h5>' +
                            '    <a href="javascript:void(0)" onclick="showSellModal()" style="color:{2}">{4}</a>' +
+                           '    <div class="FT_regtext" style="color:{2}">{5}' +
+                           '        <div class="FT_regmark" style="color:{2}">&#174;</div>' +
+                           '    </div>' +
                            '</div>';
 var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">{1}</p></div></div>';
 
@@ -420,7 +424,7 @@ String.prototype.FT_format.regex = new RegExp("{-?[0-9]+}", "g");
  * @Param parent    : hold parent element where footer will be added.
  */
 var FT_addPageFooter = function(parent) {
-    var FooterStrHtml = FT_PageFooterStrHTML.FT_format([FT_ThemeProperties.background, FT_ThemeProperties.color, FT_ThemeProperties.color, FT_translatableStrings['footerSellingTxt1'], FT_translatableStrings['footerSellingTxt2']]);
+    var FooterStrHtml = FT_PageFooterStrHTML.FT_format([FT_ThemeProperties.background, FT_ThemeProperties.color, FT_ThemeProperties.color, FT_translatableStrings['footerSellingTxt1'], FT_translatableStrings['footerSellingTxt2'], FT_translatableStrings['footerPoweredByTxt'] ]);
     var div = document.createElement('div');
     div.innerHTML = FooterStrHtml;
     /* create a modal for sell form and append to footer */
