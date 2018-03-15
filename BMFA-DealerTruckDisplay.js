@@ -712,104 +712,106 @@ var FT_prepareImageContainer = function( isForCategory, truckDataList, UICclass 
     var ul = document.createElement('ul');
     ul.className = 'FT_listStyle ' + UICclass;
     for(var truck in truckDataList) {
-        if(truckDataList[truck] || isForCategory) {
-            if( isForCategory ) {
-                var imgSrc = '';
-                if( typeof truckDataList[truck].Thumbnail_Image_Url__c != 'undefined' ) {
-                    imgSrc = truckDataList[truck].Thumbnail_Image_Url__c;
-                } else {
-                    if( languageCode != 'en' && truckDataList[truck].originalName ) {
-                        imgSrc = FT_truckTypeImageUrl[truckDataList[truck].originalName];                        
-                    } else {                        
-                        imgSrc = FT_truckTypeImageUrl[truckDataList[truck].Name];                        
-                    }
-                }
-            }
-            else {
-                var imgSrc = FT_truckTypeImageUrl[truck];
-            }
-            var li = document.createElement('li');
-            var div = document.createElement('div');
-            var img = document.createElement('img');
-            
-            if(isForCategory) {
-                var catDetailDiv = document.createElement('div');
-                catDetailDiv.innerHTML = truckDataList[truck].Name+ ' (' +truckDataList[truck].Truck_Count__c+ ')';
-                catDetailDiv.className = 'FT_redTxt';
-                catDetailDiv.style.color = FT_ThemeProperties.background;
-                if( languageCode && languageCode != 'en' &&  truckDataList[truck].originalName ) {
-                    FT_setAttributes( img, { 'category' : truckDataList[truck].originalName, translatedcat: truckDataList[truck].Name, 'page' : 1 } );
-                } else {
-                    FT_setAttributes( img, { 'category' : truckDataList[truck].Name, translatedcat: truckDataList[truck].Name, 'page' : 1 } );
-                }
-                if(!imgSrc) {       
-                    //console.log(truck);
-                }
-                div.appendChild(img);
-                div.appendChild(catDetailDiv);
-            } else {
-                var idx = truck;
-                truck = truckDataList[truck];
-                FT_setAttributes( img, { 'truckid' : truck.Id, category : categoryName, page : pageNumber, index: idx, translatedcat: translatedCatName, Stock_No : truck.Stock_Number__c } );
-                //img.setAttribute('truckid', truck.Id); // Attribute to find truck(for Dev)
-                if(truck.Cloud_Documents__r && truck.Cloud_Documents__r.records.length) {
-                    imgSrc = truck.Cloud_Documents__r.records[0].Amazon_S3_Image_URL__c; //Amazon_S3_Main_Thumbnail_URL__c
-                    //check if main image is set for truck and if set take minimized image to display on trucks listing page
-                    for( var k=0; k < truck.Cloud_Documents__r.records.length; k++ ) {
-                        if( truck.Cloud_Documents__r.records[k].Main_Image__c ) {
-                            imgSrc = truck.Cloud_Documents__r.records[k].Amazon_S3_Main_Thumbnail_URL__c;
-                            break;
+        if( truckDataList.hasOwnProperty( truck ) ) { //added to avoid iterating through object _proto properties
+            if(truckDataList[truck] || isForCategory) {
+                if( isForCategory ) {
+                    var imgSrc = '';
+                    if( typeof truckDataList[truck].Thumbnail_Image_Url__c != 'undefined' ) {
+                        imgSrc = truckDataList[truck].Thumbnail_Image_Url__c;
+                    } else {
+                        if( languageCode != 'en' && truckDataList[truck].originalName ) {
+                            imgSrc = FT_truckTypeImageUrl[truckDataList[truck].originalName];                        
+                        } else {                        
+                            imgSrc = FT_truckTypeImageUrl[truckDataList[truck].Name];                        
                         }
                     }
                 }
-                //Add loading text for lazy loading
-                var loadingSpan = document.createElement('span');
-                loadingSpan.setAttribute('class','FT_loadingImage');
-                loadingSpan.textContent = "Loading...";
-                div.appendChild(loadingSpan);
-    
-                div.appendChild(img);
-                var miniDetailDiv = document.createElement('div');
-                var miniDetailHtml = '';
-                for(var field in FT_MiniDetailFieldToStrHTML) {
-                    if(truck[field]) {
-                        if('VF_Main_Title__c' === field) {
-                            miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, truck[field]]);
-                        } else {
-                            miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
-                        }
-                    }                   
+                else {
+                    var imgSrc = FT_truckTypeImageUrl[truck];
                 }
-                miniDetailHtml += '<div class="FT_btmDiv">';
-                if( isDisplayTruckPricing ) {
-                    for(var field in FT_MiniDetailBottomFieldsToStrHTML) {
+                var li = document.createElement('li');
+                var div = document.createElement('div');
+                var img = document.createElement('img');
+                
+                if(isForCategory) {
+                    var catDetailDiv = document.createElement('div');
+                    catDetailDiv.innerHTML = truckDataList[truck].Name+ ' (' +truckDataList[truck].Truck_Count__c+ ')';
+                    catDetailDiv.className = 'FT_redTxt';
+                    catDetailDiv.style.color = FT_ThemeProperties.background;
+                    if( languageCode && languageCode != 'en' &&  truckDataList[truck].originalName ) {
+                        FT_setAttributes( img, { 'category' : truckDataList[truck].originalName, translatedcat: truckDataList[truck].Name, 'page' : 1 } );
+                    } else {
+                        FT_setAttributes( img, { 'category' : truckDataList[truck].Name, translatedcat: truckDataList[truck].Name, 'page' : 1 } );
+                    }
+                    if(!imgSrc) {       
+                        //console.log(truck);
+                    }
+                    div.appendChild(img);
+                    div.appendChild(catDetailDiv);
+                } else {
+                    var idx = truck;
+                    truck = truckDataList[truck];
+                    FT_setAttributes( img, { 'truckid' : truck.Id, category : categoryName, page : pageNumber, index: idx, translatedcat: translatedCatName, Stock_No : truck.Stock_Number__c } );
+                    //img.setAttribute('truckid', truck.Id); // Attribute to find truck(for Dev)
+                    if(truck.Cloud_Documents__r && truck.Cloud_Documents__r.records.length) {
+                        imgSrc = truck.Cloud_Documents__r.records[0].Amazon_S3_Image_URL__c; //Amazon_S3_Main_Thumbnail_URL__c
+                        //check if main image is set for truck and if set take minimized image to display on trucks listing page
+                        for( var k=0; k < truck.Cloud_Documents__r.records.length; k++ ) {
+                            if( truck.Cloud_Documents__r.records[k].Main_Image__c ) {
+                                imgSrc = truck.Cloud_Documents__r.records[k].Amazon_S3_Main_Thumbnail_URL__c;
+                                break;
+                            }
+                        }
+                    }
+                    //Add loading text for lazy loading
+                    var loadingSpan = document.createElement('span');
+                    loadingSpan.setAttribute('class','FT_loadingImage');
+                    loadingSpan.textContent = "Loading...";
+                    div.appendChild(loadingSpan);
+        
+                    div.appendChild(img);
+                    var miniDetailDiv = document.createElement('div');
+                    var miniDetailHtml = '';
+                    for(var field in FT_MiniDetailFieldToStrHTML) {
                         if(truck[field]) {
-                            miniDetailHtml += FT_MiniDetailBottomFieldsToStrHTML[field].FT_format([truck[field]]);
+                            if('VF_Main_Title__c' === field) {
+                                miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, truck[field]]);
+                            } else {
+                                miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
+                            }
                         }                   
                     }
-                } else {
-                    if( truck['VF_Website_Price__c'] == 'Held on Deposit' ) {
-                        miniDetailHtml += '<div class="FT_PriceText">'+ FT_translatableStrings["pricingTxt"] +'</div><div class="FT_HodText">'+ FT_translatableStrings["hodTxt"] +'</div>';
+                    miniDetailHtml += '<div class="FT_btmDiv">';
+                    if( isDisplayTruckPricing ) {
+                        for(var field in FT_MiniDetailBottomFieldsToStrHTML) {
+                            if(truck[field]) {
+                                miniDetailHtml += FT_MiniDetailBottomFieldsToStrHTML[field].FT_format([truck[field]]);
+                            }                   
+                        }
                     } else {
-                        miniDetailHtml += '<div class="FT_PriceText">'+ FT_translatableStrings["pricingTxt"] +'</div>';
+                        if( truck['VF_Website_Price__c'] == 'Held on Deposit' ) {
+                            miniDetailHtml += '<div class="FT_PriceText">'+ FT_translatableStrings["pricingTxt"] +'</div><div class="FT_HodText">'+ FT_translatableStrings["hodTxt"] +'</div>';
+                        } else {
+                            miniDetailHtml += '<div class="FT_PriceText">'+ FT_translatableStrings["pricingTxt"] +'</div>';
+                        }
                     }
+                    miniDetailHtml += '<a class="FT_redBtn" '+
+                                      '   style="color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background+'" truckid="'+truck.Id+'" category="'+categoryName+'" page="'+pageNumber+'" index="'+idx+'" translatedcat="'+translatedCatName+'" Stock_No="'+truck.Stock_Number__c+'">'+ FT_translatableStrings['viewDetailsBtnText'] +'</a></div>';
+                    miniDetailDiv.innerHTML = miniDetailHtml;
+                    div.appendChild(miniDetailDiv);
                 }
-                miniDetailHtml += '<a class="FT_redBtn" '+
-                                  '   style="color:'+FT_ThemeProperties.color+'; background:'+FT_ThemeProperties.background+'; border:1px solid '+FT_ThemeProperties.background+'" truckid="'+truck.Id+'" category="'+categoryName+'" page="'+pageNumber+'" index="'+idx+'" translatedcat="'+translatedCatName+'" Stock_No="'+truck.Stock_Number__c+'">'+ FT_translatableStrings['viewDetailsBtnText'] +'</a></div>';
-                miniDetailDiv.innerHTML = miniDetailHtml;
-                div.appendChild(miniDetailDiv);
+                /* Add lazy load class and data-src */
+                var originalImgSrc = ((imgSrc) ? imgSrc : FT_truckTypeImageUrl[FT_defaultTruckImageKey]);
+                if( !isForCategory ) {
+                    img.setAttribute('class', 'FT_lazy');
+                    img.setAttribute('data-src', originalImgSrc);
+                    img.style.opacity = "0";
+                } else {
+                    img.src = originalImgSrc;
+                }
+                li.appendChild(div);
+                ul.appendChild(li);
             }
-            /* Add lazy load class and data-src */
-            var originalImgSrc = ((imgSrc) ? imgSrc : FT_truckTypeImageUrl[FT_defaultTruckImageKey]);
-            if( !isForCategory ) {
-                img.setAttribute('class', 'FT_lazy');
-                img.setAttribute('data-src', originalImgSrc);
-                img.style.opacity = "0";
-            } else {
-                img.src = originalImgSrc;
-            }
-            li.appendChild(div);
-            ul.appendChild(li);
         }
     }   
     return TruckImageContainer.appendChild(ul);;
