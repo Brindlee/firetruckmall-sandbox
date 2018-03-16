@@ -190,6 +190,7 @@ var FT_DetailFieldToStrHTML = {
     'VF_Wheelbase__c' : '{0}<br/>',
     'Additional_Dimension_Info__c' : '{0}<br/>'
 };
+
 /* Javascript global variable for Bind footer element on page. */
 var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
                            '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfL"/>'+
@@ -2951,6 +2952,24 @@ var FT_addSellFrom = function() {
     submitButton.className = 'FT_submitBtn';
     submitButton.innerHTML = FT_translatableStrings['sellFormSubmitText'];
     formWarpper.appendChild(submitButton);
+
+    var trademarkElm = document.createElement( 'div' );
+    trademarkElm.className = 'FT_frmfooter';
+
+    var trademarkElmInner = document.createElement( 'div' );
+    trademarkElmInner.className = 'FT_regtext';
+
+    var paraTxt = document.createTextNode( FT_translatableStrings[ 'footerPoweredByTxt' ] );
+
+    var trademarkSymbolElm = document.createElement( 'div' );
+    trademarkSymbolElm.className = 'FT_regmark';
+    trademarkSymbolElm.innerHTML = '&#174;';
+    trademarkElmInner.appendChild( paraTxt ); 
+    trademarkElmInner.appendChild( trademarkSymbolElm ); 
+    trademarkElm.appendChild( trademarkElmInner );
+
+    formWarpper.appendChild( trademarkElm );
+
     sellFormSection.appendChild(formWarpper);
     //append loader displayed when for is submitted
     var loaderDiv = FT_createLoaderNode();
