@@ -131,6 +131,7 @@
     #descriptionTab p { margin-bottom: 10px; }
     .FT_regtext { position:relative;display: inline-block;margin-top: 10px; }
     .FT_regmark { position: absolute; right: -14px; top: -2px; font-size: 15px; }
+    .FT_frmfooter { margin-top: 20px; }
 @media screen and  (max-width:1200px){
     .FT_modalContent {width: 80%;}
 }
