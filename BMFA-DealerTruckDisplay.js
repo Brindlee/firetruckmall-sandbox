@@ -233,7 +233,6 @@ var head = document.getElementsByTagName('head')[0];
             var isDisplayTruckPricing = true;
             var dealerPhoneNumber = '';
             var isDisplayDealerPhone = false;
-            var headerDescriptionTxt = '';
 var languageCode = 'en';
 var FT_truckTypeMap;
 var FT_categoryMap;
@@ -2524,7 +2523,7 @@ var FT_setAccountRecordGlobals = function( accountRecord ) {
         dealerPhoneNumber = accountRecord.Contact_Phone_Number__c;
     }
     if( typeof accountRecord.Header_Description__c != 'undefined' ) {
-        headerDescriptionTxt = accountRecord.Header_Description__c;
+        FT_translatableStrings['headerDescription'] = accountRecord.Header_Description__c;
     }
     //replace dealerPhone in translatable string with actual account phone from back-end data
     for( var key in FT_translatableStrings ) {
