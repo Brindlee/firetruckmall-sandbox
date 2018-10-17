@@ -1,233 +1,239 @@
 var head = document.getElementsByTagName('head')[0];
-/* Inject external script library for making support of Promise in IE */
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js';
-head.appendChild(script);
-
-/* Javascript Map for Bind Truck Apparatus Type to respective public image path. */
-var FT_truckTypeImageUrl = {
-    'FooterBellImg':'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003fIoK&oid=00Do0000000JLLE&lastMod=1499264854000',
-    'Default' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003exvn&oid=00Do0000000JLLE&lastMod=1497451382000',
-    'All' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Wht1&oid=00Do0000000JLLE&lastMod=1518725645000',
-    'Rescue Pumpers and Engines' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtz&oid=00Do0000000JLLE&lastMod=1518725917000',
-    'Used Rescue Trucks and Squads' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuY&oid=00Do0000000JLLE&lastMod=1495568998000',
-    'Used Aerials, Ladder Trucks and Quints' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whu9&oid=00Do0000000JLLE&lastMod=1518725963000',
-    'Used Tankers and Tenders' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whud&oid=00Do0000000JLLE&lastMod=1495569016000',
-    'Ambulances and Transport Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhtL&oid=00Do0000000JLLE&lastMod=1495568688000',
-    'Used Brush Trucks, Quick Attacks & Minis' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuO&oid=00Do0000000JLLE&lastMod=1495568956000',
-    'Used ARFF and Airport Crash Trucks' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuE&oid=00Do0000000JLLE&lastMod=1495568936000',
-    'Towers and Platforms' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtl&oid=00Do0000000JLLE&lastMod=1518725945000',
-    'Command Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhtQ&oid=00Do0000000JLLE&lastMod=1495568717000',
-    'Loose and Miscellaneous Equipment' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtp&oid=00Do0000000JLLE&lastMod=1495568834000',
-    'European Style Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtf&oid=00Do0000000JLLE&lastMod=1495568815000',
-    'Pacific Rim Style Fire Apparatus' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtu&oid=00Do0000000JLLE&lastMod=1495568856000',
-    'Vocational Trucks' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whun&oid=00Do0000000JLLE&lastMod=1495569042000',
-    'Used Pumpers and Engines' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuT&oid=00Do0000000JLLE&lastMod=1518725976000',
-    'Demoand Refurb Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whta&oid=00Do0000000JLLE&lastMod=1495568791000',
-};
-
-var FT_translatableStrings = {
-
-    "footerSellingTxt1" : "Selling A Used Fire Truck?",
-    "footerSellingTxt2" : "Click Here For More Information",
-    "footerPoweredByTxt" : "Powered by the Fire Truck Finder",
-    "mainPageTitle" : "Shop Our Used Fire Trucks",
-    "paginationNextText" : "Next",
-    "paginationPrevText" : "Previous",
-    "viewDetailsBtnText" : "View Details",
-    "descriptionTabText" : "DESCRIPTION",
-    "inquiryTabText" : "YES I&#39;M INTERESTED",
-    "shareLinkTabText" : "LINK TO SHARE",
-    "copyBtnText" : "Copy",
-    "inquiryLinkText1" : "click",
-    "inquiryLinkText2" : "here",
-    "inquiryLinkText3" : "to inquire about this truck",
-    "contactUsText" : "Contact us to learn more about this truck.",
-    "pageTitleStart" : "Shop Our ",
-    "allCatText" : "Used Fire Trucks",
-    "paginationText1" : "Page",
-    "paginationText2" : "of",
-    "backToCatPageText" : "Return To Categories",
-    "backToTrucksPageText" : "Return To Truck List",
-    "sellFormTitle" : "Let us know a little about your Fire Truck, and we will be in touch!",
-    "requiredErrormsg" : "Please Fill All Required Fields!",
-    "invalidPhoneError" : "Invalid Phone!",
-    "invalidEmailError" : "Invalid Email!",
-    "sellFormSubmitText" : "Submit",
-    "sellFormSuccessMsg" : "Thank you for the opportunity to sell your truck.  A member of our team will be in touch with you as soon as possible to answer your questions.",
-    "formErrorMsg" : "Something Went Wrong. Please Contact Admin!",
-    "First Name" : "First Name",
-    "Last Name" : "Last Name",
-    "Fire Department" : "Fire Department",
-    "Email" : "Email",
-    "Phone" : "Phone",
-    "State" : "State",
-    "What year is your truck" : "What year is your truck",
-    "What type of truck" : "What type of truck",
-    "What brand is your truck" : "What brand is your truck",
-    "When would you like to sell your truck" : "When would you like to sell your truck",
-    "What price is needed for your truck" : "What price is needed for your truck",
-    "Comments" : "Comments",
-    "enquiryFormSubmitTxt" : "Submit Fire Truck Inquiry",
-    "Purchase Timeframe" : "Purchase Timeframe",
-    "City" : "City",
-    "FD or Company" : "FD or Company",
-    "Inquiry Message" : "Inquiry Message",
-    "inquiryFormSuccessMsg" : "Your Request Has Been Submited Successfully!",
-    "loaderText" : "We are finding your fire truck",
-    "serverErrorMessage" : "Something went wrong..",
-    "notFoundError" : "Truck not found",
-    "noRecordsMessage" : "No categories found",
-    "pricingTxt" : "Call For Custom Quote",
-    "hodTxt" : "Held on Deposit"
-};
-
-/* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
-var FT_GlobalFieldToStrHTML = {
-    VF_Main_Title__c : '<h1 class="FT_title">{0}</h1>',
-    VF_Website_Price__c : '<h2 class="FT_heading" style="color:{0}">{1} - {3} <a href="javascript:void(0)" onclick="{2}">{4}</a> {5} </h2>',
-    Cloud_Documents__r : ''
-}
-
-/* Javascript Map for Bind Truck Mini-Details(HTML) Top content dynamically with respective field data of truck. */
-var FT_MiniDetailFieldToStrHTML = {
-    VF_Main_Title__c : '<div class="FT_redTxt" style="color:{0}">{1}</div>',
-    Description : '<div class="FT_gryTxt">{0}</div>',
-    Stock_Number__c: '<div class="FT_gryTxt">Stock # {0}</div>',   
-    VF_Additional_Pricing_Text__c: '<div class="FT_gryTxt">{0}</div>' 
-}
-
-/* Javascript Map for Bind Truck Mini-Details(HTML) bottom content dynamically with respective field data of truck. */
-var FT_MiniDetailBottomFieldsToStrHTML = {
-    VF_Additional_Pricing_Text__c : '<div>{0}</div>',
-    VF_Website_Price__c : '<div class="FT_blackCost">{0}</div>'
-}
-
-// this Map values changes as per Dealer website theam.
-var FT_ThemeProperties = {
-    background : '',
-    color : ''
-}
-
-// this Map value will set as per URL parametrs value.
-var FT_URLParam = {
-    stockno : '',
-    category : ''
-}
-
-/* Javascript Map for Bind Truck Details(HTML) Tab content dynamically with respective field data of truck. */
-var FT_DetailFieldToStrHTML = {
-    'Stock_Number__c' : '<div class="FT_redTxt FT_bigTxt" style="color:{0}">Stock # {1}</div>',
-    'Description' : '{0}<br/>',
-    'VF_Main_Title__c' : '<div>{0}</div>',
-    'VF_Chassis__c' : '{0}<br/>',
-    'VF_Seating__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Chassis_Info__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Fire_Body_Info__c' : '{0}<br/>',
-    'VF_Engine__c' : '{0}<br/>',
-    'VF_Transmission_Description__c' : '{0}<br/>',
-    'VF_Engine_Brake__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Engine_Info__c' : '{0}<br/>',
-    'VF_Pump__c' : '{0}<br/>',
-    'VF_Current_Annual_Pump_Service_Test__c' : '{0}<br/>',
-    'VF_Water_Tank__c' : '{0}<br/>',
-    'VF_Foam_System__c' : '{0}<br/>',
-    'VF_Foam_Tank_1__c' : '{0}<br/>',
-    'VF_Foam_Tank_2__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Pump_Info__c' : '{0}<br/>',
-    'VF_Drivers_Side_Discharges__c' : '{0}<br/>',
-    'VF_Drivers_Side_Suction__c' : '{0}<br/>',
-    'VF_Officers_Side_Discharges__c' : '{0}<br/>',
-    'VF_Officers_Side_Suction__c' : '{0}<br/>',
-    'VF_Front_Discharges__c' : '{0}<br/>',
-    'VF_Front_Suction__c' : '{0}<br/>',
-    'VF_Rear_Discharges__c' : '{0}<br/>',
-    'VF_Rear_Suction__c' : '{0}<br/>',
-    'FT_Deck_Gun__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Plumbing_Info__c' : '{0}<br/>',
-    'VF_Booster_Reel__c' : '{0}<br/>',
-    'VF_Crosslays_Speedlays__c' : '{0}<br/>',
-    'VF_Monitor_Description__c' : '{0}<br/>',
-    'VF_Generator_Description__c' : '{0}<br/>',
-    'VF_Lighting_Description__c' : '{0}<br/>',
-    'VF_Heated_Mirrors__c' : '{0}<br/>',
-    'VF_Hard_Suction__c' : '{0}<br/>',
-    'VF_Electric_Reels__c' : '{0}<br/>',
-    'VF_Hydraulic_Reels__c' : '{0}<br/>',
-    'VF_Air_Reels__c' : '{0}<br/>',
-    'VF_Electronic_Siren__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Electrical_Info__c' : '{0}<br/>',
-    'VF_Cascade_System__c' : '{0}<br/>',
-    'VF_Breathing_Air__c' : '{0}<br/>',         
-    'VF_Air_Conditioning__c' : '{0}<br/>',
-    'VF_Hydraulic_Ladder_Rack__c' : '{0}<br/>',
-    'VF_Aluminum_Hose_Bed_Cover__c' : '{0}<br/>',
-    'VF_Automatic_Tire_Chains__c' : '{0}<br/>',
-    'VF_Pump_Heat_Pan__c' : '{0}<br/>',
-    'VF_Backup_Camera__c' : '{0}<br/>',
-    'VF_Federal_Q2B_Siren__c' : '{0}<br/>',
-    'FT_Ground_Ladders__c' : '{0}<br/>',
-    'VF_Auto_Lube_System__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Features__c' : '{0}<br/>',
-    'VF_Pump_Hours__c' : '{0}<br/>',
-    'VF_Engine_Hours__c' : '{0}<br/>',
-    'VF_Arrowstick_Traffic_Indicator__c' : '{0}<br/>',
-    'VF_LED_Lighting__c' : '{0}<br/>',
-    'VF_Light_Tower__c' : '{0}<br/>',
-    'VF_Telescoping_Lights__c' : '{0}<br/>',
-    'Fire_Truck__r.Additional_Lighting_Info__c' : '{0}<br/>',
-    'VF_Current_Aerial_Certification__c' : '{0}<br/>',
-    'Fire_Truck__r.Aerial_Info__c' : '{0}<br/>',
-    'FT_Aerial_Hours__c' : '{0}<br/>',
-    'VF_Mileage__c' : '{0}<br/>',
-    'Loose_Equipment_Included__c' : '{0}<br/>',
-    'VF_Break_Text_1__c' : '{0}<br/>',
-    'VF_OAL__c' : '{0}<br/>',
-    'VF_OAH__c' : '{0}<br/>',
-    'VF_OAW__c' : '{0}<br/>',
-    'VF_GVRW__c' : '{0}<br/>',
-    'VF_Wheelbase__c' : '{0}<br/>',
-    'Additional_Dimension_Info__c' : '{0}<br/>'
-};
-
-/* Javascript global variable for Bind footer element on page. */
-var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
-                           '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfL"/>'+
-                           '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfR"/>'+
-                           '    <h5 style="color:{1}" class="FT_footerHead">{3}</h5>' +
-                           '    <a href="javascript:void(0)" onclick="showSellModal()" style="color:{2}">{4}</a>' +
-                           '    <div class="FT_regtext" style="color:{2}">{5}' +
-                           '        <div class="FT_regmark" style="color:{2}">&#174;</div>' +
-                           '    </div>' +
-                           '</div>';
-var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">{1}</p></div></div>';
-
-/* Javascript variables contains CSS class in string format to for add to page. */
-var FT_DynamicTabCSS = 'li.FT_active a, li.FT_active a:hover { background: {0}; color: {1}; }'
-var FT_DynamicNxtBtnCSS = 'a.FT_swiperBtn.FT_nextBtn:before { content: ""; border: solid {0}; border-width: 0 3px 3px 0; position: absolute; border-radius: 3px; left: 10px;';
-var FT_DynamicPrvBtnCSS = 'a.FT_swiperBtn.FT_prevBtn:before { content: ""; border: solid {0}; border-width: 0 3px 3px 0; position: absolute; border-radius: 3px; left: 10px;';
-
-var FT_BMFA_TruckContainer;
-var FT_lastCategorySelected;
-var FT_lastTruckSelected;
-var FT_isLocalStorageSupport = (typeof(Storage) !== "undefined");
-var FT_defaultTruckImageKey = 'Default';
-var FT_tab1Id = 'descriptionTab';
-var FT_tab2Id = 'inquiryTab';
-var FT_tab3Id = 'shareLinkTab';
-var FT_emailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var FT_phoneRegex =  /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
-var FT_currencyRegex = /[\$]?([0-9,])*[\.][0-9]{2}/;
-var FT_DealerAccointId = ''; // this value changes as per Dealer.
-var FT_TruckId;
-var isSandbox = false;
-var pageNumber = 1;
-var pageSize = 10;
-
-var navigatedFromCategories = false;
-var swiperLargeImageList = [];
-var isDisplayTruckPricing = true;
+            /* Inject external script library for making support of Promise in IE */
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js';
+            head.appendChild(script);
+            
+            /* Javascript Map for Bind Truck Apparatus Type to respective public image path. */
+            var FT_truckTypeImageUrl = {
+                'FooterBellImg':'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003fIoK&oid=00Do0000000JLLE&lastMod=1499264854000',
+                'Default' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000003exvn&oid=00Do0000000JLLE&lastMod=1497451382000',
+                'All' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Wht1&oid=00Do0000000JLLE&lastMod=1518725645000',
+                'Rescue Pumpers and Engines' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtz&oid=00Do0000000JLLE&lastMod=1518725917000',
+                'Used Rescue Trucks and Squads' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuY&oid=00Do0000000JLLE&lastMod=1495568998000',
+                'Used Aerials, Ladder Trucks and Quints' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whu9&oid=00Do0000000JLLE&lastMod=1518725963000',
+                'Used Tankers and Tenders' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whud&oid=00Do0000000JLLE&lastMod=1495569016000',
+                'Ambulances and Transport Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhtL&oid=00Do0000000JLLE&lastMod=1495568688000',
+                'Used Brush Trucks, Quick Attacks & Minis' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuO&oid=00Do0000000JLLE&lastMod=1495568956000',
+                'Used ARFF and Airport Crash Trucks' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuE&oid=00Do0000000JLLE&lastMod=1495568936000',
+                'Towers and Platforms' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtl&oid=00Do0000000JLLE&lastMod=1518725945000',
+                'Command Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhtQ&oid=00Do0000000JLLE&lastMod=1495568717000',
+                'Loose and Miscellaneous Equipment' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtp&oid=00Do0000000JLLE&lastMod=1495568834000',
+                'European Style Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtf&oid=00Do0000000JLLE&lastMod=1495568815000',
+                'Pacific Rim Style Fire Apparatus' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whtu&oid=00Do0000000JLLE&lastMod=1495568856000',
+                'Vocational Trucks' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whun&oid=00Do0000000JLLE&lastMod=1495569042000',
+                'Used Pumpers and Engines' : 'https://brindlee--c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002WhuT&oid=00Do0000000JLLE&lastMod=1518725976000',
+                'Demoand Refurb Units' : 'https://c.na78.content.force.com/servlet/servlet.ImageServer?id=0151N000002Whta&oid=00Do0000000JLLE&lastMod=1495568791000',
+            };
+            
+            var FT_translatableStrings = {
+            
+                "footerSellingTxt1" : "Selling A Used Fire Truck?",
+                "footerSellingTxt2" : "click here for more information",
+                "footerPoweredByTxt" : "Powered by the Fire Truck Finder",
+                "footerCallusText" : "Call us at dealerPhone or",
+                "headerDescription" : "Welcome to the used truck portion of our site. Please use Fire Truck Finder below to search our database for used trucks. Send an inquiry form a truck below with questions, or call us at dealerPhone",
+                "mainPageTitle" : "Shop Our Used Fire Trucks",
+                "paginationNextText" : "Next",
+                "paginationPrevText" : "Previous",
+                "viewDetailsBtnText" : "View Details",
+                "descriptionTabText" : "DESCRIPTION",
+                "inquiryTabText" : "YES I&#39;M INTERESTED",
+                "shareLinkTabText" : "LINK TO SHARE",
+                "copyBtnText" : "Copy",
+                "inquiryLinkText1" : "click",
+                "inquiryLinkText2" : "here",
+                "inquiryLinkText3" : "to inquire about this truck",
+                "contactUsText" : "Send your questions below, or call us at dealerPhone for more info on this fire truck",
+                "pageTitleStart" : "Shop Our ",
+                "allCatText" : "Used Fire Trucks",
+                "paginationText1" : "Page",
+                "paginationText2" : "of",
+                "backToCatPageText" : "Return To Categories",
+                "backToTrucksPageText" : "Return To Truck List",
+                "sellFormTitle" : "Let us know a little about your Fire Truck, and we will be in touch!",
+                "requiredErrormsg" : "Please Fill All Required Fields!",
+                "invalidPhoneError" : "Invalid Phone!",
+                "invalidEmailError" : "Invalid Email!",
+                "sellFormSubmitText" : "Submit",
+                "sellFormSuccessMsg" : "Thank you for the opportunity to sell your truck.  A member of our team will be in touch with you as soon as possible to answer your questions.",
+                "formErrorMsg" : "Something Went Wrong. Please Contact Admin!",
+                "First Name" : "First Name",
+                "Last Name" : "Last Name",
+                "Fire Department" : "Fire Department",
+                "Email" : "Email",
+                "Phone" : "Phone",
+                "State" : "State",
+                "What year is your truck" : "What year is your truck",
+                "What type of truck" : "What type of truck",
+                "What brand is your truck" : "What brand is your truck",
+                "When would you like to sell your truck" : "When would you like to sell your truck",
+                "What price is needed for your truck" : "What price is needed for your truck",
+                "Comments" : "Comments",
+                "enquiryFormSubmitTxt" : "Submit Fire Truck Inquiry",
+                "Purchase Timeframe" : "Purchase Timeframe",
+                "City" : "City",
+                "FD or Company" : "FD or Company",
+                "Inquiry Message" : "Inquiry Message",
+                "inquiryFormSuccessMsg" : "Your Request Has Been Submited Successfully!",
+                "loaderText" : "We are finding your fire truck",
+                "serverErrorMessage" : "Something went wrong..",
+                "notFoundError" : "Truck not found",
+                "noRecordsMessage" : "No categories found",
+                "pricingTxt" : "Call For Custom Quote",
+                "hodTxt" : "Held on Deposit",
+                "detailPageCallusText" : "or call us at dealerPhone for more info"
+            };
+            
+            /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
+            var FT_GlobalFieldToStrHTML = {
+                VF_Main_Title__c : '<h1 class="FT_title">{0}</h1>',
+                VF_Website_Price__c : '<h2 class="FT_heading" style="color:{0}">{1} - {3} <a href="javascript:void(0)" onclick="{2}">{4}</a> {5} <span class="FT_callustxt" style="display:{7};">{6}</span></h2> ',
+                Cloud_Documents__r : ''
+            }
+            
+            /* Javascript Map for Bind Truck Mini-Details(HTML) Top content dynamically with respective field data of truck. */
+            var FT_MiniDetailFieldToStrHTML = {
+                VF_Main_Title__c : '<div class="FT_redTxt" style="color:{0}">{1}</div>',
+                Description : '<div class="FT_gryTxt">{0}</div>',
+                Stock_Number__c: '<div class="FT_gryTxt">Stock # {0}</div>',   
+                VF_Additional_Pricing_Text__c: '<div class="FT_gryTxt">{0}</div>' 
+            }
+            
+            /* Javascript Map for Bind Truck Mini-Details(HTML) bottom content dynamically with respective field data of truck. */
+            var FT_MiniDetailBottomFieldsToStrHTML = {
+                VF_Additional_Pricing_Text__c : '<div>{0}</div>',
+                VF_Website_Price__c : '<div class="FT_blackCost">{0}</div>'
+            }
+            
+            // this Map values changes as per Dealer website theam.
+            var FT_ThemeProperties = {
+                background : '',
+                color : ''
+            }
+            
+            // this Map value will set as per URL parametrs value.
+            var FT_URLParam = {
+                stockno : '',
+                category : ''
+            }
+            
+            /* Javascript Map for Bind Truck Details(HTML) Tab content dynamically with respective field data of truck. */
+            var FT_DetailFieldToStrHTML = {
+                'Stock_Number__c' : '<div class="FT_redTxt FT_bigTxt" style="color:{0}">Stock # {1}</div>',
+                'Description' : '{0}<br/>',
+                'VF_Main_Title__c' : '<div>{0}</div>',
+                'VF_Chassis__c' : '{0}<br/>',
+                'VF_Seating__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Chassis_Info__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Fire_Body_Info__c' : '{0}<br/>',
+                'VF_Engine__c' : '{0}<br/>',
+                'VF_Transmission_Description__c' : '{0}<br/>',
+                'VF_Engine_Brake__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Engine_Info__c' : '{0}<br/>',
+                'VF_Pump__c' : '{0}<br/>',
+                'VF_Current_Annual_Pump_Service_Test__c' : '{0}<br/>',
+                'VF_Water_Tank__c' : '{0}<br/>',
+                'VF_Foam_System__c' : '{0}<br/>',
+                'VF_Foam_Tank_1__c' : '{0}<br/>',
+                'VF_Foam_Tank_2__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Pump_Info__c' : '{0}<br/>',
+                'VF_Drivers_Side_Discharges__c' : '{0}<br/>',
+                'VF_Drivers_Side_Suction__c' : '{0}<br/>',
+                'VF_Officers_Side_Discharges__c' : '{0}<br/>',
+                'VF_Officers_Side_Suction__c' : '{0}<br/>',
+                'VF_Front_Discharges__c' : '{0}<br/>',
+                'VF_Front_Suction__c' : '{0}<br/>',
+                'VF_Rear_Discharges__c' : '{0}<br/>',
+                'VF_Rear_Suction__c' : '{0}<br/>',
+                'FT_Deck_Gun__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Plumbing_Info__c' : '{0}<br/>',
+                'VF_Booster_Reel__c' : '{0}<br/>',
+                'VF_Crosslays_Speedlays__c' : '{0}<br/>',
+                'VF_Monitor_Description__c' : '{0}<br/>',
+                'VF_Generator_Description__c' : '{0}<br/>',
+                'VF_Lighting_Description__c' : '{0}<br/>',
+                'VF_Heated_Mirrors__c' : '{0}<br/>',
+                'VF_Hard_Suction__c' : '{0}<br/>',
+                'VF_Electric_Reels__c' : '{0}<br/>',
+                'VF_Hydraulic_Reels__c' : '{0}<br/>',
+                'VF_Air_Reels__c' : '{0}<br/>',
+                'VF_Electronic_Siren__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Electrical_Info__c' : '{0}<br/>',
+                'VF_Cascade_System__c' : '{0}<br/>',
+                'VF_Breathing_Air__c' : '{0}<br/>',         
+                'VF_Air_Conditioning__c' : '{0}<br/>',
+                'VF_Hydraulic_Ladder_Rack__c' : '{0}<br/>',
+                'VF_Aluminum_Hose_Bed_Cover__c' : '{0}<br/>',
+                'VF_Automatic_Tire_Chains__c' : '{0}<br/>',
+                'VF_Pump_Heat_Pan__c' : '{0}<br/>',
+                'VF_Backup_Camera__c' : '{0}<br/>',
+                'VF_Federal_Q2B_Siren__c' : '{0}<br/>',
+                'FT_Ground_Ladders__c' : '{0}<br/>',
+                'VF_Auto_Lube_System__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Features__c' : '{0}<br/>',
+                'VF_Pump_Hours__c' : '{0}<br/>',
+                'VF_Engine_Hours__c' : '{0}<br/>',
+                'VF_Arrowstick_Traffic_Indicator__c' : '{0}<br/>',
+                'VF_LED_Lighting__c' : '{0}<br/>',
+                'VF_Light_Tower__c' : '{0}<br/>',
+                'VF_Telescoping_Lights__c' : '{0}<br/>',
+                'Fire_Truck__r.Additional_Lighting_Info__c' : '{0}<br/>',
+                'VF_Current_Aerial_Certification__c' : '{0}<br/>',
+                'Fire_Truck__r.Aerial_Info__c' : '{0}<br/>',
+                'FT_Aerial_Hours__c' : '{0}<br/>',
+                'VF_Mileage__c' : '{0}<br/>',
+                'Loose_Equipment_Included__c' : '{0}<br/>',
+                'VF_Break_Text_1__c' : '{0}<br/>',
+                'VF_OAL__c' : '{0}<br/>',
+                'VF_OAH__c' : '{0}<br/>',
+                'VF_OAW__c' : '{0}<br/>',
+                'VF_GVRW__c' : '{0}<br/>',
+                'VF_Wheelbase__c' : '{0}<br/>',
+                'Additional_Dimension_Info__c' : '{0}<br/>'
+            };
+            
+            /* Javascript global variable for Bind footer element on page. */
+            var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
+                                       '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfL"/>'+
+                                       '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfR"/>'+
+                                       '    <h5 style="color:{1}" class="FT_footerHead">{3}</h5>' +
+                                       '    <div class="FT_footerinner"><span style="color:{1}; display: {7}">{6} </span> <a href="javascript:void(0)" onclick="showSellModal()" style="color:{2}">{4}</a></div>' +
+                                       '    <div class="FT_regtext" style="color:{2}">{5}' +
+                                       '        <div class="FT_regmark" style="color:{2}">&#174;</div>' +
+                                       '    </div>' +
+                                       '</div>';
+            var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">{1}</p></div></div>';
+            
+            /* Javascript variables contains CSS class in string format to for add to page. */
+            var FT_DynamicTabCSS = 'li.FT_active a, li.FT_active a:hover { background: {0}; color: {1}; }'
+            var FT_DynamicNxtBtnCSS = 'a.FT_swiperBtn.FT_nextBtn:before { content: ""; border: solid {0}; border-width: 0 3px 3px 0; position: absolute; border-radius: 3px; left: 10px;';
+            var FT_DynamicPrvBtnCSS = 'a.FT_swiperBtn.FT_prevBtn:before { content: ""; border: solid {0}; border-width: 0 3px 3px 0; position: absolute; border-radius: 3px; left: 10px;';
+            
+            var FT_BMFA_TruckContainer;
+            var FT_lastCategorySelected;
+            var FT_lastTruckSelected;
+            var FT_isLocalStorageSupport = (typeof(Storage) !== "undefined");
+            var FT_defaultTruckImageKey = 'Default';
+            var FT_tab1Id = 'descriptionTab';
+            var FT_tab2Id = 'inquiryTab';
+            var FT_tab3Id = 'shareLinkTab';
+            var FT_emailRegex =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            var FT_phoneRegex =  /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/;
+            var FT_currencyRegex = /[\$]?([0-9,])*[\.][0-9]{2}/;
+            var FT_DealerAccointId = ''; // this value changes as per Dealer.
+            var FT_TruckId;
+            var isSandbox = false;
+            var pageNumber = 1;
+            var pageSize = 10;
+            
+            var navigatedFromCategories = false;
+            var swiperLargeImageList = [];
+            var isDisplayTruckPricing = true;
+            var dealerPhoneNumber = '';
+            var isDisplayDealerPhone = false;
+            var headerDescriptionTxt = '';
 var languageCode = 'en';
 var FT_truckTypeMap;
 var FT_categoryMap;
@@ -425,7 +431,9 @@ String.prototype.FT_format.regex = new RegExp("{-?[0-9]+}", "g");
  * @Param parent    : hold parent element where footer will be added.
  */
 var FT_addPageFooter = function(parent) {
-    var FooterStrHtml = FT_PageFooterStrHTML.FT_format([FT_ThemeProperties.background, FT_ThemeProperties.color, FT_ThemeProperties.color, FT_translatableStrings['footerSellingTxt1'], FT_translatableStrings['footerSellingTxt2'], FT_translatableStrings['footerPoweredByTxt'] ]);
+    console.log( 'in add page footer: ', isDisplayDealerPhone );
+    var isDisplayFooterCallusText = ( isDisplayDealerPhone ) ? 'inline-block' : 'none';
+    var FooterStrHtml = FT_PageFooterStrHTML.FT_format([FT_ThemeProperties.background, FT_ThemeProperties.color, FT_ThemeProperties.color, FT_translatableStrings['footerSellingTxt1'], FT_translatableStrings['footerSellingTxt2'], FT_translatableStrings['footerPoweredByTxt'], FT_translatableStrings['footerCallusText'], isDisplayFooterCallusText ]);
     var div = document.createElement('div');
     div.innerHTML = FooterStrHtml;
     /* create a modal for sell form and append to footer */
@@ -459,6 +467,14 @@ var FT_displayCategories = function(categoryMap) {
 
     var containerDiv = document.createElement('div');
     containerDiv.className = 'FT_container';
+
+    //add header description text if display phone field is set to true
+    if( isDisplayDealerPhone ) {
+        var headerDesc = document.createElement('div');
+        headerDesc.className = 'FT_headerdesc';
+        headerDesc.innerHTML = FT_translatableStrings[ 'headerDescription' ];
+        containerDiv.appendChild( headerDesc );
+    }
 
     var titleDiv = document.createElement('div');
     titleDiv.className = 'FT_PageTitle';
@@ -621,19 +637,21 @@ function FT_processMainPage() {
     }               
 }
 
-function FT_putDataInCache( data, key ) {
+function FT_putDataInCache( dataObj ) {
     if( FT_idbSupported && FT_isIndexedDbCreated) {
         var transaction = FT_idxDb.transaction(["FT_trucks"],"readwrite");
         if( transaction ) {
             var store = transaction.objectStore("FT_trucks");
             if( store ) {
-                var request = store.put( data, key );
-                request.onerror = function(e) {
-                    console.log("Error",e.target.error.name);
-                }
-                request.onsuccess = function(e) {
-                    //console.log("DB entry done for "+key);                                            
-                }
+                for( var key in dataObj ) {
+                    var request = store.put( dataObj[ key ], key );
+                    request.onerror = function(e) {
+                        console.log("Error",e.target.error.name);
+                    }
+                    request.onsuccess = function(e) {
+                        //console.log("DB entry done for "+key);                                            
+                    }
+                }                
             } 
         }   
     }
@@ -697,6 +715,15 @@ var FT_constructBackButton = function(toword) {
     }   
     button.className='FT_backLink';
     button.setAttribute('jData', toword);
+
+    //add header description text if display phone field is set to true
+    if( isDisplayDealerPhone ) {
+        var headerDesc = document.createElement('div');
+        headerDesc.className = 'FT_headerdesc';
+        headerDesc.innerHTML = FT_translatableStrings[ 'headerDescription' ];
+        FT_BMFA_TruckContainer.appendChild( headerDesc );
+    }
+
     FT_BMFA_TruckContainer.appendChild( button );
     FT_bindEvent('click', FT_doBack, [button]);
 }
@@ -1336,10 +1363,12 @@ var FT_addInetrestFrom = function() {
     tab2Div.style.display = 'none';
     tab2Div.className = 'FT_gryTxt';
     
-    var formTitleDiv = document.createElement('div');
-    formTitleDiv.innerHTML = FT_translatableStrings['contactUsText'];
-    formTitleDiv.className = 'FT_formTitle';
-    tab2Div.appendChild(formTitleDiv);
+    if( isDisplayDealerPhone ) {
+        var formTitleDiv = document.createElement('div');
+        formTitleDiv.innerHTML = FT_translatableStrings['contactUsText'];
+        formTitleDiv.className = 'FT_formTitle';
+        tab2Div.appendChild(formTitleDiv);
+    }
     var formWarpper = document.createElement('div');
     formWarpper.className = 'inquiryFrom';
     var messageContainerDiv = document.createElement('div');
@@ -1649,7 +1678,8 @@ function FT_prepareTruckDetails( truck ) {
                     pricingText = FT_translatableStrings["pricingTxt"]; 
                 }
             } 
-            TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, pricingText, 'document.getElementsByName(\''+FT_tab2Id+'\')[0].click()', FT_translatableStrings['inquiryLinkText1'], FT_translatableStrings['inquiryLinkText2'], FT_translatableStrings['inquiryLinkText3'] ]);
+            var isDisplayDetailpgCallusSpanCss = ( isDisplayDealerPhone ) ? 'inline' : 'none';
+            TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, pricingText, 'document.getElementsByName(\''+FT_tab2Id+'\')[0].click()', FT_translatableStrings['inquiryLinkText1'], FT_translatableStrings['inquiryLinkText2'], FT_translatableStrings['inquiryLinkText3'], FT_translatableStrings['detailPageCallusText'], isDisplayDetailpgCallusSpanCss ]);
         } else {
             TruckDetailsHtml += FT_GlobalFieldToStrHTML[field].FT_format([fieldVal]);
         }
@@ -1890,7 +1920,7 @@ var FT_processTranslation = function( xhttp, additionalParams ) {
                     if( translatedData[translatedDataLen] ) {
                         FT_translatableStrings = translatedData[translatedDataLen]; 
                         //console.log('static texts: ',translatedData[translatedDataLen]);
-                        FT_putDataInCache( FT_translatableStrings , 'FT_translatableStrings' ); 
+                        FT_putDataInCache( { 'FT_translatableStrings' : FT_translatableStrings } ); 
                     } else {
                         console.log("Error accoured while translating static strings");
                     }   
@@ -1949,6 +1979,10 @@ var FT_processTruckData = function(xhttp) {
             if(serverResponse.Success) {
                 var truckData = JSON.parse(JSON.parse(serverResponse.Data));
                 console.log('truckData: ',truckData);
+                /* Dynamic header and footer text from Dealer FTF Account object fields */
+                if( truckData.record ) {
+                    FT_setAccountRecordGlobals( truckData.record );
+                }
                 languageCode = truckData.strLanguageCode;
                 if( languageCode == null || typeof languageCode == 'undefined' ) {
                     languageCode = 'en';
@@ -1958,19 +1992,23 @@ var FT_processTruckData = function(xhttp) {
                 //put pagesize in cache
                 var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
                 if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 || pgSize == null || typeof pgSize == 'undefined' ) pgSize = 10;
-                FT_putDataInCache( pgSize, 'FT_pageSize' );
-                //if language code is different than english then request translated data from server
+                var dataToAddInCache = { 'FT_pageSize' : pgSize };
+                if( truckData.record ) {
+                    dataToAddInCache[ 'FT_dealerAccountRecord' ] = truckData.record;
+                }
+                FT_putDataInCache( dataToAddInCache );
+                
                 var allCategories = truckData.recordList;
                 if( allCategories.length > 0 ) {
                     allCategories.reverse();
                 }
+                //if language code is different than english then request translated data from server
                 if( languageCode != 'en' ) {
                     FT_dataToTranslate = [];
                     FT_createTranslationData( allCategories );
                     //console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
                     FT_dataToTranslate.push(FT_translatableStrings);
                     console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
-                    //FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
                     var callbackAdditionalParams = { originalData : allCategories, pageName : 'categoriesPage' };
                     FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
                 } else {
@@ -2073,7 +2111,7 @@ var FT_processCustomTranslation = function( xhttp, additionalParams ) {
             if( translatedData[translatedDataLen] ) {
                 FT_translatableStrings = translatedData[translatedDataLen]; 
                 //console.log('static texts: ',translatedData[translatedDataLen]);  
-                FT_putDataInCache( FT_translatableStrings, 'FT_translatableStrings' );
+                FT_putDataInCache( { 'FT_translatableStrings' : FT_translatableStrings }  );
             } else {
                 console.log("Error accoured while translating static strings");
             }   
@@ -2100,6 +2138,10 @@ function FT_refreashTruckCountMap( xhttp ) {
             if(serverResponse.Success) {
                 var truckData = JSON.parse(JSON.parse(serverResponse.Data));
                 console.log('truckData: ',truckData);
+                /* Dynamic header and footer text from Dealer FTF Account object fields */
+                if( truckData.record ) {
+                    FT_setAccountRecordGlobals( truckData.record );
+                }
                 isDisplayTruckPricing = truckData.isDisplayTruckPricing;
                 languageCode = truckData.strLanguageCode;
                 if( languageCode == null || typeof languageCode == 'undefined' ) {
@@ -2108,7 +2150,11 @@ function FT_refreashTruckCountMap( xhttp ) {
                 //put pagesize in cache
                 var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
                 if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 || pgSize == null || typeof pgSize == 'undefined' ) pgSize = 10;
-                FT_putDataInCache( pgSize, 'FT_pageSize' );
+                var dataToAddInCache = { 'FT_pageSize' : pgSize };
+                if( truckData.record ) {
+                    dataToAddInCache[ 'FT_dealerAccountRecord' ] = truckData.record;
+                }
+                FT_putDataInCache( dataToAddInCache );
                 if( languageCode != 'en' ) {
                     FT_dataToTranslate = [];
                     FT_createTranslationData( FT_categoryMap );
@@ -2163,7 +2209,6 @@ var FT_processPageTruckData = function( xhttp, additionalParams ) {
                     FT_dataToTranslate = [];
                     FT_createTranslationData( trucks );
                     console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
-                    //FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
                     var callbackAdditionalParams = { originalData : trucks, pageName: 'truckListingPage', categoryName: categoryName, pageNumber: pageNumber, translatedCat : translatedCatName };
                     FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
                 } else {
@@ -2258,7 +2303,6 @@ var FT_displayTruckDetails = function( xhttp, additionalParams ) {
                         FT_dataToTranslate = [];
                         FT_createTranslationData( trucks );
                         //console.log( 'FT_dataToTranslate: ', FT_dataToTranslate );
-                        //FT_WebRequestHandler.getTranslationRequest( FT_processTranslation , FT_dataToTranslate );
                         var callbackAdditionalParams = { originalData : trucks, pageName: 'truckDetailPage', truck: truck };
                         FT_WebRequestHandler.postRequestCustom( JSON.stringify(FT_dataToTranslate), translationApiLink+'?language='+languageCode, FT_processTranslation, callbackAdditionalParams );
                     } else {
@@ -2465,80 +2509,118 @@ function FT_getCategoryMapFromCache() {
     });
     return promise;
 }
+/* Function to set global variables for account record */
+var FT_setAccountRecordGlobals = function( accountRecord ) {
+    if( accountRecord &&  accountRecord.Dealer_Header__c ) {
+        FT_translatableStrings['mainPageTitle'] = accountRecord.Dealer_Header__c;
+    }
+    if( accountRecord && accountRecord.Dealer_Footer__c ) {
+        FT_translatableStrings['footerSellingTxt1'] = accountRecord.Dealer_Footer__c;
+    }                    
+    if( typeof accountRecord.Display_Contact_Phone_Number__c != 'undefined' ) {
+        isDisplayDealerPhone = accountRecord.Display_Contact_Phone_Number__c;
+    }
+    if( typeof accountRecord.Contact_Phone_Number__c != 'undefined' ) {
+        dealerPhoneNumber = accountRecord.Contact_Phone_Number__c;
+    }
+    if( typeof accountRecord.Header_Description__c != 'undefined' ) {
+        headerDescriptionTxt = accountRecord.Header_Description__c;
+    }
+    //replace dealerPhone in translatable string with actual account phone from back-end data
+    for( var key in FT_translatableStrings ) {
+        var strToTranslate = FT_translatableStrings[ key ];
+        if( strToTranslate.indexOf( 'dealerPhone' ) != -1 ) {
+            strToTranslate = strToTranslate.replace( 'dealerPhone', dealerPhoneNumber );
+            FT_translatableStrings[ key ] = strToTranslate;
+        }
+    }  
+    console.log( "FT_translatableStrings after phone replace: ", FT_translatableStrings );  
+}
 
 /* Function to process cached truck data */
 var FT_processCachedTruckData = function() {
-    FT_getCategoryMapFromCache().then( function( categoryMap ) {
-        if( categoryMap ) { //if successfully fetched data from cache
-            FT_categoryMap = categoryMap; //set global variable
-            FT_prepareCatTruckCountMap( FT_categoryMap );
-            if( FT_URLParam.category && !FT_URLParam.stockno ) {        
-                var isCatValid = FT_checkValidCategory( decodeURIComponent( FT_URLParam.category ) );
-                var cat = ( isCatValid ) ? decodeURIComponent( FT_URLParam.category ) : 'All';
-                var div = document.createElement('div');
-                var translatedCatName = FT_getCatTranslatedName( cat );
-                console.log('translatedCatName::::',translatedCatName);
-                FT_setAttributes( div, { 'category' : cat, 'page' : 1, 'translatedCat' : translatedCatName } );
-                    FT_expandCategory( div );                                                   
-            }
-            /* If URL has stock no in URL then display truck detail page */
-            else if( FT_URLParam.stockno && !FT_lastTruckSelected ) {
-                if( FT_URLParam.category ) {        
+    FT_getDataFromCache( "FT_dealerAccountRecord" ).then( function( accountRecord ) {
+        
+        FT_getCategoryMapFromCache().then( function( categoryMap ) {
+            if( categoryMap ) { //if successfully fetched data from cache
+                /* set dynamic header and footer text from cached account record of Dealer FTF account object */
+                if( languageCode && languageCode == 'en' ) {
+                    FT_setAccountRecordGlobals( accountRecord );
+                }
+                FT_categoryMap = categoryMap; //set global variable
+                FT_prepareCatTruckCountMap( FT_categoryMap );
+                if( FT_URLParam.category && !FT_URLParam.stockno ) {        
                     var isCatValid = FT_checkValidCategory( decodeURIComponent( FT_URLParam.category ) );
                     var cat = ( isCatValid ) ? decodeURIComponent( FT_URLParam.category ) : 'All';
-                } else {
-                    var cat = 'All';
+                    var div = document.createElement('div');
+                    var translatedCatName = FT_getCatTranslatedName( cat );
+                    console.log('translatedCatName::::',translatedCatName);
+                    FT_setAttributes( div, { 'category' : cat, 'page' : 1, 'translatedCat' : translatedCatName } );
+                        FT_expandCategory( div );                                                   
                 }
-                var translatedCatName = FT_getCatTranslatedName( cat );
-                //reinitialize indexedDB so that if pagesize is changed in HTML then all page cache should also be cleared 
-                FT_reinitializeIndexedDb().then( 
-                    function() {
-                        //refreash category truck count map
-                        FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);
-                        //show loader before requesting data from server
-                        FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
-                        //set last selected category to all
-                        var catDiv = document.createElement('div');
-                        //catDiv.setAttribute('category',categoryName);
-                        FT_setAttributes( catDiv, { 'category' : cat, 'page' : 1, 'translatedCat' : translatedCatName } );
-                        FT_lastCategorySelected = catDiv;
-                        //request data from server
-                        var additionalParam = { cat : cat, pageNum: 1, stockn : FT_URLParam.stockno };
-                        FT_WebRequestHandler.getPageRequest( FT_displayTruckDetails, additionalParam );
-                    }, function( error ) {
-                        console.log( error );
-                        ///else display first page
-                        FT_loadCustomTruckData(false);  
+                /* If URL has stock no in URL then display truck detail page */
+                else if( FT_URLParam.stockno && !FT_lastTruckSelected ) {
+                    if( FT_URLParam.category ) {        
+                        var isCatValid = FT_checkValidCategory( decodeURIComponent( FT_URLParam.category ) );
+                        var cat = ( isCatValid ) ? decodeURIComponent( FT_URLParam.category ) : 'All';
+                    } else {
+                        var cat = 'All';
                     }
-                );
-            }
-            else {
-                //added for history maintainance
-                navigatedFromCategories = true;
-                /* Get static translation from cache */
-                if( languageCode && languageCode != 'en' )  {
-                    if( FT_idbSupported ) {
-                        FT_getDataFromCache( "FT_translatableStrings" ).then( function(result) {
-                            FT_translatableStrings = result;
-                            FT_displayCategories( FT_categoryMap ); 
+                    var translatedCatName = FT_getCatTranslatedName( cat );
+                    //reinitialize indexedDB so that if pagesize is changed in HTML then all page cache should also be cleared 
+                    FT_reinitializeIndexedDb().then( 
+                        function() {
+                            //refreash category truck count map
+                            FT_WebRequestHandler.getRequest(FT_refreashTruckCountMap);
+                            //show loader before requesting data from server
+                            FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
+                            //set last selected category to all
+                            var catDiv = document.createElement('div');
+                            //catDiv.setAttribute('category',categoryName);
+                            FT_setAttributes( catDiv, { 'category' : cat, 'page' : 1, 'translatedCat' : translatedCatName } );
+                            FT_lastCategorySelected = catDiv;
+                            //request data from server
+                            var additionalParam = { cat : cat, pageNum: 1, stockn : FT_URLParam.stockno };
+                            FT_WebRequestHandler.getPageRequest( FT_displayTruckDetails, additionalParam );
                         }, function( error ) {
                             console.log( error );
-                            //if error occured whil fetching translations from db then use english data
-                            FT_displayCategories( FT_categoryMap ); 
-                        }); 
-                    } else {
-                         FT_displayCategories( FT_categoryMap );   
-                    }                                    
-                } else {
-                    FT_displayCategories( FT_categoryMap ); 
+                            ///else display first page
+                            FT_loadCustomTruckData(false);  
+                        }
+                    );
                 }
-            }   
-        } else { //if error ocuured while fetching data from cache request data from server
-            FT_WebRequestHandler.getRequest(FT_processTruckData);   
-        }
+                else {
+                    //added for history maintainance
+                    navigatedFromCategories = true;
+                    /* Get static translation from cache */
+                    if( languageCode && languageCode != 'en' )  {
+                        if( FT_idbSupported ) {
+                            FT_getDataFromCache( "FT_translatableStrings" ).then( function(result) {
+                                FT_translatableStrings = result;
+                                FT_displayCategories( FT_categoryMap ); 
+                            }, function( error ) {
+                                console.log( error );
+                                //if error occured whil fetching translations from db then use english data
+                                FT_displayCategories( FT_categoryMap ); 
+                            }); 
+                        } else {
+                             FT_displayCategories( FT_categoryMap );   
+                        }                                    
+                    } else {
+                        FT_displayCategories( FT_categoryMap ); 
+                    }
+                }   
+            } else { //if error ocuured while fetching data from cache request data from server
+                FT_WebRequestHandler.getRequest(FT_processTruckData);   
+            }
+        }, function( error ) {
+            console.log('Error whil getting category map from cache: ',error);
+        } );    
+
     }, function( error ) {
-        console.log('Error whil getting category map from cache: ',error);
-    } );    
+        console.log('Error whil getting dealer FTF account record from cache: ',error);
+    });
+    
 }
 
 /* A function for initialize FT_URLParam Map. */
