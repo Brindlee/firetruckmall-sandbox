@@ -811,7 +811,6 @@ var head = document.getElementsByTagName('head')[0];
                                                 //console.log( 'isStockNoHide: ', isStockNoHide );
                                                 if( !isStockNoHide ) { //if don't want to hide stock number then only display it
                                                     
-                                                    
                                                     //console.log( 'globalAccountRecord: ', globalAccountRecord );
                                                     if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
                                                         if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
@@ -820,13 +819,9 @@ var head = document.getElementsByTagName('head')[0];
                                                             if( truck['FTF_Dealer_Stock__c'] ) {
                                                                 miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck['FTF_Dealer_Stock__c'] ] );
                                                             }
-                                                        } /*else (None) then don't concat stock field */
-                                                    } else { 
-                                                        miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
-                                                    }
-                            
-                                                
-                                                    
+                                                        } 
+                                                    } 
+
                                                 }
                                             } else {
                                                 miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
@@ -1629,6 +1624,7 @@ var head = document.getElementsByTagName('head')[0];
                     if(innerFieldVal) {
                         if(innerMostField === 'Stock_Number__c') {
                             if( !isStockNoHide ) { //if don't want to hide stock number then only display
+
                                 //console.log( 'globalAccountRecord: ', globalAccountRecord );
                                 if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
                                     if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
@@ -1637,10 +1633,9 @@ var head = document.getElementsByTagName('head')[0];
                                         if( selectedTruck && selectedTruck['FTF_Dealer_Stock__c'] ) {
                                             truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format( [ FT_ThemeProperties.background, selectedTruck['FTF_Dealer_Stock__c'] ] );
                                         }
-                                    } /*else (None) then don't concat stock field */
-                                } else { 
-                                    truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
-                                }
+                                    } 
+                                } 
+                                
                             }
                         } else {
                             truckDetailsHtml += '<p>'+FT_DetailFieldToStrHTML[field].FT_format([innerFieldVal])+'</p>';
