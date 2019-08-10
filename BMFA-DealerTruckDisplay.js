@@ -244,6 +244,7 @@ var head = document.getElementsByTagName('head')[0];
             var dbFetchError = false;
             var FT_isFetchedPageSize = false;
             var FT_isFetchedTranslations = false;
+            var globalAccountRecord;
             /* A javascript Class Module for API requests. */
             var FT_WebRequestHandler = {
                 getWebRequestInstance : function() {
@@ -807,9 +808,25 @@ var head = document.getElementsByTagName('head')[0];
                                             miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, truck[field]]);
                                         } else {
                                             if( field == 'Stock_Number__c' ) {
-                                                console.log( 'isStockNoHide: ', isStockNoHide );
+                                                //console.log( 'isStockNoHide: ', isStockNoHide );
                                                 if( !isStockNoHide ) { //if don't want to hide stock number then only display it
-                                                    miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
+                                                    
+                                                    
+                                                    //console.log( 'globalAccountRecord: ', globalAccountRecord );
+                                                    if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
+                                                        if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
+                                                            miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck[field] ] );
+                                                        } else if( globalAccountRecord.Display_Stock_Number__c == 'Dealer' ) { //if set to dealer and FTF_Dealer_Stock__c set then show FTF_Dealer_Stock__c field
+                                                            if( truck['FTF_Dealer_Stock__c'] ) {
+                                                                miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck['FTF_Dealer_Stock__c'] ] );
+                                                            }
+                                                        } /*else (None) then don't concat stock field */
+                                                    } else { 
+                                                        miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
+                                                    }
+                            
+                                                
+                                                    
                                                 }
                                             } else {
                                                 miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
@@ -1600,7 +1617,7 @@ var head = document.getElementsByTagName('head')[0];
                         var innerObject = !(index) ? selectedTruck : innerFieldVal;
                         //console.log( 'innerObject: ',innerObject );
                         if( innerObject ) {
-                        	innerFieldVal = ((innerObject[innerField]) ? innerObject[innerField] : null);
+                            innerFieldVal = ((innerObject[innerField]) ? innerObject[innerField] : null);
                         } else {
                             innerFieldVal = null;
                         }
@@ -1612,7 +1629,18 @@ var head = document.getElementsByTagName('head')[0];
                     if(innerFieldVal) {
                         if(innerMostField === 'Stock_Number__c') {
                             if( !isStockNoHide ) { //if don't want to hide stock number then only display
-                                truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
+                                //console.log( 'globalAccountRecord: ', globalAccountRecord );
+                                if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
+                                    if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
+                                        truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
+                                    } else if( globalAccountRecord.Display_Stock_Number__c == 'Dealer' ) { //if set to dealer and FTF_Dealer_Stock__c set then show FTF_Dealer_Stock__c field
+                                        if( selectedTruck && selectedTruck['FTF_Dealer_Stock__c'] ) {
+                                            truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format( [ FT_ThemeProperties.background, selectedTruck['FTF_Dealer_Stock__c'] ] );
+                                        }
+                                    } /*else (None) then don't concat stock field */
+                                } else { 
+                                    truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
+                                }
                             }
                         } else {
                             truckDetailsHtml += '<p>'+FT_DetailFieldToStrHTML[field].FT_format([innerFieldVal])+'</p>';
@@ -2560,6 +2588,7 @@ var head = document.getElementsByTagName('head')[0];
             }
             /* Function to set global variables for account record */
             var FT_setAccountRecordGlobals = function( accountRecord ) {
+            
                 if( accountRecord &&  accountRecord.Dealer_Header__c ) {
                     FT_translatableStrings['mainPageTitle'] = accountRecord.Dealer_Header__c;
                 }
@@ -2583,7 +2612,8 @@ var head = document.getElementsByTagName('head')[0];
                         FT_translatableStrings[ key ] = strToTranslate;
                     }
                 }  
-                console.log( "FT_translatableStrings after phone replace: ", FT_translatableStrings );  
+                console.log( "FT_translatableStrings after phone replace: ", FT_translatableStrings );
+                globalAccountRecord = accountRecord; 
             }
             
             /* Function to process cached truck data */
