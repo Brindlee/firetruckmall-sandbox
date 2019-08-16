@@ -2532,7 +2532,8 @@
                                                 var objLanguageCode = store.get("FT_languageCode");
                                                 if( objLanguageCode ) {
                                                     objLanguageCode.onsuccess = function(e) {
-                                                        languageCode = e.target.result;                                                        
+                                                        languageCode = e.target.result; 
+														resolve(dbResults);
                                                     }
                                                     objLanguageCode.onerror = function(e) {
                                                         reject("Error occured while fetching language code key from cache");
