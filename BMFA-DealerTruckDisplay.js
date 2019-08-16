@@ -1,4 +1,4 @@
-var head = document.getElementsByTagName('head')[0];
+ var head = document.getElementsByTagName('head')[0];
             /* Inject external script library for making support of Promise in IE */
             var script = document.createElement('script');
             script.type = 'text/javascript';
@@ -233,7 +233,6 @@ var head = document.getElementsByTagName('head')[0];
             var isDisplayTruckPricing = true;
             var dealerPhoneNumber = '';
             var isDisplayDealerPhone = false;
-            var isStockNoHide = false;
             var languageCode = 'en';
             var FT_truckTypeMap;
             var FT_categoryMap;
@@ -513,7 +512,7 @@ var head = document.getElementsByTagName('head')[0];
                 }
             }
             
-            function FT_putCategoryMapInCache( categoryMap, isDisplayTruckPricing, languageCode, isStockNoHide ) {
+            function FT_putCategoryMapInCache( categoryMap, isDisplayTruckPricing, languageCode ) {
                 var dbError = false;
                 if( FT_idbSupported ) {
                     if( FT_isIndexedDbCreated ) {
@@ -531,8 +530,7 @@ var head = document.getElementsByTagName('head')[0];
                                     var dataSavedTime = FT_getCurrentTimeStamp();
                                     store.put(dataSavedTime,'FT_dataSavedTime');
                                     store.put(isDisplayTruckPricing,'FT_isDisplayTruckPricing');    
-                                    store.put(languageCode,'FT_languageCode');     
-                                    store.put(isStockNoHide,'FT_isStockNoHide');                      
+                                    store.put(languageCode,'FT_languageCode');                      
                                 }
                             } else 
                                 dbError = true;
@@ -575,7 +573,7 @@ var head = document.getElementsByTagName('head')[0];
                 FT_prepareCatTruckCountMap( FT_categoryMap );
                 if(FT_categoryMap.length) {
                     if( FT_idbSupported ) {
-                        FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode, isStockNoHide );
+                        FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );
                     }
                     if( FT_URLParam.category && !FT_URLParam.stockno ) {    
                         var isCatValid = FT_checkValidCategory( decodeURIComponent( FT_URLParam.category ) );
@@ -808,21 +806,19 @@ var head = document.getElementsByTagName('head')[0];
                                             miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, truck[field]]);
                                         } else {
                                             if( field == 'Stock_Number__c' ) {
-                                                //console.log( 'isStockNoHide: ', isStockNoHide );
-                                                if( !isStockNoHide ) { //if don't want to hide stock number then only display it
-                                                    
-                                                    //console.log( 'globalAccountRecord: ', globalAccountRecord );
-                                                    if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
-                                                        if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
-                                                            miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck[field] ] );
-                                                        } else if( globalAccountRecord.Display_Stock_Number__c == 'Dealer' ) { //if set to dealer and FTF_Dealer_Stock__c set then show FTF_Dealer_Stock__c field
-                                                            if( truck['FTF_Dealer_Stock__c'] ) {
-                                                                miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck['FTF_Dealer_Stock__c'] ] );
-                                                            }
-                                                        } 
+                                                
+                                                //console.log( 'globalAccountRecord: ', globalAccountRecord );
+                                                if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
+                                                    if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
+                                                        miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck[field] ] );
+                                                    } else if( globalAccountRecord.Display_Stock_Number__c == 'Dealer' ) { //if set to dealer and FTF_Dealer_Stock__c set then show FTF_Dealer_Stock__c field
+                                                        if( truck['FTF_Dealer_Stock__c'] ) {
+                                                            miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format( [ truck['FTF_Dealer_Stock__c'] ] );
+                                                        }
                                                     } 
+                                                } 
 
-                                                }
+                                                
                                             } else {
                                                 miniDetailHtml += FT_MiniDetailFieldToStrHTML[field].FT_format([truck[field]]);
                                             }
@@ -1622,21 +1618,20 @@ var head = document.getElementsByTagName('head')[0];
                     });
                     //console.log( 'field: ', field, 'innerFieldVal: ', innerFieldVal );
                     if(innerFieldVal) {
-                        if(innerMostField === 'Stock_Number__c') {
-                            if( !isStockNoHide ) { //if don't want to hide stock number then only display
+                        if(innerMostField === 'Stock_Number__c') {                            
 
-                                //console.log( 'globalAccountRecord: ', globalAccountRecord );
-                                if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
-                                    if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
-                                        truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
-                                    } else if( globalAccountRecord.Display_Stock_Number__c == 'Dealer' ) { //if set to dealer and FTF_Dealer_Stock__c set then show FTF_Dealer_Stock__c field
-                                        if( selectedTruck && selectedTruck['FTF_Dealer_Stock__c'] ) {
-                                            truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format( [ FT_ThemeProperties.background, selectedTruck['FTF_Dealer_Stock__c'] ] );
-                                        }
-                                    } 
+                            //console.log( 'globalAccountRecord: ', globalAccountRecord );
+                            if( globalAccountRecord && globalAccountRecord.Display_Stock_Number__c ) { //account record is returned by service and Display stock number filed is set
+                                if( globalAccountRecord.Display_Stock_Number__c == 'Brindlee' ) { //if set to brindlee then show Stock number field
+                                    truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format([FT_ThemeProperties.background, innerFieldVal]);
+                                } else if( globalAccountRecord.Display_Stock_Number__c == 'Dealer' ) { //if set to dealer and FTF_Dealer_Stock__c set then show FTF_Dealer_Stock__c field
+                                    if( selectedTruck && selectedTruck['FTF_Dealer_Stock__c'] ) {
+                                        truckDetailsHtml += FT_DetailFieldToStrHTML[field].FT_format( [ FT_ThemeProperties.background, selectedTruck['FTF_Dealer_Stock__c'] ] );
+                                    }
                                 } 
+                            } 
                                 
-                            }
+                            
                         } else {
                             truckDetailsHtml += '<p>'+FT_DetailFieldToStrHTML[field].FT_format([innerFieldVal])+'</p>';
                         }
@@ -2038,10 +2033,7 @@ var head = document.getElementsByTagName('head')[0];
                             }
                             console.log('languageCode: ',languageCode);
                             isDisplayTruckPricing = truckData.isDisplayTruckPricing;
-                            if( typeof truckData.isStockNoHide != 'undefined' ) {
-                                isStockNoHide = truckData.isStockNoHide;
-                            }
-                            
+                                                        
                             //put pagesize in cache
                             var pgSize = FT_BMFA_TruckContainer.getAttribute('pageSize');
                             if( isNaN(pgSize) || pgSize == 0 || pgSize < 0 || pgSize == null || typeof pgSize == 'undefined' ) pgSize = 10;
@@ -2173,9 +2165,9 @@ var head = document.getElementsByTagName('head')[0];
                         FT_categoryMap = truckData;
                         FT_prepareCatTruckCountMap( FT_categoryMap );
                         if( FT_categoryMap.length && typeof isDisplayTruckPricing != 'undefined' && languageCode 
-                            && typeof isStockNoHide != 'undefined' ) {
+                             ) {
                             if( FT_idbSupported ) {
-                                FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode, isStockNoHide );  
+                                FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );  
                             }                      
                         }       
                     } catch(exp) {
@@ -2198,9 +2190,7 @@ var head = document.getElementsByTagName('head')[0];
                             }
                             isDisplayTruckPricing = truckData.isDisplayTruckPricing;
                             languageCode = truckData.strLanguageCode;
-                            if( typeof truckData.isStockNoHide != 'undefined' ) {
-                                isStockNoHide = truckData.isStockNoHide;
-                            }
+                            
                             if( languageCode == null || typeof languageCode == 'undefined' ) {
                                 languageCode = 'en';
                             }
@@ -2231,7 +2221,7 @@ var head = document.getElementsByTagName('head')[0];
                                 FT_prepareCatTruckCountMap( FT_categoryMap );
                                 if(FT_categoryMap.length) {
                                     if( FT_idbSupported ) {
-                                        FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode, isStockNoHide );  
+                                        FT_putCategoryMapInCache( FT_categoryMap, isDisplayTruckPricing, languageCode );  
                                     }                      
                                 }       
                             }           
@@ -2542,17 +2532,7 @@ var head = document.getElementsByTagName('head')[0];
                                                 var objLanguageCode = store.get("FT_languageCode");
                                                 if( objLanguageCode ) {
                                                     objLanguageCode.onsuccess = function(e) {
-                                                        languageCode = e.target.result;
-                                                        var objStockNoHide = store.get("FT_isStockNoHide");
-                                                        if( objStockNoHide ) {
-                                                            objStockNoHide.onsuccess = function(e) {
-                                                                isStockNoHide = e.target.result;
-                                                                resolve(dbResults);
-                                                            }
-                                                            objStockNoHide.onerror = function(e) {                                                    
-                                                                reject("Error occured while fetching stock number hide key from cache");
-                                                            }
-                                                        }
+                                                        languageCode = e.target.result;                                                        
                                                     }
                                                     objLanguageCode.onerror = function(e) {
                                                         reject("Error occured while fetching language code key from cache");
