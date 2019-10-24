@@ -233,7 +233,7 @@
             select.no-height.FT_gryTxt.FT_select {  -webkit-appearance: none; -moz-appearance: none; appearance: none;}
         	.truckFinderFrom {display: flex; flex-wrap: wrap;  justify-content: center;}
             .truckFinderFrom .FT_fR, .truckFinderFrom .FT_fL {float:none;}
-   
+			#truckFinderMessageContainerId {width:100%;}
    /********************CSS 17-10-2018******************/
 }				
 				@media screen and  (max-width:1200px){
