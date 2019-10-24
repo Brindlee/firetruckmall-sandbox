@@ -806,7 +806,7 @@ function FT_getSerachFilterBodyStr(){
 		'</div>'+
 		'<div>'+
 			'<button class="filterButton" id="filterButton" title="Filters" type="button" onclick="FT_openFilters(event)">'+
-				'<img src="{!URLFOR($Resource.BMFAStaticResource,'/BMFA-staticResource/dftf-filter-icon.png')}"/>'+        
+				'<img src="{!URLFOR($Resource.BMFAStaticResource,\'/BMFA-staticResource/dftf-filter-icon.png\')}"/>'+        
 			'</button>'+
 		'</div> </div>'+
 		'<div id="myDropdown" class="dropdown-content">'+
@@ -822,7 +822,7 @@ function FT_getSerachFilterBodyStr(){
 						'</div>'+
 						'<div class="col">'+
 							'<h4 class="filterTitle">Budget Range</h4>'+
-							'<div id="filterBudgetRange"></div>'+/*</div><input name="budgetMin" type="text" placeholder="Min Budget" min="0"/><input name="budgetMax" placeholder="Max Budget" type="text" max="1200000"/>*/
+							'<div id="filterBudgetRange"></div>'+
 						'</div>'+
 						'<div class="col">'+
 							'<h4 class="filterTitle">Brand</h4>'+
@@ -830,7 +830,7 @@ function FT_getSerachFilterBodyStr(){
 						'</div>'+
 						'<div class="col">'+
 							'<h4 class="filterTitle">Year Range</h4>'+
-							'<div id="filterYearRange"></div>'+/*<input name="yearMin" type="text" placeholder="1950" min="1950"/><input name="yearMax" placeholder="2020" type="text" max="2020"/>*/
+							'<div id="filterYearRange"></div>'+
 						'</div>' +
 						'<div class="col">'+
 							'<h4 class="filterTitle">Geographic Region</h4>'+
