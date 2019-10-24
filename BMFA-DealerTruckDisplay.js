@@ -806,7 +806,7 @@ function FT_getSerachFilterBodyStr(){
 		'</div>'+
 		'<div>'+
 			'<button class="filterButton" id="filterButton" title="Filters" type="button" onclick="FT_openFilters(event)">'+
-				'<img src="{!URLFOR($Resource.BMFAStaticResource,\'/BMFA-staticResource/dftf-filter-icon.png\')}"/>'+        
+				'<img src="https://brindlee--partial--c.cs29.content.force.com/servlet/servlet.ImageServer?id=0150r000000Dvig&oid=00D0r0000000Wej&lastMod=1571936386000"/>'+        
 			'</button>'+
 		'</div> </div>'+
 		'<div id="myDropdown" class="dropdown-content">'+
