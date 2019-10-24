@@ -806,7 +806,7 @@ function FT_getSerachFilterBodyStr(){
 		'</div>'+
 		'<div>'+
 			'<button class="filterButton" id="filterButton" title="Filters" type="button" onclick="FT_openFilters(event)">'+
-				'<img src="https://brindlee--partial--c.cs29.content.force.com/servlet/servlet.ImageServer?id=0150r000000Dvig&oid=00D0r0000000Wej&lastMod=1571936386000"/>'+        
+				'<img src="https://brindlee--c.na116.content.force.com/servlet/servlet.ImageServer?id=0153m000004z2C6&oid=00Do0000000JLLE&lastMod=1571936837000"/>'+        
 			'</button>'+
 		'</div> </div>'+
 		'<div id="myDropdown" class="dropdown-content">'+
