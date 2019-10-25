@@ -800,8 +800,7 @@ function FT_getSerachFilterBodyStr(){
 	return '<div class="col search-col" style="max-width:unset!important;">'+
 		'<div class="searchHeader"> <div id="searchbox" style="width:100%!important;">'+
 			'<input placeholder="Search Trucks!" id="searchinput" onkeypress="FT_searchOnEnterkey(event);"/>'+
-			'<button class="searchButton" type="button" onclick="FT_getFilterValues(event,false)">'+
-				'<i id="searchimg" class="icon icon-magnifier"></i>'+
+			'<button class="searchButton" type="button" onclick="FT_getFilterValues(event,false)">Search'+
 			'</button>'+
 		'</div>'+
 		'<div>'+
