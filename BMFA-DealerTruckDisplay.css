@@ -234,7 +234,14 @@
         	.truckFinderFrom {display: flex; flex-wrap: wrap;  justify-content: center;}
             .truckFinderFrom .FT_fR, .truckFinderFrom .FT_fL {float:none;}
 			#truckFinderMessageContainerId {width:100%;}
-   /********************CSS 17-10-2018******************/
+	
+  * { margin: 0; padding: 0; font-family: 'Source Sans Pro', sans-serif; box-sizing: border-box; font-size: 13px; line-height: normal !important; }
+    input#searchinput { color: #000; box-shadow: none; background: transparent; border: 0 none; border-right: 0 none; width: 100%; padding: 5px; align-self: center; height: unset; }
+    button.searchButton { background: #7a0c02; border: 0 none;  margin: -8px 0; border-radius: 0; padding:6px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; height:unset; }
+		button.searchButton i{color: #666;font-weight: bold;}
+    .pagebody * {   font-family: 'Source Sans Pro', sans-serif !important;}
+		button.searchButton i {  color: #666; font-weight: bold;}
+    #searchimg:before {   color: #fff;}
 }				
 				@media screen and  (max-width:1200px){
 	.FT_modalContent {width: 80%;}
@@ -253,6 +260,7 @@
 	a.FT_swiperBtn.FT_prevBtn { left: 15px; }
 	a.FT_swiperBtn.FT_nextBtn { right: 30px; }
 	ul.FT_listStyle.FT_truckList { -moz-column-count: 2; -webkit-column-count: 2; column-count: 2; }
+	.searchButton{margin-left: 5px!important;}
 }
 			
 @media screen and  (max-width:750px){   
@@ -285,4 +293,8 @@
 	a.FT_PagePrev { margin: 0 auto 8px auto; }
 	a.FT_PageNext { margin: 8px auto 0 auto; }
 	.FT_PageTitle { padding-top: 5px;  }
+}
+
+@media only screen and (max-width: 760px) {	
+	.footer .searchButton{width: unset !important;  height: unset !important;  left: 100%; }
 }
