@@ -193,7 +193,7 @@
             .form-inline.gridForm> div { width: 50%; padding: 15px; }
             h4.filterTitle { font-size: 15px; font-weight: 400; }
             .btnDiv button { background: #7a0c02; border: 1px solid #7a0c02; padding: 5px 15px; line-height: 30px; border-radius: 3px; color: #fff; cursor:pointer; }
-            button.searchButton {width:50px;}
+            .searchButton {width:50px;}
             .searchHeader { display: flex; align-items: center; }
             div#searchbox {margin-right:10px;}
             #searchimg:before { color: #fff; }
@@ -208,24 +208,19 @@
             
             /***** Message design *******/
             
-            #truckMsg{              
-               display: block; background-color: #7a0c02; color: white; padding: 5px; border-radius: 3px;
-            }
-            
             .closebtn {
               margin-left: 15px;
-              color: white;
               font-weight: bold;
               float: right;
               font-size: 22px;
-              line-height: 20px;
+              line-height: 18px !important;
               cursor: pointer;
               transition: 0.3s;
             }
             
-            .closebtn:hover {
+            /*.closebtn:hover {
               color: black;
-            }
+            }*/
             .FT_input.no-height { height: auto; }
             input, select, textarea { -webkit-appearance: inherit; appearance : inherit; }
             .grey-opt { border-bottom: 1px solid #ccc; }
@@ -237,13 +232,15 @@
 	
   * { margin: 0; padding: 0; font-family: 'Source Sans Pro', sans-serif; box-sizing: border-box; font-size: 13px; line-height: normal !important; }
     input#searchinput { color: #000; box-shadow: none; background: transparent; border: 0 none; border-right: 0 none; width: 100%; padding: 5px; align-self: center; height: unset; }
-    button.searchButton { background: #7a0c02; color:#fff; border: 0 none;  margin: -8px 0; border-radius: 0; padding:6px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; height:unset; }
-button.searchButton i{color: #666;font-weight: bold;}
+    .searchButton { background: #7a0c02; color:#fff; border: 0 none;  margin: -8px 0; border-radius: 0; padding:6px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; height:unset;cursor: pointer; }
     .pagebody * {   font-family: 'Source Sans Pro', sans-serif !important;}
-		button.searchButton i {  color: #666; font-weight: bold;}
+	.searchButton img { max-width : 28px; }
     #searchimg:before {   color: #fff;}
 	div#searchbox { margin-right: 10px; background: #f5f5f5; display: flex; padding: 8px 0 8px 15px; border-radius: 3px; width: 50%; margin: 10px auto; }
-	
+	#filterForm .selectedOpt { background-color: rgb(200, 200, 200); }
+	#truckMsg{ display: block; background-color: #fde5e3; padding: 5px 10px; border: 1px solid #f7957e;     margin-bottom: 10px; }
+	.searchButton.loaderDiv { display: none; }
+	.searchButton.loaderDiv .loader { width: 22px; height: 22px; }
 }				
 				@media screen and  (max-width:1200px){
 	.FT_modalContent {width: 80%;}
