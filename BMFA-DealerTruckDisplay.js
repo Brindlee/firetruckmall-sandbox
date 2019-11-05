@@ -3,7 +3,7 @@ var isPgFilterApply = false;
 var totalPageNo = 0;
 var isPrevious = false;
 var isIndexPage = false;
-
+var searchTerm = '';
 var head = document.getElementsByTagName('head')[0];
 /* Inject external script library for making support of Promise in IE */
 var script = document.createElement('script');
@@ -112,7 +112,9 @@ var FT_translatableStrings = {
 	"Pump Size" : "Pump Size",
 	"Tank Size" : "Tank Size",
 	"Brands" : "Brands",
-	"Geographic Region" : "Geographic Region"
+	"Geographic Region" : "Geographic Region",
+	"searchNoResultsMsgPart1" : "Your search for",
+	"searchNoResultsMsgPart2" : "did not match any trucks"
 };
 
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
@@ -243,6 +245,8 @@ var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
 						   '    </div>' +
 						   '</div>';
 var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">{1}</p></div></div>';
+
+var FT_SearchLoaderHtml = '<div class="searchButton loaderDiv"><div class="loader" style="border-top: 4px solid {0}"></div></div>';
 
 /* Javascript variables contains CSS class in string format to for add to page. */
 var FT_DynamicTabCSS = 'li.FT_active a, li.FT_active a:hover { background: {0}; color: {1}; }'
@@ -488,6 +492,9 @@ var FT_addPageFooter = function(parent) {
 	createModal( div, 'FT_truckFinderModal', FT_addTruckFinderFrom );
 	
 	parent.appendChild(div);
+
+	//add search filter and modal on each page as footer is added in each page
+	FT_getDistinctFilters( parent );
 }
 
 /* A function bind click events on DOM elements. 
@@ -512,7 +519,6 @@ var FT_displayCategories = function(categoryMap) {
 	}
 
 	FT_clearContainerDom();
-	FT_getDistinctFilters();
 	var containerDiv = document.createElement('div');
 	containerDiv.className = 'FT_container';
 
@@ -529,17 +535,16 @@ var FT_displayCategories = function(categoryMap) {
 	titleDiv.innerHTML = FT_translatableStrings['mainPageTitle'];
 
 	containerDiv.appendChild(titleDiv);
-	// Start Element to display filter options
-	containerDiv.appendChild(FT_createSearchFilterElement());
-	
+
 	//add truckMsg to display "No results found" message if random search string added
-	containerDiv.appendChild(FT_truckMsg());
+	//containerDiv.appendChild(FT_truckMsg());
 	 
 	// End Element to display filter options 
 	containerDiv.appendChild( FT_prepareImageContainer(true, categoryMap, 'FT_category' , '', 1, '') );
 	FT_BMFA_TruckContainer.appendChild(containerDiv);
 	FT_addPageFooter(FT_BMFA_TruckContainer);
-	FT_bindEvent('click', FT_expandCategory, FT_BMFA_TruckContainer.querySelectorAll('img'));  
+	//FT_bindEvent('click', FT_expandCategory, FT_BMFA_TruckContainer.querySelectorAll('img'));  
+	FT_bindEvent('click', FT_expandCategory, FT_BMFA_TruckContainer.querySelectorAll('.FT_category img'));	
 	
 	/* Scroll to top at start of truck container div */
 	if( !FT_isSafariOrIos() ) { //avoid scroll top for safari
@@ -547,60 +552,55 @@ var FT_displayCategories = function(categoryMap) {
 	}
 }
 
-function FT_getDistinctFilters(){
-	var filterObj = {
-		accountId: FT_BMFA_TruckContainer.getAttribute('accountId')
-	};
-	var customURL = apiServiceBaseLink + "DistinctFilter?isSandbox=true";
-	FT_WebRequestHandler.postRequestCustom(JSON.stringify(filterObj), customURL, function (xhttp) {
-		if (xhttp && xhttp.readyState == 4 && xhttp.status == 200) {
-			var serverResponse = JSON.parse(xhttp.responseText);
-			//console.log('serverResponse: ',serverResponse);
+FT_getDistinctFiltersCallback = function( xhttp,additionalParams ) {
+
+	if (xhttp && xhttp.readyState == 4 && xhttp.status == 200) {
+
+		var serverResponse = JSON.parse(xhttp.responseText);
+		console.log('serverResponse: ',serverResponse);
+		if( serverResponse.Success ) {
 			var serverData = JSON.parse(JSON.parse(serverResponse.Data));
 			console.log('serverData distinct: ', serverData);
 			if (serverData.isSuccess) {
+
 				distinctFilters = serverData.ResponseMap;
-				setTimeout(function () {
-					if (document.getElementById('filterApparatusType')) {
-						document.getElementById('filterApparatusType').innerHTML = '';
-						document.getElementById('filterApparatusType').appendChild(createFilterInputElements('apparatusType', 'select', null));
-					}
-					if (document.getElementById('filterMileage')) {
-						document.getElementById('filterMileage').innerHTML = '';
-						document.getElementById('filterMileage').appendChild(createFilterInputElements('mileage', 'select', null));
-					}
-					if (document.getElementById('filterBrand')) {
-						document.getElementById('filterBrand').innerHTML = '';
-						document.getElementById('filterBrand').appendChild(createFilterInputElements('brand', 'select', null));
-					}
-					if (document.getElementById('filterRegion')) {
-						document.getElementById('filterRegion').innerHTML = '';
-						document.getElementById('filterRegion').appendChild(createFilterInputElements('region', 'select', null));
-					}
-					if (document.getElementById('filterBudgetRange')) {
-						document.getElementById('filterBudgetRange').innerHTML = '';
-						document.getElementById('filterBudgetRange').appendChild(createFilterInputElements('budgetMin', 'input', 'text'));
-						document.getElementById('filterBudgetRange').appendChild(createFilterInputElements('budgetMax', 'input', 'text'));
-					}
-					if (document.getElementById('filterYearRange')) {
-						document.getElementById('filterYearRange').innerHTML = '';
-						document.getElementById('filterYearRange').appendChild(createFilterInputElements('yearMin', 'input', 'text'));
-						document.getElementById('filterYearRange').appendChild(createFilterInputElements('yearMax', 'input', 'text'));
-					}
-				}, 5000);
-				//FT_processPageTruckSearchData(serverResponse);
-				//FT_setMessage( true, FT_translatableStrings['inquiryFormSuccessMsg'], 'messageContainerId' );
-				//FT_saveFormToCookie(JSON.stringify(JSON_Buffer));
+
+				FT_createSearchFilterElement( additionalParams );			
+				
+
 			} else {
-				console.log(serverResponse.Message);
+				console.log( 'Error while fetching search filters: ', serverResponse.strMessage );
 				//FT_setMessage( false, FT_getFormErrorMsg(), 'messageContainerId' );
 			}
+		} else {
+			console.log( 'Server side error while fetching search filters: ',serverResponse.Message );
 		}
-		//hide loader
-		//document.getElementsByClassName('inquiryFrom')[0].style.display = 'block';
-		//document.getElementsByClassName('FT_loaderContainer')[0].style.display = 'none';
-	});
+	}
 }
+
+function FT_getDistinctFilters( containerDiv ){
+	var callbackAdditionalParams = { containerDiv : containerDiv };
+	if( distinctFilters == null ){
+		var filterObj = {
+			accountId: FT_BMFA_TruckContainer.getAttribute('accountId')
+		};
+		var customURL = apiServiceBaseLink + "DistinctFilter?isSandbox=true";
+		
+		FT_WebRequestHandler.postRequestCustom(JSON.stringify(filterObj), customURL, FT_getDistinctFiltersCallback, callbackAdditionalParams );
+	} else {
+		FT_createSearchFilterElement( callbackAdditionalParams );	
+	}
+}
+
+var FT_removeOptionSelectedClass = function( e ) {
+	if( e.target.id && document.getElementById( e.target.name ) ) {
+		var options = document.getElementById( e.target.name ).options;
+		for( var i = 0; i < options.length; i++ ) {
+			options[i].classList.remove( 'selectedOpt' );
+		}
+	}
+}
+
 // Function to create filter input elements
 function createFilterInputElements(name, type, typeAttribute){
 	var element = document.createElement(type);
@@ -608,6 +608,7 @@ function createFilterInputElements(name, type, typeAttribute){
 		element.setAttribute('type', typeAttribute);
 	}
 	element.setAttribute('name', name);
+	element.setAttribute( 'id', name );
 	if(type == 'select'){
 		if(distinctFilters){
 			if(name == 'apparatusType' && distinctFilters['Apparatus Type'].length){
@@ -615,6 +616,10 @@ function createFilterInputElements(name, type, typeAttribute){
 					var opt = document.createElement('option');
 					opt.value = distinctFilters['Apparatus Type'][i];
 					opt.innerHTML = distinctFilters['Apparatus Type'][i];
+
+					if( pgFilter && pgFilter['ApparatusType'] && pgFilter['ApparatusType'].indexOf( opt.value ) !== -1 ){
+						opt.selected = true;
+					}
 					element.appendChild(opt);
 				}
 				//element.setAttribute('multiple', 'multiple');
@@ -623,22 +628,37 @@ function createFilterInputElements(name, type, typeAttribute){
 					var opt = document.createElement('option');
 					opt.value = distinctFilters['Brand'][i];
 					opt.innerHTML = distinctFilters['Brand'][i];
+					
+					if( pgFilter && pgFilter['Brand'] && pgFilter['Brand'].indexOf( opt.value ) !== -1 ){
+						opt.className = 'selectedOpt';
+						opt.setAttribute('selected', 'selected');
+					}
 					element.appendChild(opt);
 				}
 				element.setAttribute('multiple', 'multiple');
+				element.addEventListener( 'change', function(e) { FT_removeOptionSelectedClass(e) } );
 			} else if (name == 'region' && distinctFilters['Geographic Region'].length) {
 				for (var i = 0; i < distinctFilters['Geographic Region'].length; i++) {
 					var opt = document.createElement('option');
 					opt.value = distinctFilters['Geographic Region'][i];
 					opt.innerHTML = distinctFilters['Geographic Region'][i];
+
+					if( pgFilter && pgFilter['GeographicRegion'] && pgFilter['GeographicRegion'].indexOf( opt.value ) !== -1 ){
+						opt.className = 'selectedOpt';
+						opt.setAttribute('selected', 'selected');
+					}
 					element.appendChild(opt);
 				}
+				element.addEventListener( 'change', function(e) { FT_removeOptionSelectedClass(e) } );
 				element.setAttribute('multiple', 'multiple');
 			} else if (name == 'mileage' && distinctFilters['Mileage'].length) {
 				for (var i = 0; i < distinctFilters['Mileage'].length; i++) {
 					var opt = document.createElement('option');
 					opt.value = distinctFilters['Mileage'][i];
 					opt.innerHTML = distinctFilters['Mileage'][i];
+					if( pgFilter && pgFilter['Mileage'] && pgFilter['Mileage'] == opt.value ){
+						opt.setAttribute( 'selected', 'selected' );
+					}
 					element.appendChild(opt);
 				}
 			}
@@ -649,21 +669,42 @@ function createFilterInputElements(name, type, typeAttribute){
 			if ((name == 'budgetMin' || name == "budgetMax") && distinctFilters['Budget Range'].length){
 				element.setAttribute('min', distinctFilters['Budget Range'][0]);
 				element.setAttribute('max', distinctFilters['Budget Range'][1]);
-				
+				var budgetMinVal = '';
+				var budgetMaxVal = '';
+				if( pgFilter && pgFilter['BudgetRange'] ) {
+					let budgetRangeArr = pgFilter['BudgetRange'].split("-");
+					if( budgetRangeArr.length == 2 ) {
+						budgetMinVal = budgetRangeArr[ 0 ];
+						budgetMaxVal = budgetRangeArr[ 1 ];
+					}
+				}
 				if(name == 'budgetMin'){
 					element.setAttribute('placeholder', 'Min Budget');
+					element.value = budgetMinVal;
 				}else{
 					element.setAttribute('placeholder', 'Max Budget');
+					element.value = budgetMaxVal;
 				}
 				element.setAttribute('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
 			}else if ((name == 'yearMin' || name == "yearMax") && distinctFilters['Year Range'].length) {
 				element.setAttribute('min', distinctFilters['Year Range'][0]);
 				element.setAttribute('max', distinctFilters['Year Range'][1]);
 				element.setAttribute('onkeypress', 'return event.charCode >= 48 && event.charCode <= 57');
+				var yearMinVal = '';
+				var yearMaxVal = '';
+				if( pgFilter && pgFilter['YearRange'] ) {
+					let yearRangeArr = pgFilter['YearRange'].split("-");
+					if( yearRangeArr.length == 2 ) {
+						yearMinVal = yearRangeArr[ 0 ];
+						yearMaxVal = yearRangeArr[ 1 ];
+					}
+				}
 				if(name == 'yearMin'){
 					element.setAttribute('placeholder', 'Min Year');
+					element.value = yearMinVal;
 				}else{
 					element.setAttribute('placeholder', 'Max Year');
+					element.value = yearMaxVal;
 				}
 			}
 		}
@@ -672,16 +713,59 @@ function createFilterInputElements(name, type, typeAttribute){
 	return element;
 }
 // Function to create filter dropdown
-function FT_createSearchFilterElement(){
+function FT_createSearchFilterElement( additionalParams ){
 	var searchFilterContainer = document.createElement('div');
 	searchFilterContainer.classList.add('filter-container');
 	var searchFilterBodyStr = FT_getSerachFilterBodyStr();
 	//searchFilterContainer.classList.add('form-inline');
 	searchFilterContainer.innerHTML = searchFilterBodyStr.trim();
-	//var apparatusTypeElem = 
-	
-	
-	return searchFilterContainer;
+
+	if( additionalParams && additionalParams.containerDiv && distinctFilters ) {
+
+		let containerDiv = additionalParams.containerDiv.querySelector('.FT_container');
+
+		if( containerDiv ) {
+
+			var innerContainer = containerDiv.querySelector('.FT_innerContainer');
+
+			if( !containerDiv.querySelector('.filter-container') && innerContainer ) {
+
+				containerDiv.insertBefore( searchFilterContainer, innerContainer );
+				containerDiv.insertBefore( FT_truckMsg(), innerContainer );
+
+				//attach key up event listner to search input for enter key form submission
+				FT_searchOnEnterkey();
+
+				if (document.getElementById('filterApparatusType')) {
+					document.getElementById('filterApparatusType').innerHTML = '';
+					document.getElementById('filterApparatusType').appendChild(createFilterInputElements('apparatusType', 'select', null));
+				}
+				if (document.getElementById('filterMileage')) {
+					document.getElementById('filterMileage').innerHTML = '';
+					document.getElementById('filterMileage').appendChild(createFilterInputElements('mileage', 'select', null));
+				}
+				if (document.getElementById('filterBrand')) {
+					document.getElementById('filterBrand').innerHTML = '';
+					document.getElementById('filterBrand').appendChild(createFilterInputElements('brand', 'select', null));
+				}
+				if (document.getElementById('filterRegion')) {
+					document.getElementById('filterRegion').innerHTML = '';
+					document.getElementById('filterRegion').appendChild(createFilterInputElements('region', 'select', null));
+				}
+				if (document.getElementById('filterBudgetRange')) {
+					document.getElementById('filterBudgetRange').innerHTML = '';
+					document.getElementById('filterBudgetRange').appendChild(createFilterInputElements('budgetMin', 'input', 'text'));
+					document.getElementById('filterBudgetRange').appendChild(createFilterInputElements('budgetMax', 'input', 'text'));
+				}
+				if (document.getElementById('filterYearRange')) {
+					document.getElementById('filterYearRange').innerHTML = '';
+					document.getElementById('filterYearRange').appendChild(createFilterInputElements('yearMin', 'input', 'text'));
+					document.getElementById('filterYearRange').appendChild(createFilterInputElements('yearMax', 'input', 'text'));
+				}
+			}
+		}
+
+	}
 }
 
 function FT_truckMsg(){
@@ -689,19 +773,27 @@ function FT_truckMsg(){
 	msgContainer.id = "truckMsg";
 	msgContainer.class = "truckMsg";
 	msgContainer.style.display = 'none';
-	var msgBody = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span> No trucks match your search criteria.  Please try a different search term.';
-	msgContainer.innerHTML = msgBody.trim();
+	
 	return msgContainer;
 }
 
-function FT_searchOnEnterkey(event){
+function FT_searchOnEnterkey(){
+
 	var input = document.getElementById("searchinput");
-	input.addEventListener("keyup", function(event) {
-		if (event.keyCode === 13) {
-			event.preventDefault();
-		   FT_getFilterValues(event,false);
-		}
-	});
+	//avoid multiple times attaching event listner if already added
+	if ( input.getAttribute('listener') !== 'true' ) {
+
+		input.addEventListener("keyup", function(event) {
+
+			if (event.keyCode === 13) {
+
+				event.preventDefault();
+				const elementClicked = event.target;
+	         	elementClicked.setAttribute('listener', 'true');				
+			   	FT_getFilterValues(event,false);
+			}
+		});
+	}
 }
 function FT_openFilters(event){
 	event.preventDefault();
@@ -709,8 +801,9 @@ function FT_openFilters(event){
 	document.getElementById("myDropdown").classList.toggle("showFilters");
 }
 function FT_closeFilterMenu(event){
-	console.log('close buton**********************');
-	document.getElementById("myDropdown").classList.remove("showFilters");
+	if( document.getElementById("myDropdown") != null ) {
+		document.getElementById("myDropdown").classList.remove("showFilters");
+	}
 }
 function minmax(value, min, max) {
 	if (parseInt(value) < min || isNaN(parseInt(value)))
@@ -722,10 +815,7 @@ function minmax(value, min, max) {
 function FT_getFilterValues(event, flag){
 	var form = document.forms['filterForm'];
 	var isValid = false;
-	
-	console.log('form.elements[budgetMin] :::::',form.elements['budgetMin']);
-	console.log('form.elements :::::',form.elements);
-	
+		
 	if(form.elements['budgetMin'] && minmax(form.elements['budgetMin'].value, form.elements['budgetMin'].getAttribute('min'), form.elements['yearMin'].getAttribute('max'))){
 		isValid = true;
 	}else if(form.elements['yearMin'] && minmax(form.elements['yearMin'].value, form.elements['yearMin'].getAttribute('min'), form.elements['yearMin'].getAttribute('max'))){
@@ -743,6 +833,7 @@ function FT_getFilterValues(event, flag){
 		console.log('Invalid input values.');
 		return;
 	}
+	searchTerm = document.getElementById('searchinput').value;
 	var filterObj={
 		//ApparatusType : form.elements['apparatusType'].value,
 		ApparatusType : getSelectValues(form.elements['apparatusType']),
@@ -751,7 +842,7 @@ function FT_getFilterValues(event, flag){
 		Mileage : form.elements['mileage'].value,
 		Brand: getSelectValues(form.elements['brand']),
 		GeographicRegion: getSelectValues(form.elements['region']),
-		searchKey: document.getElementById('searchinput').value,
+		searchKey: searchTerm,
 		isFilterApply : flag,
 		accountId :  FT_BMFA_TruckContainer.getAttribute('accountId'),
 		page : '1',
@@ -761,20 +852,57 @@ function FT_getFilterValues(event, flag){
 	pgFilter = filterObj;
 	isPgFilterApply = true;
 	console.log('filterObj ::::',filterObj);
-	console.log('JSON.stringify(filterObj) ::::',JSON.stringify(filterObj));
-	console.log('customURL  ::::',customURL );
-	
+	//request search data from server
+	FT_requestSearchTrucks( JSON.stringify(filterObj) );	
+}
+
+var FT_showSearchLoader = function() {
+	let loaderDiv = FT_BMFA_TruckContainer.querySelector('div.searchButton.loaderDiv');
+	let searchBtn = FT_BMFA_TruckContainer.querySelector('button.searchButton');
+	if( loaderDiv && searchBtn ) {
+		loaderDiv.style.display = 'block';
+		searchBtn.style.display = 'none';
+	}
+}
+
+var FT_hideSearchLoader = function() {
+	let loaderDiv = FT_BMFA_TruckContainer.querySelector('div.searchButton.loaderDiv');
+	let searchBtn = FT_BMFA_TruckContainer.querySelector('button.searchButton');
+	if( loaderDiv && searchBtn ) {
+		searchBtn.style.display = 'block';
+		loaderDiv.style.display = 'none';
+	}
+}
+
+var FT_requestSearchTrucks = function( strFilterData ) {
+
+	//show loader before requesting data from server
+	/*FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);*/
+	FT_showSearchLoader();
 	var customURL = apiServiceBaseLink+"SearchTruck?isSandbox=true";
-	FT_WebRequestHandler.postRequestCustom(JSON.stringify(filterObj), customURL, function (xhttp) {
+	FT_WebRequestHandler.postRequestCustom( strFilterData, customURL, function (xhttp) {
 		if (xhttp && xhttp.readyState == 4 && xhttp.status == 200) {
 			var serverResponse = JSON.parse(xhttp.responseText);
-			//console.log('serverResponse: ',serverResponse);
-			var serverData = JSON.parse(JSON.parse(serverResponse.Data));
-			console.log('serverData: ', serverData);
-			if (serverData.isSuccess) {
-				FT_processPageTruckSearchData(serverResponse);
+			console.log('serverResponse: ',serverResponse);
+			FT_hideSearchLoader();
+			if( serverResponse.Success && serverResponse.Data ) {
+				var serverData = JSON.parse(JSON.parse(serverResponse.Data));
+				console.log('serverData: ', serverData);
+				if (serverData.isSuccess) {
+					FT_processPageTruckSearchData(serverResponse);
+				} else {
+					FT_displayServerError( 'serverErrorMessage' );
+					console.log(serverData.strMessage);
+				}
 			} else {
-				console.log(serverResponse.Message);
+				FT_displayServerError( 'serverErrorMessage' );
+				console.log( serverResponse.Message );
+			}
+		} else {
+			if( xhttp.status != 200 ) {
+				FT_hideSearchLoader();
+				FT_displayServerError( 'serverErrorMessage' );
+				console.log( 'SearchTruck service error with status code: ', xhttp.status );
 			}
 		}
 	});
@@ -788,7 +916,7 @@ function getSelectValues(select) {
   for (var i=0, iLen=options.length; i<iLen; i++) {
 	opt = options[i];
 
-	if (opt.selected) {
+	if (opt.selected || opt.classList.contains( 'selectedOpt' ) ) {
 	  result.push(opt.value || opt.text);
 	}
   }
@@ -797,10 +925,11 @@ function getSelectValues(select) {
 
 
 function FT_getSerachFilterBodyStr(){
-	return '<div class="col search-col" style="max-width:unset!important;">'+
+	var searchFilterBody = '<div class="col search-col" style="max-width:unset!important;">'+
 		'<div class="searchHeader"> <div id="searchbox" style="width:100%!important;">'+
-			'<input placeholder="Search Trucks!" id="searchinput" onkeypress="FT_searchOnEnterkey(event);"/>'+
-			'<button class="searchButton" type="button" onclick="FT_getFilterValues(event,false)">Search'+
+		'<input placeholder="Search Trucks!" id="searchinput" value="'+searchTerm+'" />';
+	searchFilterBody += FT_SearchLoaderHtml.FT_format( [ FT_ThemeProperties.background ] );
+	searchFilterBody += '<button class="searchButton" type="button" onclick="FT_getFilterValues(event,false)"><img src="https://brindlee--c.na116.content.force.com/servlet/servlet.ImageServer?id=0153m000004z38A&oid=00Do0000000JLLE&lastMod=1572497390000" />'+
 			'</button>'+
 		'</div>'+
 		'<div>'+
@@ -844,6 +973,7 @@ function FT_getSerachFilterBodyStr(){
 			'</form>'+
 		'</div>'+
 	'</div>';
+	return searchFilterBody;
 }
 function FT_prepareCatTruckCountMap( categoryMap )  {
 	FT_catTruckCountMap = [];
@@ -1047,22 +1177,17 @@ function FT_PutPageTrucksInCache( trucks, pageNumber, categoryName ) {
  */     
 var FT_doBack = function(button) {
 	if(navigatedFromCategories) {
-		console.log('00000000 '+navigatedFromCategories);
 		navigatedFromCategories = false;
 		history.back();
 	} else {
 		var toBackStr = button.getAttribute('jData');
 		if(toBackStr === 'To Categories') {
-			console.log('111111111 '+toBackStr);
 			FT_displayCategories( FT_categoryMap );                 
 		} else if(toBackStr === 'To Truck List') {
-			console.log('222222 '+toBackStr);
-			console.log('FT_lastCategorySelected',FT_lastCategorySelected);
-			
 			if(isPgFilterApply){
 				isIndexPage = true;
 				FT_expandSearchCategory(FT_lastCategorySelected);
-				history.back();
+				//history.back();
 			}else{
 				FT_expandCategory(FT_lastCategorySelected);
 			}
@@ -1111,7 +1236,7 @@ var FT_prepareImageContainer = function( isForCategory, truckDataList, UICclass 
 	TruckImageContainer = document.createElement('div');
 	TruckImageContainer.className += 'FT_container';
 	var ul = document.createElement('ul');
-	ul.className = 'FT_listStyle ' + UICclass;
+	ul.className = 'FT_listStyle FT_innerContainer ' + UICclass;
 	for(var truck in truckDataList) {
 		if( truckDataList.hasOwnProperty( truck ) ) { //added to avoid iterating through object _proto properties
 			if(truckDataList[truck] || isForCategory) {
@@ -2063,14 +2188,13 @@ function FT_prepareTruckDetails( truck ) {
 	
 	FT_lastTruckSelected = selectedTruck;
 	FT_clearContainerDom();
-	FT_getDistinctFilters();
 	
 	var containerDiv = document.createElement('div');
 	containerDiv.className = 'FT_container';
 
 	FT_constructBackButton('To Truck List');
 	var truckContainer = document.createElement('div');
-	
+	truckContainer.className = 'FT_innerContainer';
 	truckContainer.setAttribute('truckId', FT_TruckId);
 	truckContainer.align = "left";
 	var truckPart1Container = document.createElement('div');
@@ -2110,12 +2234,9 @@ function FT_prepareTruckDetails( truck ) {
 	}
 	truckPart1Container.innerHTML = TruckDetailsHtml;
 	truckContainer.appendChild(truckPart1Container);
-	
-	/*// Start Element to display filter options*/
-	containerDiv.appendChild(FT_createSearchFilterElement());
-	
+
 	//add truckMsg to display "No results found" message if random search string added
-	containerDiv.appendChild(FT_truckMsg());
+	//containerDiv.appendChild(FT_truckMsg());
 
 	containerDiv.appendChild(truckContainer);
 	//FT_BMFA_TruckContainer.appendChild(truckContainer);
@@ -2145,7 +2266,6 @@ function FT_prepareTruckDetails( truck ) {
 function FT_prepareTruckSearchDetails(truck){
 
 	selectedTruck = truck;
-	console.log('selectedTruck 10000000000000::::',selectedTruck);
 	//add history
 	navigatedFromCategories = false;
 	//////////////////////////////////////////////////////
@@ -2166,19 +2286,17 @@ function FT_prepareTruckSearchDetails(truck){
 
 	FT_lastTruckSelected = selectedTruck;
 	FT_clearContainerDom();
-	FT_getDistinctFilters();
 
 	var containerDiv = document.createElement('div');
 	containerDiv.className = 'FT_container';
 
 	FT_constructBackButton('To Truck List');
-	/*// Start Element to display filter options*/
-	containerDiv.appendChild(FT_createSearchFilterElement());
 
 	//add truckMsg to display "No results found" message if random search string added
-	containerDiv.appendChild(FT_truckMsg());
+	//containerDiv.appendChild(FT_truckMsg());
 
 	var truckContainer = document.createElement('div');
+	truckContainer.className = 'FT_innerContainer';
 	truckContainer.setAttribute('truckId', FT_TruckId);
 	truckContainer.align = "left";
 	var truckPart1Container = document.createElement('div');
@@ -2224,7 +2342,6 @@ function FT_prepareTruckSearchDetails(truck){
 	containerDiv.appendChild(truckContainer);
 	
 	/*// Start Element to display filter options*/
-	//containerDiv.appendChild(FT_createSearchFilterElement());
 	
 	//FT_BMFA_TruckContainer.appendChild(truckContainer);
 	var shareLinkDiv = document.createElement('div');
@@ -2355,13 +2472,9 @@ function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatNam
 		//titleDiv.innerHTML = FT_translatableStrings['pageTitleStart']+ ((categoryName === 'All' ) ? ' '+FT_translatableStrings['allCatText'] : ' '+categoryName);
 		
 		containerDiv.appendChild(titleDiv);
-		
-		
-		/*// Start Element to display filter options*/
-		containerDiv.appendChild(FT_createSearchFilterElement());
 
 		//add truckMsg to display "No results found" message if random search string added
-		containerDiv.appendChild(FT_truckMsg());
+		//containerDiv.appendChild(FT_truckMsg());
 
 	   /* // End Element to display filter options*/
 		containerDiv.appendChild( FT_prepareImageContainer( false, trucks, 'FT_truckList', categoryName, pageNumber, translatedCatName ) );
@@ -2450,7 +2563,6 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 		
 		//add history
 		var categoryName = 'All',pageNumber='1';
-		console.log('isPgFilterApply 1010101010:::',isPgFilterApply);
 		if(isPgFilterApply){
 			categoryName = pgFilter['ApparatusType'][0];
 			pageNumber = pgFilter['page'];
@@ -2474,7 +2586,6 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 		
 		FT_clearContainerDom();
 		
-		FT_getDistinctFilters();
 		var containerDiv = document.createElement('div');
 		containerDiv.className = 'FT_container';
 
@@ -2485,13 +2596,9 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 		//titleDiv.innerHTML = FT_translatableStrings['pageTitleStart']+ ((categoryName === 'All' ) ? ' '+FT_translatableStrings['allCatText'] : ' '+categoryName);
 
 		containerDiv.appendChild(titleDiv);
-		
-		
-		/*// Start Element to display filter options*/
-		containerDiv.appendChild(FT_createSearchFilterElement());
 
 		//add truckMsg to display "No results found" message if random search string added
-		containerDiv.appendChild(FT_truckMsg());
+		//containerDiv.appendChild(FT_truckMsg());
 
 		/*// End Element to display filter options*/
 		containerDiv.appendChild(FT_prepareImageContainer(false, trucks, 'FT_truckList', categoryName, pageNumber, translatedCatName));
@@ -2592,10 +2699,24 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 		}
 	}else{
 		FT_closeFilterMenu(null);
-		
+		/*FT_displayServerError( 'searchNoResultsMsg' );
+		//navigate to All category trucks page if no search results found after showing error message
+		setTimeout(function(){  
+			var div = document.createElement('div');
+			var translatedCatName = FT_getCatTranslatedName( 'All' );
+			console.log('translatedCatName::::',translatedCatName);
+			FT_setAttributes( div, { 'category' : 'All', 'page' : 1, 'translatedCat' : translatedCatName } );
+			FT_expandCategory( div, true );
+		}, 5000);*/
 		var divElement = document.getElementById("truckMsg");
+
+		var msgBody = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>'+FT_translatableStrings['searchNoResultsMsgPart1']+' <b>"'+searchTerm+'"</b> '+FT_translatableStrings['searchNoResultsMsgPart2'];
+
+		divElement.innerHTML = msgBody.trim();
+
 		divElement.style.display = 'block';
-		setTimeout(function(){ divElement.style.display = 'none'; }, 5000);
+		//setTimeout(function(){ divElement.style.display = 'none'; }, 5000);
+
 	}
 }
 
@@ -2606,6 +2727,7 @@ function onPrevClick(){
 
 /* Function to dosplay server error */
 function FT_displayServerError( messageTransKey ) {
+
 	var containerDiv = document.createElement('div');
 	containerDiv.className = 'FT_container';
 
@@ -2683,6 +2805,10 @@ var FT_processTranslation = function( xhttp, additionalParams ) {
 				} else if( pageName == 'truckDetailPage' ) {
 					var truck = additionalParams.truck;
 					FT_prepareTruckDetails( truck );
+				} else if( pageName == 'searchListingPage' ) {
+					var translatedCatName = additionalParams.translatedCat;
+					//display data on page
+					FT_processSearchTruckList( truckData, translatedCatName );
 				} else {
 					FT_processMainPage();   
 				}
@@ -2976,7 +3102,7 @@ var FT_processPageTruckData = function( xhttp, additionalParams ) {
 	}
 }
 
-function FT_SearchTruckPaginationResult(){
+function FT_SearchTruckPaginationResult( categoryName ){
 	
 	var currentPageNo = pgFilter['page'];
 	
@@ -2999,20 +3125,8 @@ function FT_SearchTruckPaginationResult(){
 	}
 	console.log('pgFilter ::::',pgFilter);
 	
-	var customURL = apiServiceBaseLink+"SearchTruck?isSandbox=true";
-	FT_WebRequestHandler.postRequestCustom(JSON.stringify(pgFilter), customURL, function (xhttp) {
-		if (xhttp && xhttp.readyState == 4 && xhttp.status == 200) {
-			var serverResponse = JSON.parse(xhttp.responseText);
-			//console.log('serverResponse: ',serverResponse);
-			var serverData = JSON.parse(JSON.parse(serverResponse.Data));
-			console.log('serverData: ', serverData);
-			if (serverData.isSuccess) {                         
-				FT_processPageTruckSearchData(serverResponse);
-			} else {
-				console.log(serverResponse.Message);
-			}
-		}
-	});
+	//request search data from server
+	FT_requestSearchTrucks( JSON.stringify(pgFilter) );
 }
 
 
@@ -3036,7 +3150,9 @@ function FT_processPageTruckSearchData(serverResponse) {
 			FT_dataToTranslate = [];
 			FT_createTranslationData(trucks);
 			console.log('FT_dataToTranslate: ', FT_dataToTranslate);
-			var callbackAdditionalParams = { originalData: trucks, pageName: 'searchListingPage', translatedCat: translatedCatName };
+
+			var callbackAdditionalParams = { originalData : trucks, pageName: 'searchListingPage', categoryName: translatedCatName, pageNumber: pgFilter['page'], translatedCat : translatedCatName };
+
 			FT_WebRequestHandler.postRequestCustom(JSON.stringify(FT_dataToTranslate), translationApiLink + '?language=' + languageCode, FT_processTranslation, callbackAdditionalParams);
 		} else {
 			FT_processSearchTruckList(trucks, translatedCatName);
@@ -3102,7 +3218,6 @@ var FT_processCachedPageTruckData = function( categoryName, pageNumber, translat
 			var additionalParam = { cat : categoryName, pageNum: pageNumber, translatedCat : translatedCatName };
 			FT_WebRequestHandler.getPageRequest( FT_processPageTruckData, additionalParam );
 		}
-		FT_getDistinctFilters();
 	}, function(error) {
 		console.log('Error while getting trucks data from indexedDB: ',error);
 	}); 
@@ -3214,13 +3329,6 @@ function FT_getPageSearchTruckData( categoryName, pageNumber, translatedCatName 
 	console.log('FT_processPageTruckData ::::',FT_processPageTruckData);
 	FT_WebRequestHandler.getPageRequest( FT_processPageTruckData, additionalParam ); 
 }
-function FT_getPageTruckSearchData(categoryName, pageNumber, translatedCatName) {
-		//show loader before requesting data from server
-		FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);
-		//request data from server
-		var additionalParam = { cat: categoryName, pageNum: pageNumber, translatedCat: translatedCatName };
-		FT_WebRequestHandler.getPageRequest(FT_processPageTruckSearchData, additionalParam);
-	}
 function FT_expandCategoryDetail( element ) {
 	var categoryName = element.getAttribute('category');
 	var translatedCatName = element.getAttribute('translatedcat');
@@ -3276,7 +3384,7 @@ function FT_expandSearchCategoryDetail( element ) {
 	}
 	isIndexPage = false;
 	
-	FT_SearchTruckPaginationResult();
+	FT_SearchTruckPaginationResult( categoryName );
 }
 
 function FT_getDataFromCache( key ) {
@@ -3352,7 +3460,17 @@ function FT_expandSearchCategoryDeep( element ) {
 	}   
 }
 
+var FT_resetSearchFilters = function() {	
+	isPgFilterApply = false;
+	searchTerm = '';
+	pgFilter = {};
+}
+
 var FT_expandCategory = function( element ) {
+
+	//reset filters on click of any category
+	FT_resetSearchFilters();
+
 	if( !FT_isFetchedPageSize ) {
 		//get page size from cache
 		if( FT_idbSupported ) {
