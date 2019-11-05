@@ -853,7 +853,7 @@ function FT_getFilterValues(event, flag){
 	isPgFilterApply = true;
 	console.log('filterObj ::::',filterObj);
 	//request search data from server
-	FT_requestSearchTrucks( JSON.stringify(filterObj) );	
+	FT_requestSearchTrucks( JSON.stringify(filterObj), false );	
 }
 
 var FT_showSearchLoader = function() {
@@ -874,7 +874,7 @@ var FT_hideSearchLoader = function() {
 	}
 }
 
-var FT_requestSearchTrucks = function( strFilterData ) {
+var FT_requestSearchTrucks = function( strFilterData, fromBackButton ) {
 
 	//show loader before requesting data from server
 	/*FT_BMFA_TruckContainer.innerHTML = FT_LoaderHtml.FT_format([FT_ThemeProperties.background, FT_translatableStrings['loaderText']]);*/
@@ -889,7 +889,7 @@ var FT_requestSearchTrucks = function( strFilterData ) {
 				var serverData = JSON.parse(JSON.parse(serverResponse.Data));
 				console.log('serverData: ', serverData);
 				if (serverData.isSuccess) {
-					FT_processPageTruckSearchData(serverResponse);
+					FT_processPageTruckSearchData( serverResponse, fromBackButton );
 				} else {
 					FT_displayServerError( 'serverErrorMessage' );
 					console.log(serverData.strMessage);
@@ -1176,7 +1176,7 @@ function FT_PutPageTrucksInCache( trucks, pageNumber, categoryName ) {
  * @Param button    : button DOM-element. 
  */     
 var FT_doBack = function(button) {
-	if(navigatedFromCategories) {
+	if( navigatedFromCategories && !isPgFilterApply ) {
 		navigatedFromCategories = false;
 		history.back();
 	} else {
@@ -1186,7 +1186,7 @@ var FT_doBack = function(button) {
 		} else if(toBackStr === 'To Truck List') {
 			if(isPgFilterApply){
 				isIndexPage = true;
-				FT_expandSearchCategory(FT_lastCategorySelected);
+				FT_expandSearchCategory( FT_lastCategorySelected, true );
 				//history.back();
 			}else{
 				FT_expandCategory(FT_lastCategorySelected);
@@ -1430,6 +1430,24 @@ var FT_SetURLParam = function(url, paramName, paramValue) {
 		url += "&" + paramName + "=" + paramValue;
 	}
 	return  (url + hash);
+}
+
+var FT_removeUrlParam = function( key, sourceURL ) {
+    var rtn = sourceURL.split("?")[0],
+        param,
+        params_arr = [],
+        queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+    if (queryString !== "") {
+        params_arr = queryString.split("&");
+        for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+            param = params_arr[i].split("=")[0];
+            if (param === key) {
+                params_arr.splice(i, 1);
+            }
+        }
+        rtn = rtn + "?" + params_arr.join("&");
+    }
+    return rtn;
 }
 
 /* A function for get url parameter's value by there name.
@@ -2557,7 +2575,7 @@ function FT_processTruckList( trucks, categoryName, pageNumber, translatedCatNam
 	} 
 }
 
-function FT_processSearchTruckList(trucks, translatedCatName) {
+function FT_processSearchTruckList( trucks, translatedCatName, fromBackButton ) {
 	if (trucks.length) {
 		
 		
@@ -2580,7 +2598,7 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 			for (var param in urlParams) {  
 				historyUrl = FT_SetURLParam(historyUrl, param, encodeURIComponent(urlParams[param]));
 			}
-			history.pushState({ page: 'searchListingPage', 'translatedCat': translatedCatName }, null, historyUrl);
+			history.pushState({ page: 'categoryDetail', 'translatedCat': translatedCatName }, null, historyUrl);
 		}
 		
 		
@@ -2650,7 +2668,7 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 				'change',
 				function () { 
 					isIndexPage = true;
-					FT_expandSearchCategory(this.options[this.selectedIndex]); },
+					FT_expandSearchCategory(this.options[this.selectedIndex], false); },
 				false
 			);
 		} else {
@@ -2698,24 +2716,37 @@ function FT_processSearchTruckList(trucks, translatedCatName) {
 			FT_scrollTop();
 		}
 	}else{
+
 		FT_closeFilterMenu(null);
-		/*FT_displayServerError( 'searchNoResultsMsg' );
-		//navigate to All category trucks page if no search results found after showing error message
-		setTimeout(function(){  
+		
+		//navigate to All category trucks page if no search results found when going back to truck list page
+		if( fromBackButton ) {
 			var div = document.createElement('div');
 			var translatedCatName = FT_getCatTranslatedName( 'All' );
 			console.log('translatedCatName::::',translatedCatName);
 			FT_setAttributes( div, { 'category' : 'All', 'page' : 1, 'translatedCat' : translatedCatName } );
+			var historyUrl = window.location.href;
+			var urlParams = { category: 'All' }
+			for(var param in urlParams) {
+				historyUrl = FT_SetURLParam( historyUrl, param, encodeURIComponent( urlParams[param] ) );
+			}
+
+			historyUrl = FT_removeUrlParam( 'stockno', historyUrl );
+
+			history.pushState({ page : 'categoryDetail',category : 'All', 'translatedCat' : translatedCatName }, null, historyUrl);
+
 			FT_expandCategory( div, true );
-		}, 5000);*/
-		var divElement = document.getElementById("truckMsg");
 
-		var msgBody = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>'+FT_translatableStrings['searchNoResultsMsgPart1']+' <b>"'+searchTerm+'"</b> '+FT_translatableStrings['searchNoResultsMsgPart2'];
+		} else {
+			var divElement = document.getElementById("truckMsg");
 
-		divElement.innerHTML = msgBody.trim();
+			var msgBody = '<span class="closebtn" onclick="this.parentElement.style.display=\'none\';">&times;</span>'+FT_translatableStrings['searchNoResultsMsgPart1']+' <b>"'+searchTerm+'"</b> '+FT_translatableStrings['searchNoResultsMsgPart2'];
 
-		divElement.style.display = 'block';
-		//setTimeout(function(){ divElement.style.display = 'none'; }, 5000);
+			divElement.innerHTML = msgBody.trim();
+
+			divElement.style.display = 'block';
+
+		}	
 
 	}
 }
@@ -2808,7 +2839,7 @@ var FT_processTranslation = function( xhttp, additionalParams ) {
 				} else if( pageName == 'searchListingPage' ) {
 					var translatedCatName = additionalParams.translatedCat;
 					//display data on page
-					FT_processSearchTruckList( truckData, translatedCatName );
+					FT_processSearchTruckList( truckData, translatedCatName, false );
 				} else {
 					FT_processMainPage();   
 				}
@@ -3102,7 +3133,7 @@ var FT_processPageTruckData = function( xhttp, additionalParams ) {
 	}
 }
 
-function FT_SearchTruckPaginationResult( categoryName ){
+function FT_SearchTruckPaginationResult( categoryName, fromBackButton ){
 	
 	var currentPageNo = pgFilter['page'];
 	
@@ -3126,14 +3157,14 @@ function FT_SearchTruckPaginationResult( categoryName ){
 	console.log('pgFilter ::::',pgFilter);
 	
 	//request search data from server
-	FT_requestSearchTrucks( JSON.stringify(pgFilter) );
+	FT_requestSearchTrucks( JSON.stringify(pgFilter), fromBackButton );
 }
 
 
 /* A function for search truck. 
 * @Param element   : holding instance of category DOM-element that is currently selected by User.
 */
-function FT_processPageTruckSearchData(serverResponse) {
+function FT_processPageTruckSearchData( serverResponse, fromBackButton ) {
 	
 	try {                        
 		var translatedCatName = pgFilter['ApparatusType'];
@@ -3155,7 +3186,7 @@ function FT_processPageTruckSearchData(serverResponse) {
 
 			FT_WebRequestHandler.postRequestCustom(JSON.stringify(FT_dataToTranslate), translationApiLink + '?language=' + languageCode, FT_processTranslation, callbackAdditionalParams);
 		} else {
-			FT_processSearchTruckList(trucks, translatedCatName);
+			FT_processSearchTruckList( trucks, translatedCatName, fromBackButton );
 		}
 	} catch (exp) {
 		FT_displayServerError('serverErrorMessage');
@@ -3373,7 +3404,7 @@ function FT_expandCategoryDetail( element ) {
 }
 
 
-function FT_expandSearchCategoryDetail( element ) {
+function FT_expandSearchCategoryDetail( element, fromBackButton ) {
 	var categoryName = element.getAttribute('category');
 	var translatedCatName = element.getAttribute('translatedcat');
 	var pageNumber = element.getAttribute('page');
@@ -3384,7 +3415,7 @@ function FT_expandSearchCategoryDetail( element ) {
 	}
 	isIndexPage = false;
 	
-	FT_SearchTruckPaginationResult( categoryName );
+	FT_SearchTruckPaginationResult( categoryName, fromBackButton );
 }
 
 function FT_getDataFromCache( key ) {
@@ -3445,18 +3476,18 @@ function FT_expandCategoryDeep( element ) {
 	}   
 }
 
-function FT_expandSearchCategoryDeep( element ) {
+function FT_expandSearchCategoryDeep( element, fromBackButton ) {
 	
 	if(  languageCode && languageCode != 'en' ) {
 		if( !FT_isFetchedTranslations ) {
 			
-			FT_expandSearchCategoryDetail( element );
+			FT_expandSearchCategoryDetail( element, fromBackButton );
 			
 		} else {
-			FT_expandSearchCategoryDetail( element );
+			FT_expandSearchCategoryDetail( element, fromBackButton );
 		}
 	} else {
-		FT_expandSearchCategoryDetail( element );
+		FT_expandSearchCategoryDetail( element, fromBackButton );
 	}   
 }
 
@@ -3466,10 +3497,14 @@ var FT_resetSearchFilters = function() {
 	pgFilter = {};
 }
 
-var FT_expandCategory = function( element ) {
+/* doNotResetFilters : Set to true if retuned to truck list from truck detail page and no search results found then All category page is displayed and no filters are cleared */
+
+var FT_expandCategory = function( element, doNotResetFilters ) {
 
 	//reset filters on click of any category
-	FT_resetSearchFilters();
+	if( typeof doNotResetFilters == 'undefined' ) {
+		FT_resetSearchFilters();
+	}
 
 	if( !FT_isFetchedPageSize ) {
 		//get page size from cache
@@ -3491,11 +3526,11 @@ var FT_expandCategory = function( element ) {
 	}   
 }
 
-var FT_expandSearchCategory = function( element ) {
+var FT_expandSearchCategory = function( element, fromBackButton ) {
 	if( !FT_isFetchedPageSize ) {                    
-		FT_expandSearchCategoryDeep( element );                   
+		FT_expandSearchCategoryDeep( element, fromBackButton );                   
 	} else {
-		FT_expandSearchCategoryDeep( element );
+		FT_expandSearchCategoryDeep( element, fromBackButton );
 	}   
 }
 
