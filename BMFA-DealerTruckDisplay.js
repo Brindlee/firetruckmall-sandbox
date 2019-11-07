@@ -3738,6 +3738,7 @@ var FT_loadCustomTruckData = function(isCached) {
 	FT_BMFA_TruckContainer = document.getElementById('dealerTruckContainerId');
 	FT_DealerAccointId = FT_BMFA_TruckContainer.getAttribute('accountId');
 	isSandbox = FT_BMFA_TruckContainer.getAttribute('isSandbox');
+	if( isSandbox == null ) { isSandbox = false; }
 	var style = getComputedStyle(FT_BMFA_TruckContainer);
 	FT_ThemeProperties.background = style.backgroundColor;
 	FT_ThemeProperties.color = style.color;
@@ -4358,7 +4359,7 @@ var FT_loadSiteMap = function() {
 
 		FT_DealerAccointId = FT_SiteMapContainer.getAttribute('accountId');
 		isSandbox = FT_SiteMapContainer.getAttribute('isSandbox');
-
+		if( isSandbox == null ) { isSandbox = false; }
 		FT_BMFA_TruckContainer = document.getElementById('dealerTruckContainerId');
 		if( FT_BMFA_TruckContainer ) {
 			var style = getComputedStyle(FT_BMFA_TruckContainer);
