@@ -229,23 +229,27 @@ var FT_DetailFieldToStrHTML = {
 };
 
 /* Javascript global variable for Bind footer element on page. */
-var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:{0}">' +
-                           '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfL"/>'+
-                           '    <img src="'+FT_truckTypeImageUrl['FooterBellImg']+'" class="FT_imgfR"/>'+
-                            '<div class="FT_clr"></div>'+
-                            '<div class="FT_fR">'+
+var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:#000;">'
+                            +'<div class="FT_tableCell FT_footerBg" onclick="showSellModal()">'+
+                            '<div class="FT_footerImgWrap">'+
+                            '<div class="FT_footerImg"><img src="https://brindlee--partial--c.cs29.content.force.com/servlet/servlet.ImageServer?id=0150r000000E1Qx&oid=00D0r0000000Wej&lastMod=1574858827000" class="" /></div>'+
                            '    <h5 style="color:{1}" class="FT_footerHead">{3}</h5>' +
-                           '    <div class="FT_footerinner"><span style="color:{1}; display: {7}">{6} </span> <a href="javascript:void(0)" onclick="showSellModal()" style="color:{2}">{4}</a></div>' +
-                            '</div>'+
-                            '<div class="FT_fL">'+
-                            '    <h5 style="color:{1}" class="FT_footerHead">{8}</h5>' +
-                           '    <div class="FT_footerinner"><a href="javascript:void(0)" onclick="FT_showTruckFinderModal()" style="color:{2}">{4}</a></div>' +
+                           '    <div class="FT_footerinner"><span style="color:{1}; display: {7}">{6} </span> <a href="javascript:void(0)" style="color:{2}">{4}</a></div>' +
                            '</div>'+
-                        '<div class="FT_clr"></div>'+
-                            '    <div class="FT_regtext" style="color:{2}; margin-top:15px;">{5}' +
-                           '        <div class="FT_regmark" style="color:{2}">&#174;</div>' +
-                           '    </div>' +
-                           '</div>';
+                            '</div>'+
+                            '<div class="FT_tableCell" onclick="FT_showTruckFinderModal()">'+
+                            '<div class="FT_footerImgWrap">'+
+                            '<div class="FT_footerImg"><img src="https://brindlee--partial--c.cs29.content.force.com/servlet/servlet.ImageServer?id=0150r000000E1R2&oid=00D0r0000000Wej&lastMod=1574858882000" class=""/></div>'+
+                            '   <h5 style="color:{1}" class="FT_footerHead">{8}</h5>' +
+                           '    <div class="FT_footerinner"><a href="javascript:void(0)"  style="color:{2}">{4}</a></div>' +
+                           '</div>'+
+                            '<div class="FT_clr"></div>'+
+                            '</div>'+
+                            '</div>'+
+                        '    <div class="FT_regtext" style="margin-top:15px;">{5}' +
+                       '        <span class="" style="">&#174;</span>' +
+                       '    </div>';
+                           
 var FT_LoaderHtml = '<div class="FT_container FT_loaderContainer"><div class="bgBlack FT_loader" id="FT_loader"><div class="whtieBg"><div class="loader" style="border-top: 4px solid {0}"></div></div><p class="FT_loaderText">{1}</p></div></div>';
 
 var FT_SearchLoaderHtml = '<div class="searchButton loaderDiv"><div class="loader" style="border-top: 4px solid {0}"></div></div>';
@@ -2810,8 +2814,8 @@ function FT_displayServerError( messageTransKey, actualErrorMessage ) {
 
     //call siteDownAlert web service to send email of failure
     if( typeof actualErrorMessage != 'undefined' && actualErrorMessage != '' ) {
-    	FT_callSiteDownAlertService( actualErrorMessage );
-	}
+        FT_callSiteDownAlertService( actualErrorMessage );
+    }
 }
 
 function FT_MapTranslatedObject( translatedTextObj, obj ) {
@@ -5069,7 +5073,7 @@ var FT_callSiteDownAlertServiceCallback = function( xhttp,additionalParams ) {
             var serverData = JSON.parse( serverResponse );
             console.log('FT_callSiteDownAlertService serverData : ', serverData);
             if ( !serverData.isSuccess ) {
-            	console.log( 'Error occurred while sending mail of site down alert: ', serverData.strMessage );
+                console.log( 'Error occurred while sending mail of site down alert: ', serverData.strMessage );
             }            
         } else {
             console.log( 'Error: reponse is not a valid JSON' );
@@ -5079,16 +5083,16 @@ var FT_callSiteDownAlertServiceCallback = function( xhttp,additionalParams ) {
 
 
 var FT_callSiteDownAlertService = function( reason ) {
-	let sourceURL = window.location.href;
-	var serviceParams = { 
-		accountId: FT_BMFA_TruckContainer.getAttribute('accountId'), 
-		reson: reason, 
-		source: sourceURL 
-	};
-	var serviceBaseUrl = sandboxServiceUrl;
-	if( !isSandbox ) {
-		serviceBaseUrl = productionServiceUrl;
-	} 
+    let sourceURL = window.location.href;
+    var serviceParams = { 
+        accountId: FT_BMFA_TruckContainer.getAttribute('accountId'), 
+        reson: reason, 
+        source: sourceURL 
+    };
+    var serviceBaseUrl = sandboxServiceUrl;
+    if( !isSandbox ) {
+        serviceBaseUrl = productionServiceUrl;
+    } 
     var customURL = serviceBaseUrl + "SiteDownAlert"; 
             
     FT_WebRequestHandler.postRequestCustom( JSON.stringify( serviceParams ), customURL, FT_callSiteDownAlertServiceCallback );
