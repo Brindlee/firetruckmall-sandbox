@@ -4852,7 +4852,7 @@ var FT_addTruckFinderFrom = function() {
                     }
                 } else {
                     optLabel = ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
-                    if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].includes('FT_required') ) {
+                    if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].indexOf('FT_required') < 0 ) {
                         optLabel += ' *';
                     }
                 }
@@ -4884,7 +4884,7 @@ var FT_addTruckFinderFrom = function() {
                 FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
             }
 
-            if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].includes("FT_required") ) {
+            if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].indexOf("FT_required") < 0 ) {
                 dynamicDom.placeholder += ' *';
             }
         }
