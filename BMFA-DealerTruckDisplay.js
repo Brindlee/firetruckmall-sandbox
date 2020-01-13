@@ -949,15 +949,15 @@ function getSelectValues(select) {
 
 function FT_getSerachFilterBodyStr(){
     var searchFilterBody = '<div class="col search-col" style="max-width:unset!important;">'+
-        '<div class="searchHeader"> <div id="searchbox" style="width:100%!important;">'+
+        '<div class="searchHeader"> <div id="searchbox" class="search-box">'+
         '<input placeholder="Search Trucks!" id="searchinput" value="'+searchTerm+'" />';
     searchFilterBody += FT_SearchLoaderHtml.FT_format( [ FT_ThemeProperties.background ] );
     searchFilterBody += '<button class="searchButton" type="button" onclick="FT_getFilterValues(event,false)"><img src="https://brindlee--c.na116.content.force.com/servlet/servlet.ImageServer?id=0153m000004z38A&oid=00Do0000000JLLE&lastMod=1572497390000" />'+
             '</button>'+
         '</div>'+
-        '<div>'+
-            '<button class="filterButton" id="filterButton" title="Filters" type="button" onclick="FT_openFilters(event)">'+
-                '<img src="https://brindlee--c.na116.content.force.com/servlet/servlet.ImageServer?id=0153m000004z2C6&oid=00Do0000000JLLE&lastMod=1571936837000"/>'+        
+        '<div class="filter-search-btn">'+
+            '<button class="FT_redBtn" title="Filters" type="button" onclick="FT_openFilters(event)" > Filter Search Results >>'+
+                        
             '</button>'+
         '</div> </div>'+
         '<div id="myDropdown" class="dropdown-content">'+
