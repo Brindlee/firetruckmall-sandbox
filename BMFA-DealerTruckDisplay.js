@@ -116,7 +116,8 @@ var FT_translatableStrings = {
     "Brands" : "Brands",
     "Geographic Region" : "Geographic Region",
     "searchNoResultsMsgPart1" : "Your search for",
-    "searchNoResultsMsgPart2" : "did not match any trucks"
+    "searchNoResultsMsgPart2" : "did not match any trucks",
+    "Filter Results" : "Filter Results"
 };
 
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
@@ -956,7 +957,7 @@ function FT_getSerachFilterBodyStr(){
             '</button>'+
         '</div>'+
         '<div class="filter-search-btn">'+
-            '<button class="FT_redBtn" title="Filters" type="button" onclick="FT_openFilters(event)" > Filter Search Results >>'+
+            '<button class="FT_redBtn" title="Filters" type="button" onclick="FT_openFilters(event)" >'+FT_translatableStrings["Filter Results"]+' >>'+
                         
             '</button>'+
         '</div> </div>'+
