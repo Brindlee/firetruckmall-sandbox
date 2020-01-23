@@ -92,7 +92,7 @@ var FT_translatableStrings = {
     "Inquiry Message" : "Inquiry Message",
     "inquiryFormSuccessMsg" : "Your Request Has Been Submited Successfully!",
     "loaderText" : "We are finding your fire truck",
-    "serverErrorMessage" : "Something went wrong..",
+    "serverErrorMessage" : "There are currently no trucks available, please check back later.",
     "notFoundError" : "Truck not found",
     "noRecordsMessage" : "No categories found",
     "pricingTxt" : "Call For Custom Quote",
@@ -116,8 +116,7 @@ var FT_translatableStrings = {
     "Brands" : "Brands",
     "Geographic Region" : "Geographic Region",
     "searchNoResultsMsgPart1" : "Your search for",
-    "searchNoResultsMsgPart2" : "did not match any trucks",
-    "Filter Results" : "Filter Results"
+    "searchNoResultsMsgPart2" : "did not match any trucks"
 };
 
 /* Javascript Map for Bind Truck Details(HTML) Abstract content dynamically with respective field data of truck. */
@@ -957,7 +956,7 @@ function FT_getSerachFilterBodyStr(){
             '</button>'+
         '</div>'+
         '<div class="filter-search-btn">'+
-            '<button class="FT_redBtn" title="Filters" type="button" onclick="FT_openFilters(event)" >'+FT_translatableStrings["Filter Results"]+' >>'+
+            '<button class="FT_redBtn" title="Filters" type="button" onclick="FT_openFilters(event)" > Filter Search Results >>'+
                         
             '</button>'+
         '</div> </div>'+
@@ -1660,6 +1659,27 @@ var removeFT_SelectClass = function(element){
     element.classList.remove('FT_select');
 }
 
+var FT_UpdateCountry_Inquiry = function(element){
+    console.log( 'update country' );
+    var op = element.options[element.selectedIndex];
+	var optgroup = op.parentNode;
+    document.getElementsByName("Country")[0].value = optgroup.label;
+}
+
+var FT_UpdateCountry_Sell = function(element){
+    console.log( 'update country' );
+    var op = element.options[element.selectedIndex];
+	var optgroup = op.parentNode;
+    document.getElementsByName("Country")[1].value = optgroup.label;
+}
+
+var FT_UpdateCountry_Finder = function(element){
+    console.log( 'update country' );
+    var op = element.options[element.selectedIndex];
+	var optgroup = op.parentNode;
+    document.getElementsByName("Country")[2].value = optgroup.label;
+}
+
 /* A function to validate and mask the phone number.
  * @Param element   : set message for Error or Success.
  */
@@ -1889,6 +1909,7 @@ var FT_addInetrestFrom = function() {
         //'Make An Offer':'div',
         'City':'input',
         'State':'select',
+        'Country':'input',
         'FD or Company': 'input',
         'Inquiry Message':'textarea'
     }
@@ -1902,6 +1923,7 @@ var FT_addInetrestFrom = function() {
         //'Make An Offer':'',
         'City':'FT_input FT_required',
         'State':'FT_input FT_required',
+        'Country':'FT_input FT_required',
         'FD or Company': 'FT_input FT_required',
         'Inquiry Message':'FT_input FT_required'
     }
@@ -1915,6 +1937,7 @@ var FT_addInetrestFrom = function() {
         //'Make An Offer':'',
         'City':'',
         'State':' ',
+        'Country':'',
         'FD or Company': '',
         'Inquiry Message':''
     }
@@ -1928,6 +1951,7 @@ var FT_addInetrestFrom = function() {
         if( frmData['Email'] ) fieldToValues['Email'] = frmData['Email'];
         if( frmData['PurchaseTimeframe'] ) fieldToValues['Purchase Timeframe'] = frmData['PurchaseTimeframe'];
         if( frmData['City'] ) fieldToValues['City'] = frmData['City'];
+        if( frmData['Country'] ) fieldToValues['Country'] = frmData['Country'];
         if( frmData['State'] ) fieldToValues['State'] = frmData['State'];
         if( frmData['FDorCompany'] ) fieldToValues['FD or Company'] = frmData['FDorCompany'];
         if( frmData['InquiryMessage'] ) fieldToValues['Inquiry Message'] = frmData['InquiryMessage'];       
@@ -1935,8 +1959,8 @@ var FT_addInetrestFrom = function() {
     
     var PurchaseTimeframeOpt = ['', 'Less than 1 month', '1 month - 3 months', '6 months - 12 months', '12 months+'];
     var StateOpt = {
-        "United States" : [ "AL", "AK", "AZ", "AR", "AS", "CA", "CO", "CT", "DC", "DE", "FM", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "ME", "MD", "MH", "MI", "MN", "MS", "MO", "MT", "MP", "NE", "NH", "NJ", "NM", "NY", "NC", "ND", "NV", "OH", "OK", "OR", "PA", "PR", "QC", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VI", "VA", "WA", "WV", "WI", "WY" ], 
-        "Canada" : [ "AB", "BC", "MB", "NL", "NB", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT" ]
+        "United States" : [ 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ],
+        "Canada" : [ 'Alberta', 'British Columbia', 'Manitoba', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territories' ]
     };
     var tab2Div = document.createElement('div');
     tab2Div.id = FT_tab2Id;
@@ -1957,62 +1981,83 @@ var FT_addInetrestFrom = function() {
     formWarpper.appendChild(messageContainerDiv);
     var index = 0;
     for(var fieldName in fieldAndType) {
-        var inputContainer = document.createElement('div');
-        inputContainer.className += ((index%2) ? 'FT_fL' : 'FT_fR');
-        var dynamicDom = document.createElement(fieldAndType[fieldName]);
-        dynamicDom.name = fieldName.replace(/\s/g,'');
-        dynamicDom.className = fieldToClasses[fieldName];
-        if(fieldName === 'Purchase Timeframe') {
-            dynamicDom.className += ' FT_gryTxt FT_select';
-            PurchaseTimeframeOpt.forEach(function(opt) {                
-                var option = document.createElement('option');
-                option.value = (opt) ? opt: ' ';
-                option.innerHTML = (opt) ? opt: (( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : 'Timeframe');
-                if(!opt) {
-                    option.disabled = true;
-                    option.selected = true;
-                }
-                dynamicDom.appendChild(option);
-            });
-            
-            FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-        } else if(fieldName === 'State') {
-            dynamicDom.className += ' FT_gryTxt FT_select';
-            //default selected option "State"
-            var option = document.createElement('option');
-            option.value = ' ';
-            option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
-            option.disabled = true;
-            option.selected = true;   
-            dynamicDom.appendChild(option);
-            //create option group
-            for( var key in StateOpt ) {
-                var optGroup = document.createElement('optgroup');
-                optGroup.setAttribute( "label", key );
-                StateOpt[ key ].forEach( function( opt ) {
+        if(fieldName !== 'Country')
+        {
+            var inputContainer = document.createElement('div');
+            inputContainer.className += ((index%2) ? 'FT_fL' : 'FT_fR');
+            var dynamicDom = document.createElement(fieldAndType[fieldName]);
+            dynamicDom.name = fieldName.replace(/\s/g,'');
+            dynamicDom.className = fieldToClasses[fieldName];
+            if(fieldName === 'Purchase Timeframe') {
+                dynamicDom.className += ' FT_gryTxt FT_select';
+                PurchaseTimeframeOpt.forEach(function(opt) {                
                     var option = document.createElement('option');
-                    option.value = opt;
-                    option.innerHTML = opt;
-                    optGroup.appendChild(option);
-                });                         
-                dynamicDom.appendChild( optGroup );
+                    option.value = (opt) ? opt: ' ';
+                    option.innerHTML = (opt) ? opt: (( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : 'Timeframe');
+                    if(!opt) {
+                        option.disabled = true;
+                        option.selected = true;
+                    }
+                    dynamicDom.appendChild(option);
+                });
+                
+                FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
+            } else if(fieldName === 'State') {
+                dynamicDom.className += ' FT_gryTxt FT_select';
+                //default selected option "State"
+                var option = document.createElement('option');
+                option.value = ' ';
+                option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
+                option.disabled = true;
+                option.selected = true;   
+                dynamicDom.appendChild(option);
+                //create option group
+                for( var key in StateOpt ) {
+                    var optGroup = document.createElement('optgroup');
+                    optGroup.setAttribute( "label", key );
+                    StateOpt[ key ].forEach( function( opt ) {
+                        var option = document.createElement('option');
+                        option.value = opt;
+                        option.innerHTML = opt;
+                        optGroup.appendChild(option);
+                    });                         
+                    dynamicDom.appendChild( optGroup );
+                }
+                FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
+                FT_bindEvent('change', FT_UpdateCountry_Inquiry, [dynamicDom]);
+            } else {
+                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;           
+                if(fieldName === 'Phone') {
+                    FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
+                } else if(fieldName === 'Inquiry Message') {
+                    inputContainer.className += 'FT_TextArea';
+                }           
             }
-            FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-        } else {
-            dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;           
-            if(fieldName === 'Phone') {
-                FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
-            } else if(fieldName === 'Inquiry Message') {
-                inputContainer.className += 'FT_TextArea';
-            }           
+            //populate value from cookie data (check conditions if radio/checkbox field is added in form)
+            if( fieldAndType[fieldName] == 'input' || fieldAndType[fieldName] == 'select' || fieldAndType[fieldName] == 'textarea' )
+                dynamicDom.value = fieldToValues[fieldName];
         }
-        //populate value from cookie data (check conditions if radio/checkbox field is added in form)
-        if( fieldAndType[fieldName] == 'input' || fieldAndType[fieldName] == 'select' || fieldAndType[fieldName] == 'textarea' )
-            dynamicDom.value = fieldToValues[fieldName];
+        else{
+            index = index - 1;
+        }
+        
         inputContainer.appendChild(dynamicDom);
         formWarpper.appendChild(inputContainer);
         index++;
     }
+
+    var fieldName = 'Country';
+    var inputContainer = document.createElement('div');
+    var dynamicDom = document.createElement(fieldAndType[fieldName]);
+    let fname = fieldName.replace(/\s/g,'');
+    fname = fname.replace("'","");
+    fname = fname.replace("/","");
+    dynamicDom.name = fname;
+    dynamicDom.className = fieldToClasses[fieldName];
+    dynamicDom.setAttribute("style", "display:none;");
+    inputContainer.appendChild(dynamicDom);
+    formWarpper.appendChild(inputContainer);
+
     var submitButton = document.createElement('button');
     submitButton.type = 'button';
     submitButton.className = 'FT_submitBtn';
@@ -4064,6 +4109,7 @@ var FT_addSellForm = function() {
         'Email':'input',
         'Phone':'input',
         'State':'select',
+        'Country':'input',
         'What year is your truck':'input',
         'What type of truck' : 'select',
         'What brand is your truck' : 'input',
@@ -4079,6 +4125,7 @@ var FT_addSellForm = function() {
         'Email': 'FT_input FT_required FT_email',
         'Phone': 'FT_input FT_required',
         'State': 'FT_input FT_required',
+        'Country': 'FT_input FT_required',
         'What year is your truck': 'FT_input',
         'What type of truck' : 'FT_input',
         'What brand is your truck' : 'FT_input',
@@ -4095,6 +4142,7 @@ var FT_addSellForm = function() {
         'Email': '',
         'Phone': '',
         'State': '',
+        'Country': '',
         'What year is your truck': '',
         'What type of truck' : '',
         'What brand is your truck' : '',
@@ -4113,6 +4161,7 @@ var FT_addSellForm = function() {
         if( frmData['Email'] ) fieldToValues['Email'] = frmData['Email'];
         if( frmData['FireDepartment'] ) fieldToValues['FireDepartment'] = frmData['FireDepartment'];
         if( frmData['State'] ) fieldToValues['State'] = frmData['State'];
+        if( frmData['Country'] ) fieldToValues['Country'] = frmData['Country'];
         if( frmData['Whatyearisyourtruck'] ) fieldToValues['What year is your truck'] = frmData['Whatyearisyourtruck']; 
         if( frmData['Whattypeoftruck'] ) fieldToValues['What type of truck'] = frmData['Whattypeoftruck'];  
         if( frmData['Whatbrandisyourtruck'] ) fieldToValues['What brand is your truck'] = frmData['Whatbrandisyourtruck'];  
@@ -4123,13 +4172,12 @@ var FT_addSellForm = function() {
     
     var StateOpt = {
         "United States" : [ 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ],
-        "Canada" : [ 'Alberta', 'British Columbia', 'Manitoba', 'Newfoundland / Labrador', 'New Brunswick', 'Nova Scotia', 'Northwest Territories', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon' ]
+        "Canada" : [ 'Alberta', 'British Columbia', 'Manitoba', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territories' ]
     };
 
     var BooleanOpt = ['', 'Yes', 'No'];
     
-    var truckTypeOpt = ['', 'Used Pumper and Engines', 'Rescue Pumper and Engines', 'Used Aerial, Ladder Trucks and Quints', 'Towers and Platforms', 'Used Tankers and Tenders', 'Used Brush Trucks, Quick Attacks and Mini Pumpers', 'Used Rescue Trucks and Squads', 'Command Units', 'Used ARFF and Airport Crash Trucks', 'Ambulances and Transport Units', 'European Style Units', 'Vocational Trucks'];
-    
+    var truckTypeOpt = ['', "Used Pumpers and Engines", "Rescue Pumpers and Engines", "Used Aerials Ladder Trucks and Quints", "Towers and Platforms", "Used Rescue Trucks and Squads", "Command Units", "Used Brush Trucks, Quick Attacks & Minis", "Used Tankers and Tenders", "Used ARFF and Airport Crash Trucks", 'Ambulances and Transport Units', 'European Style Units', 'Vocational Trucks'];
     var timeForSellOpt = ['', 'Today', '30 Days', 'Maybe 6 Months', 'Probably 1 Year Or More'];
     
     var replacementOpt = ['', 'Yes', 'No', 'Working On It', 'Not Replacing'];   
@@ -4158,98 +4206,120 @@ var FT_addSellForm = function() {
     var index = 0;
     
     for(var fieldName in fieldAndType) {
-        var inputContainer = document.createElement('div');
-        inputContainer.className += ((index%2) ? 'FT_fL' : 'FT_fR');
-        var dynamicDom = document.createElement(fieldAndType[fieldName]);
-        dynamicDom.name = fieldName.replace(/\s/g,'');
-        dynamicDom.className = fieldToClasses[fieldName];
-        if(fieldName === 'State') {
-            dynamicDom.className += ' FT_gryTxt FT_select';
-            //default selected option "State"
-            var option = document.createElement('option');
-            option.value = '';
-            option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
-            option.disabled = true;
-            //option.selected = true; 
-            option.setAttribute( "selected", "" );
-            dynamicDom.appendChild(option);
-            //create option group
-            for( var key in StateOpt ) {
-                var optGroup = document.createElement('optgroup');
-                optGroup.setAttribute( "label", key );
-                StateOpt[ key ].forEach( function( opt ) {
+        if(fieldName !== 'Country')
+        {
+            var inputContainer = document.createElement('div');
+            inputContainer.className += ((index%2) ? 'FT_fL' : 'FT_fR');
+            var dynamicDom = document.createElement(fieldAndType[fieldName]);
+            dynamicDom.name = fieldName.replace(/\s/g,'');
+            dynamicDom.className = fieldToClasses[fieldName];
+            if(fieldName === 'State') {
+                dynamicDom.className += ' FT_gryTxt FT_select';
+                //default selected option "State"
+                var option = document.createElement('option');
+                option.value = '';
+                option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
+                option.disabled = true;
+                //option.selected = true; 
+                option.setAttribute( "selected", "" );
+                dynamicDom.appendChild(option);
+                //create option group
+                for( var key in StateOpt ) {
+                    var optGroup = document.createElement('optgroup');
+                    optGroup.setAttribute( "label", key );
+                    StateOpt[ key ].forEach( function( opt ) {
+                        var option = document.createElement('option');
+                        option.value = opt;
+                        option.innerHTML = opt;
+                        optGroup.appendChild(option);
+                    });                         
+                    dynamicDom.appendChild( optGroup );
+                }
+                FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
+                FT_bindEvent('change', FT_UpdateCountry_Sell, [dynamicDom]);
+            } else if (fieldName === 'Country') {
+                dynamicDom.setAttribute("style", "display:none;");
+            
+            } else if(fieldName === 'What type of truck') {
+                dynamicDom.className += ' FT_gryTxt FT_select';
+                truckTypeOpt.forEach(function(opt) {
                     var option = document.createElement('option');
-                    option.value = opt;
-                    option.innerHTML = opt;
-                    optGroup.appendChild(option);
-                });                         
-                dynamicDom.appendChild( optGroup );
+                    option.value = (opt) ? opt: '';
+                    option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
+                    if(!opt) {
+                        option.disabled = true;
+                        option.selected = true;                 
+                    }
+                    dynamicDom.appendChild(option);
+                });
+                
+                FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
+                
+            }else if(fieldName === 'When would you like to sell your truck') {
+                dynamicDom.className += ' FT_gryTxt FT_select';
+                timeForSellOpt.forEach(function(opt) {
+                    var option = document.createElement('option');
+                    option.value = (opt) ? opt: '';
+                    option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
+                    if(!opt) {
+                        option.disabled = true;
+                        option.selected = true;
+                    }
+                    dynamicDom.appendChild(option);
+                });
+                
+                FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
             }
-            FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-            
-        } else if(fieldName === 'What type of truck') {
-            dynamicDom.className += ' FT_gryTxt FT_select';
-            truckTypeOpt.forEach(function(opt) {
-                var option = document.createElement('option');
-                option.value = (opt) ? opt: '';
-                option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
-                if(!opt) {
-                    option.disabled = true;
-                    option.selected = true;                 
+            else {
+                    
+                if(fieldName == 'What brand is your truck'){                
+                    dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';
+                }else if(fieldName == 'What price is needed for your truck'){               
+                    dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';           
+                    dynamicDom.className += ' FT_gryTxt FT_select FT_currency';
+                    FT_bindEvent('keyup', FT_validateCurrency, [dynamicDom]);
+                    
+                }else if(fieldName == 'What year is your truck' ){
+                    dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';                           
+                    dynamicDom.setAttribute("maxlength", "4");  
+                    FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
+                    
+                }else{
+                    dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;   
                 }
-                dynamicDom.appendChild(option);
-            });
-            
-            FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-            
-        }else if(fieldName === 'When would you like to sell your truck') {
-            dynamicDom.className += ' FT_gryTxt FT_select';
-            timeForSellOpt.forEach(function(opt) {
-                var option = document.createElement('option');
-                option.value = (opt) ? opt: '';
-                option.innerHTML = (opt) ? opt : ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?' );
-                if(!opt) {
-                    option.disabled = true;
-                    option.selected = true;
+                
+                if(fieldName === 'Phone') {
+                    FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
                 }
-                dynamicDom.appendChild(option);
-            });
-            
-            FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-        }
-        else {
-                
-            if(fieldName == 'What brand is your truck'){                
-                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';
-            }else if(fieldName == 'What price is needed for your truck'){               
-                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';           
-                dynamicDom.className += ' FT_gryTxt FT_select FT_currency';
-                FT_bindEvent('keyup', FT_validateCurrency, [dynamicDom]);
-                
-            }else if(fieldName == 'What year is your truck' ){
-                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] + '?' : fieldName + '?';                           
-                dynamicDom.setAttribute("maxlength", "4");  
-                FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
-                
-            }else{
-                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;   
+                else if(fieldName === 'Comments') {
+                    inputContainer.className += 'FT_TextArea';
+                }           
             }
-            
-            if(fieldName === 'Phone') {
-                FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
-            }
-            else if(fieldName === 'Comments') {
-                inputContainer.className += 'FT_TextArea';
-            }           
+            //populate value from cookie data (check conditions if radio/checkbox field is added in form)
+            if( fieldAndType[fieldName] == 'input' || fieldAndType[fieldName] == 'select' || fieldAndType[fieldName] == 'textarea' )
+                dynamicDom.value = fieldToValues[fieldName];
         }
-        //populate value from cookie data (check conditions if radio/checkbox field is added in form)
-        if( fieldAndType[fieldName] == 'input' || fieldAndType[fieldName] == 'select' || fieldAndType[fieldName] == 'textarea' )
-            dynamicDom.value = fieldToValues[fieldName];
+        else{
+            index = index - 1;
+        }
+        
             
         inputContainer.appendChild(dynamicDom);
         formWarpper.appendChild(inputContainer);
         index++;
     }
+
+    var fieldName = 'Country';
+    var inputContainer = document.createElement('div');
+    var dynamicDom = document.createElement(fieldAndType[fieldName]);
+    let fname = fieldName.replace(/\s/g,'');
+    fname = fname.replace("'","");
+    fname = fname.replace("/","");
+    dynamicDom.name = fname;
+    dynamicDom.className = fieldToClasses[fieldName];
+    dynamicDom.setAttribute("style", "display:none;");
+    inputContainer.appendChild(dynamicDom);
+    formWarpper.appendChild(inputContainer);
     
     var submitButton = document.createElement('button');
     submitButton.type = 'button';
@@ -4718,6 +4788,7 @@ var FT_addTruckFinderFrom = function() {
         "Fire Dept's Website" : 'input',
         'Phone Number' : 'input',
         'Fire Dept State/Province' : 'select',
+        'Country' : 'input',
         'Fire Dept City' : 'input',
         'Email Address' : 'input',
 
@@ -4741,6 +4812,7 @@ var FT_addTruckFinderFrom = function() {
         'First Name' : 'FT_input FT_required',
         'Last Name' : 'FT_input FT_required',
         "Fire Dept's Website" : 'FT_input',
+        'Country' : 'FT_input',
         'Phone Number' : 'FT_input FT_required FT_phone',
         'Fire Dept State/Province' : 'FT_input FT_required',
         'Fire Dept City' : 'FT_input FT_required',
@@ -4760,23 +4832,24 @@ var FT_addTruckFinderFrom = function() {
         'Geographic Region':'FT_input FT_required no-height'                    
     }
     
-    var appratusOpt = [ "", "Used Aerials, Ladder Trucks and Quints", "Used Pumpers and Engines", "Used Tankers and Tenders", 
-                        "Towers and Platforms", "Rescue Pumpers and Engines", "Used Rescue Trucks and Squads", 
-                        "Used Brush Trucks, Quick Attacks & Minis", "Command Units", "Used ARFF and Airport Crash Trucks", 
-                        "European Style Units" ];
+    var appratusOpt = [ "", "Used Pumpers and Engines", "Rescue Pumpers and Engines", "Used Aerials Ladder Trucks and Quints", "Towers and Platforms", "Used Rescue Trucks and Squads", "Command Units", "Used Brush Trucks, Quick Attacks & Minis", "Used Tankers and Tenders", "Used ARFF and Airport Crash Trucks", "European Style Units"];
 
     var pumpSizeOpt = ['', 'All', '0-500', '500-750', '750-1250', '1250-1500', '1250-1500', '1500-2000', '2000' ];
     var tankSizeOpt = ['', 'All', '0-250', '250-400', '400-750', '750-1100', '1100-1800', '1100-1800', '1800-2500', '2500'];
-    var brandsOpt = ["", "E-One", "Pierce", "Other", "KME", "Seagrave", "Ferrara", "Spartan", "Simon-Duplex", "Crimson", "American LaFrance", "Custom Fire", "Rosenbauer", "General", "RD Murray", "Central States", "Toyne", "Marion", "GMC", "Boise Mobile", "Saulsbury", "Darley", "Sutphen", "Helie", "Dependable", "Precision", "Metalfab", "4 Guys", "Anchor Richey", "Blanchat", "HME"];
+    var brandsOpt = ["",  "4 Guys", "American LaFrance", "Anchor Richey", "Blanchat", "Boise Mobile", "Central States", "Crimson", "Custom Fire", "Darley", "Dependable", "EOne", "Ferrara", "General", "GMC", "Helie", "HME", "KME", "Marion", "Metalfab", "Other", "Pierce", "Precision", "RD Murray", "Rosenbauer", "Saulsbury", "Seagrave", "Simon-Duplex", "Spartan", "Sutphen", "Toyne"];
     var chassisOpt = ['', 'All', 'Custom', '2 Door Commercial', '4 Door Commerical'];
     var mileageOpt = ["", "Under 150,000", "Under 100,000", "Under 15,000", "Under 60,000", "Under 30,000", "Under 45,000", "Under 75,000", "Under 200,000", "Over 200,000"];
     var warrantyOpt = ['', 'All', 'Included', 'Not Included'];
-    var geographicRegionsOpt = ["", "USA - South", "USA - West", "Canada", "USA - Northeast", "USA - Midwest", "USA - Southwest", "Pacific Rim", "Middle East"];
+    var geographicRegionsOpt = ["",  "Canada", "Middle East", "Pacific Rim", "USA - Midwest", "USA - Northeast", "USA - South", "USA - Southwest", "USA - West"];
     var fireDeptStateOpt = [ "", "AB", "AK", "AL", "AR", "AZ", "BC", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", 
                         "KY", "LA", "MA", "MB", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NB", "NC", "ND", "NE", "NF", "NH", "NJ", "NM", "NS"
                         , "NT", "NU", "NV", "NY", "OH", "OK", "ON", "OR", "PA", "PE", "QC", "RI", "SC", "SD", "SK", "TN", "TX", "UT", "VA", "VT"
                         , "WA", "WI", "WV", "WY", "YT" ];
     var yearsOpt = [ "" ];
+    var StateOpt = {
+        "United States" : [ 'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming' ],
+        "Canada" : [ 'Alberta', 'British Columbia', 'Manitoba', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon Territories' ]
+    };
     
     var d = new Date();
     var currentYear = d.getFullYear();
@@ -4802,98 +4875,144 @@ var FT_addTruckFinderFrom = function() {
     formWarpper.appendChild(messageContainerDiv);
     var index = 0;
     
-    for(var fieldName in fieldAndType) {
-        var inputContainer = document.createElement('div');
-        inputContainer.className += ((index%2) ? 'FT_fL' : 'FT_fR');
-        var dynamicDom = document.createElement(fieldAndType[fieldName]);
-        let fname = fieldName.replace(/\s/g,'');
-        fname = fname.replace("'","");
-        fname = fname.replace("/","");
-        dynamicDom.name = fname;
-        dynamicDom.className = fieldToClasses[fieldName];
-        if( fieldName === 'Apparatus Type' || fieldName === 'Pump Size' || fieldName === 'Tank Size' || fieldName === 'Brands'
-            || fieldName === 'Chassis' || fieldName === 'Mileage' || fieldName === 'Warranty' || fieldName === 'Geographic Region'
-            || fieldName === 'Fire Dept State/Province' || fieldName === 'Year Min' || fieldName === 'Year Max' ) {
-            dynamicDom.className += ' FT_gryTxt FT_select';
-            var optionsVar = '';
-            if( fieldName === 'Apparatus Type' ) {
-                optionsVar = appratusOpt;
-            } else if( fieldName === 'Pump Size' ) {
-                optionsVar = pumpSizeOpt;
-                dynamicDom.setAttribute( 'multiple', true );
-            } else if( fieldName === 'Tank Size' ) {
-                optionsVar = tankSizeOpt;
-            } else if( fieldName === 'Brands' ) {
-                optionsVar = brandsOpt;
-                dynamicDom.setAttribute( 'multiple', true );
-            } else if( fieldName === 'Chassis' ) {
-                optionsVar = chassisOpt;
-            } else if( fieldName === 'Mileage' ) {
-                optionsVar = mileageOpt;
-            } else if( fieldName === 'Warranty' ) {
-                optionsVar = warrantyOpt;
-            } else if( fieldName === 'Geographic Region' ) {
-                optionsVar = geographicRegionsOpt;
-                dynamicDom.setAttribute( 'multiple', true );
-            } else if( fieldName === 'Fire Dept State/Province' ) {
-                optionsVar = fireDeptStateOpt;
-            } else if( fieldName === 'Year Min' || fieldName === 'Year Max' ) {
-                optionsVar = yearsOpt;
-            } 
-            optionsVar.forEach(function(opt) {
-                var option = document.createElement('option');
-                option.value = (opt) ? opt: '';
-                var optLabel = '';
-                if( opt ) {
-                    optLabel = opt;
-                    if( fieldName === 'Pump Size' && opt != 'All' ) {
-                        optLabel += ( opt == '2000' ) ? '+ GPM' : ' GPM';                                    
-                    } else if( fieldName === 'Tank Size' && opt != 'All' ) {
-                        optLabel += ( opt == '2500' ) ? '+ Gallons' : ' Gallons';  
-                    }
-                } else {
-                    optLabel = ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
-                    if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].indexOf('FT_required') < 0 ) {
-                        optLabel += ' *';
-                    }
-                }
-                option.innerHTML = optLabel;
-                if(!opt) {
+    for(var fieldName in fieldAndType) 
+    {
+        if(fieldName !== 'Country')
+        {
+            var inputContainer = document.createElement('div');
+            inputContainer.className += ((index%2) ? 'FT_fL' : 'FT_fR');
+            var dynamicDom = document.createElement(fieldAndType[fieldName]);
+            let fname = fieldName.replace(/\s/g,'');
+            fname = fname.replace("'","");
+            fname = fname.replace("/","");
+            dynamicDom.name = fname;
+            dynamicDom.className = fieldToClasses[fieldName];
+            if( fieldName === 'Apparatus Type' || fieldName === 'Pump Size' || fieldName === 'Tank Size' || fieldName === 'Brands'
+                || fieldName === 'Chassis' || fieldName === 'Mileage' || fieldName === 'Warranty' || fieldName === 'Geographic Region'
+                || fieldName === 'Fire Dept State/Province' || fieldName === 'Year Min' || fieldName === 'Year Max' ) {
+                dynamicDom.className += ' FT_gryTxt FT_select';
+                var optionsVar = '';
+                if( fieldName === 'Apparatus Type' ) {
+                    optionsVar = appratusOpt;
+                } else if( fieldName === 'Pump Size' ) {
+                    optionsVar = pumpSizeOpt;
+                    dynamicDom.setAttribute( 'multiple', true );
+                } else if( fieldName === 'Tank Size' ) {
+                    optionsVar = tankSizeOpt;
+                } else if( fieldName === 'Brands' ) {
+                    optionsVar = brandsOpt;
+                    dynamicDom.setAttribute( 'multiple', true );
+                } else if( fieldName === 'Chassis' ) {
+                    optionsVar = chassisOpt;
+                } else if( fieldName === 'Mileage' ) {
+                    optionsVar = mileageOpt;
+                } else if( fieldName === 'Warranty' ) {
+                    optionsVar = warrantyOpt;
+                } else if( fieldName === 'Geographic Region' ) {
+                    optionsVar = geographicRegionsOpt;
+                    dynamicDom.setAttribute( 'multiple', true );
+                } else if( fieldName === 'Fire Dept State/Province' ) {
+                    //optionsVar = StateOpt;
+                } else if( fieldName === 'Year Min' || fieldName === 'Year Max' ) {
+                    optionsVar = yearsOpt;
+                } 
+                if(fieldName === 'Fire Dept State/Province')
+                {
+                    var option = document.createElement('option');
+                    option.value = '';
+                    option.innerHTML =( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;
                     option.disabled = true;
-                    if( !dynamicDom.getAttribute('multiple') ) {
-                        option.selected = true;    
-                    } else {
-                        option.classList.add( 'grey-opt' );             
+                    //option.selected = true; 
+                    option.setAttribute( "selected", "" );
+                    dynamicDom.appendChild(option);
+                    //create option group
+                    for( var key in StateOpt ) {
+                        var optGroup = document.createElement('optgroup');
+                        optGroup.setAttribute( "label", key );
+                        StateOpt[ key ].forEach( function( opt ) {
+                            var option = document.createElement('option');
+                            option.value = opt;
+                            option.innerHTML = opt;
+                            optGroup.appendChild(option);
+                        });                         
+                        dynamicDom.appendChild( optGroup );
                     }
+                    FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
+                    FT_bindEvent('change', FT_UpdateCountry_Finder, [dynamicDom]);
+                } 
+                else 
+                {
+                    optionsVar.forEach(function(opt) {
+                        var option = document.createElement('option');
+                        option.value = (opt) ? opt: '';
+                        var optLabel = '';
+                        if( opt ) {
+                            optLabel = opt;
+                            if( fieldName === 'Pump Size' && opt != 'All' ) {
+                                optLabel += ( opt == '2000' ) ? '+ GPM' : ' GPM';                                    
+                            } else if( fieldName === 'Tank Size' && opt != 'All' ) {
+                                optLabel += ( opt == '2500' ) ? '+ Gallons' : ' Gallons';  
+                            }
+                        } else {
+                            optLabel = ( ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName );
+                            if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].indexOf('FT_required') < 0 ) {
+                                optLabel += ' *';
+                            }
+                        }
+                        option.innerHTML = optLabel;
+                        if(!opt) {
+                            option.disabled = true;
+                            if( !dynamicDom.getAttribute('multiple') ) {
+                                option.selected = true;    
+                            } else {
+                                option.classList.add( 'grey-opt' );             
+                            }
+                        }
+                        dynamicDom.appendChild(option);
+                    });
+                    
+                    //FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
                 }
-                dynamicDom.appendChild(option);
-            });
-            
-            //FT_bindEvent('change', removeFT_SelectClass, [dynamicDom]);
-            
-        } else { //input fields
-
-            if( fieldName == 'Budget Min' || fieldName == 'Budget Max' ) {
-                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;                           
-                FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
                 
-            } else{
-                dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;   
-            } 
+                
+            } else { //input fields
 
-            if( fieldName == 'Phone Number' ) {
-                FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
-            }
+                if( fieldName == 'Budget Min' || fieldName == 'Budget Max' ) {
+                    dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;                           
+                    FT_bindEvent('keyup', FT_validateNumberOnly, [dynamicDom]);
+                    
+                } else{
+                    dynamicDom.placeholder = ( typeof FT_translatableStrings[fieldName] != 'undefined' ) ? FT_translatableStrings[fieldName] : fieldName;   
+                } 
 
-            if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].indexOf("FT_required") < 0 ) {
-                dynamicDom.placeholder += ' *';
+                if( fieldName == 'Phone Number' ) {
+                    FT_bindEvent('keyup', FT_processNumberEntry, [dynamicDom]);
+                }
+
+                if( fieldToClasses[ fieldName ] && fieldToClasses[ fieldName ].indexOf("FT_required") < 0 ) {
+                    dynamicDom.placeholder += ' *';
+                }
+
             }
+        } else {
+            index = index - 1;
         }
-                            
+                                
         inputContainer.appendChild(dynamicDom);
         formWarpper.appendChild(inputContainer);
         index++;
     }
+    var fieldName = 'Country';
+    var inputContainer = document.createElement('div');
+    var dynamicDom = document.createElement(fieldAndType[fieldName]);
+    let fname = fieldName.replace(/\s/g,'');
+    fname = fname.replace("'","");
+    fname = fname.replace("/","");
+    dynamicDom.name = fname;
+    dynamicDom.className = fieldToClasses[fieldName];
+    dynamicDom.setAttribute("style", "display:none;");
+    inputContainer.appendChild(dynamicDom);
+    formWarpper.appendChild(inputContainer);
     
     var submitButton = document.createElement('button');
     submitButton.type = 'button';
