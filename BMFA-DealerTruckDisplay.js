@@ -232,14 +232,14 @@ var FT_DetailFieldToStrHTML = {
 var FT_PageFooterStrHTML = '<div class="FT_footer" style="background:#000;">'
                             +'<div class="FT_tableCell FT_footerBg" onclick="showSellModal()">'+
                             '<div class="FT_footerImgWrap">'+
-                            '<div class="FT_footerImg"><img src="https://brindlee--partial--c.cs29.content.force.com/servlet/servlet.ImageServer?id=0150r000000E1Qx&oid=00D0r0000000Wej&lastMod=1574858827000" class="" /></div>'+
+                            '<div class="FT_footerImg"><img src="https://brindlee--c.na116.content.force.com/servlet/servlet.ImageServer?id=0153m000005FcCy&oid=00Do0000000JLLE&lastMod=1580769668000" class="" /></div>'+
                            '    <h5 style="color:{1}" class="FT_footerHead">{3}</h5>' +
                            '    <div class="FT_footerinner"><span style="color:{1}; display: {7}">{6} </span> <a href="javascript:void(0)" style="color:{2}">{4}</a></div>' +
                            '</div>'+
                             '</div>'+
                             '<div class="FT_tableCell" onclick="FT_showTruckFinderModal()">'+
                             '<div class="FT_footerImgWrap">'+
-                            '<div class="FT_footerImg"><img src="https://brindlee--partial--c.cs29.content.force.com/servlet/servlet.ImageServer?id=0150r000000E1R2&oid=00D0r0000000Wej&lastMod=1574858882000" class=""/></div>'+
+                            '<div class="FT_footerImg"><img src="https://brindlee--c.na116.content.force.com/servlet/servlet.ImageServer?id=0153m000005FcD3&oid=00Do0000000JLLE&lastMod=1580769703000" class=""/></div>'+
                             '   <h5 style="color:{1}" class="FT_footerHead">{8}</h5>' +
                            '    <div class="FT_footerinner"><a href="javascript:void(0)"  style="color:{2}">{4}</a></div>' +
                            '</div>'+
@@ -1662,21 +1662,21 @@ var removeFT_SelectClass = function(element){
 var FT_UpdateCountry_Inquiry = function(element){
     console.log( 'update country' );
     var op = element.options[element.selectedIndex];
-	var optgroup = op.parentNode;
+    var optgroup = op.parentNode;
     document.getElementsByName("Country")[0].value = optgroup.label;
 }
 
 var FT_UpdateCountry_Sell = function(element){
     console.log( 'update country' );
     var op = element.options[element.selectedIndex];
-	var optgroup = op.parentNode;
+    var optgroup = op.parentNode;
     document.getElementsByName("Country")[1].value = optgroup.label;
 }
 
 var FT_UpdateCountry_Finder = function(element){
     console.log( 'update country' );
     var op = element.options[element.selectedIndex];
-	var optgroup = op.parentNode;
+    var optgroup = op.parentNode;
     document.getElementsByName("Country")[2].value = optgroup.label;
 }
 
