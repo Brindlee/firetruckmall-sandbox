@@ -4,7 +4,7 @@ var totalPageNo = 0;
 var isPrevious = false;
 var isIndexPage = false;
 var searchTerm = '';
-var sandboxServiceUrl = 'https://partial-firetruckmall.cs29.force.com/services/apexrest/';
+var sandboxServiceUrl = 'https://brindlee--dev.cs43.my.salesforce.com/services/apexrest/';
 var productionServiceUrl = 'https://www.firetruckmall.com/services/apexrest/';
 var head = document.getElementsByTagName('head')[0];
 /* Inject external script library for making support of Promise in IE */
@@ -1923,7 +1923,7 @@ var FT_addInetrestFrom = function() {
         //'Make An Offer':'',
         'City':'FT_input FT_required',
         'State':'FT_input FT_required',
-        'Country':'FT_input FT_required',
+        'Country':'FT_input',
         'FD or Company': 'FT_input FT_required',
         'Inquiry Message':'FT_input FT_required'
     }
@@ -4125,7 +4125,7 @@ var FT_addSellForm = function() {
         'Email': 'FT_input FT_required FT_email',
         'Phone': 'FT_input FT_required',
         'State': 'FT_input FT_required',
-        'Country': 'FT_input FT_required',
+        'Country': 'FT_input ',
         'What year is your truck': 'FT_input',
         'What type of truck' : 'FT_input',
         'What brand is your truck' : 'FT_input',
@@ -4753,11 +4753,20 @@ var FT_showTruckFinderModal = function(){
     hideLoader('FT_truckFinderSecId'); 
 }
 
+var FT_closeSelfModal = function( element ) {    
+    if( element && element.classList.contains("FT_modal") ){
+        element.style.display = "none";
+    }    
+}
+
 var createModal = function( parentNode, modalId, formCreationFunction ) { 
 
     var modalWrap = document.createElement('div');
     modalWrap.className = 'FT_modal';
     modalWrap.setAttribute( 'id',modalId );
+    
+    FT_bindEvent('click', FT_closeSelfModal, [ modalWrap ] );
+    
     var modalContainer = document.createElement( 'div' );
     modalContainer.className = 'FT_modalContent';   
 
@@ -5172,11 +5181,11 @@ var FT_submitTruckFinderForm = function() {
             if(!isTruckFinderFormError) {
                 setTimeout(function(){ 
                     document.getElementById('FT_truckFinderModal').style.display = 'none';
-                    document.getElementsByClassName('truckFinderFrom')[0].style.display = 'block';
+                    document.getElementsByClassName('truckFinderFrom')[0].style.display = 'flex';
                 }, 3000);
                 
             }else{
-                document.getElementsByClassName('truckFinderFrom')[0].style.display = 'block';
+                document.getElementsByClassName('truckFinderFrom')[0].style.display = 'flex';
             }
         });
     }
