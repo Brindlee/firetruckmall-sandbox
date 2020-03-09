@@ -3,7 +3,7 @@ var isPgFilterApply = false;
 var totalPageNo = 0;
 var isPrevious = false;
 var isIndexPage = false;
-var searchTerm = '';
+var searchTerm = '';jkhjkjhkj
 var sandboxServiceUrl = 'https://brindlee--dev.cs43.my.salesforce.com/services/apexrest/';
 var productionServiceUrl = 'https://www.firetruckmall.com/services/apexrest/';
 var head = document.getElementsByTagName('head')[0];
@@ -447,9 +447,7 @@ var FT_clearContainerDom = function() {
 /* Function to scroll window at position where truck container starts */
 var FT_scrollTop = function() {
     setTimeout(function () {
-        window.scrollTo(0, (FT_BMFA_TruckContainer.offsetTop-10));
-        if( document.body.scrollTo )
-            document.body.scrollTo(0, (FT_BMFA_TruckContainer.offsetTop-10));
+        FT_BMFA_TruckContainer.scrollIntoView(true);
     },2);   
 }
 
@@ -5226,3 +5224,4 @@ var FT_callSiteDownAlertService = function( reason ) {
             
     FT_WebRequestHandler.postRequestCustom( JSON.stringify( serviceParams ), customURL, FT_callSiteDownAlertServiceCallback );
 }
+
