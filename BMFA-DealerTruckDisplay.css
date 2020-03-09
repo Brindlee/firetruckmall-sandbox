@@ -1,7 +1,8 @@
- @media all {
+@media all {
+            	.form-inline.gridForm input, .form-inline.gridForm select { color: #000; }
                 .FT_container * { margin: 0; padding: 0; font-family: 'Source Sans Pro', sans-serif; box-sizing: border-box; font-size: 13px; line-height: normal !important; }
                 ul.FT_listStyle.FT_truckList { display:block; -moz-column-count: 4; -webkit-column-count: 4; column-count: 4; -moz-column-gap: 15px; -webkit-column-gap: 15px; column-gap: 15px; }
-                ul.FT_listStyle > li { width: 25%; display: inline-block; padding: 15px; min-height: 150px; list-style: none; vertical-align: top; text-align: center; margin: 0; }
+                ul.FT_listStyle > li { width: 25%; display: inline-block; padding: 15px; min-height: 150px; list-style: none; vertical-align: top; text-align: center; margin: 0; float:none; }
                 ul.FT_listStyle.FT_truckList > li { width: 100%; padding: 2px; margin: 0 0 15px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;}
                 /*body, html{ font-family: 'Open Sans', sans-serif; font-size: 14px; }*/
                 #dealerTruckContainerId{ max-width:1000px; width: 90%; margin: 15px auto; }
@@ -9,7 +10,7 @@
                 .FT_ThemeContainer p + p { line-height: 20px; padding-top: 10px; }
                 .FT_tabs { width: 100%; padding: 25px 0 0; }
                 .FT_tab-links:after { display: block; clear: both; content: ''; }
-                .FT_tab-links li { margin-right: 10px; float: left; list-style: none; min-width:210px; margin-left: 0;}
+                .FT_tab-links li { margin-right: 10px; float: left; list-style: none; min-width:210px; margin-left: 0; width: auto; padding: 0;}
                 .FT_tab-links a { padding: 18px 10px; display: block; border-radius: 0; background: #eaeaea; font-size: 13px !important; font-weight: bold; color: #6e6e6e; text-decoration: none; transition: all linear 0.15s; text-align: center; }
                 .FT_tab-links a:hover { background: #f5f5f5; text-decoration: none; }
                 li.FT_active a, li.FT_active a:hover { background: #7a0303; color: #fff; }
@@ -66,7 +67,7 @@
                 .FT_ThemeContainer { background-color: #7a0303; color: #fff; }
                 li .FT_gryTxt { color: #666; padding: 0 0 7px; display: block; max-width: 100%; height: auto; /*-webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;*/ line-height: 19px; }
                 .FT_footer > h5 { font-size: 25px; font-weight: 500; padding:0; margin: 0;}
-                .FT_footer { /*padding: 15px 25px;padding: 15px 9px; */text-align: center; display: table; width: 100%; }
+                .FT_footer { /*padding: 15px 25px;padding: 15px 9px; */text-align: center; display: table; width: 100%; display:table !important; }
                 .FT_footer a, .FT_footer span { font-size: 19px; display: block; padding: 10px 0 0; line-height: normal; }
                 .FT_footer .FT_footerinner a, .FT_footer .FT_footerinner span { display: inline-block; }
                 .FT_footer .FT_footerinner span { margin-right: 5px;  }
@@ -85,8 +86,8 @@
                 .FT_imgfR{float:right; max-width:45px;}
                 .FT_imgfL{float:left; max-width:45px;}
                 h5.FT_footerHead {background:transparent;  font-size: 20px; font-weight: 600;margin: 0;}
-                .whtieBg {content: ''; background: rgb(255, 255, 255); width: 40px; height: 40px; position: absolute; border-radius: 50px; /*top: 50%;*/top: 28%; left: 50%; margin-left: -25px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.71); }
-                .loader { border: 4px solid #dcdcdc; border-radius: 50%; border-top: 4px solid #7a0303; width: 30px; height: 30px; -webkit-animation: spin 1s linear infinite; animation: spin 1s linear infinite; margin: 5px auto; transform-origin: unset !important;margin:-15px; }
+            /*.whtieBg {content: ''; background: rgb(255, 255, 255); width: 40px; height: 40px; position: absolute; border-radius: 50px; /*top: 50%;*/top: 28%; left: 50%; margin-left: -25px; box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.71); }*/
+                .loader { border: 4px solid #fff; border-radius: 50%; border-top: 4px solid #7a0303; width: 30px; height: 30px; -webkit-animation: spin 1s linear infinite; animation: spin 1s linear infinite; margin: 5px auto; transform-origin: unset !important;margin:-15px; }
                 @-webkit-keyframes spin {0% { -webkit-transform: rotate(0deg); }100% { -webkit-transform: rotate(360deg); }}
                 @keyframes spin {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}
                 .bgBlack{position:fixed; top:0; bottom:0 ;left:0;right:0; background:rgba(0, 0, 0, 0.38); z-index: 9001;}
@@ -216,6 +217,7 @@
               cursor: pointer;
               transition: 0.3s;
               background: none;
+            color:#000;
             }
             
             /*.closebtn:hover {
@@ -238,7 +240,7 @@
             #searchimg:before {   color: #fff;}
             div#searchbox {  background: #ffff; display: flex; padding: 8px 0 8px 15px; border-radius: 3px; width: 73%; margin-left: 5px; border:1px solid #d2d2d2}
             #filterForm .selectedOpt { background-color: rgb(200, 200, 200); }
-            #truckMsg{ display: block; background-color: #fde5e3; padding: 5px 10px; border: 1px solid #f7957e;     margin-bottom: 10px; }
+            #truckMsg{ display: block; background-color: #fde5e3; padding: 5px 10px; border: 1px solid #f7957e; margin-bottom: 10px; color:#000; }
             .searchButton.loaderDiv { display: none; }
             .searchButton.loaderDiv .loader { width: 22px; height: 22px; }
             .FT_footerBg {background: #fe0000;}
@@ -345,4 +347,4 @@
 
         @media only screen and (max-width: 760px) { 
             .footer .searchButton{width: unset !important;  height: unset !important;  left: 100%; }
-        }
+        }        
